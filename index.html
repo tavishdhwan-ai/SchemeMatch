@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SchemeMatch — Indian Government Scholarship Eligibility Matcher (SDG 4)</title>
-  <meta name="description" content="Discover government scholarships tailored to your profile. Matched against 30+ Indian central and state government scholarship schemes.">
-  
+  <meta name="description"
+    content="Discover government scholarships tailored to your profile. Matched against 30+ Indian central and state government scholarship schemes.">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
   <!-- Navigation / Header -->
@@ -23,9 +26,15 @@
         <div class="logo-icon">🎓</div>
         <div class="logo-text">Scheme<span>Match</span></div>
       </div>
-      <div class="sdg-badge">
-        <span class="sdg-badge-icon">4</span>
-        <span>SDG 4 — Quality Education</span>
+      <div class="sdg-badges">
+        <div class="sdg-badge sdg-4">
+          <span class="sdg-badge-icon">4</span>
+          <span>SDG 4 — Quality Education</span>
+        </div>
+        <div class="sdg-badge sdg-8">
+          <span class="sdg-badge-icon">8</span>
+          <span>SDG 8 — Decent Work & Economic Growth</span>
+        </div>
       </div>
     </div>
   </header>
@@ -33,14 +42,15 @@
   <!-- Hero Banner -->
   <section class="hero-section">
     <div class="hero-content">
-      <h1 class="hero-title">Find Government Scholarships You Qualify For</h1>
-      <p class="hero-subtitle">Match your student profile with official Indian Central & State Government scholarship schemes instantly.</p>
+      <h1 class="hero-title">Find Government Schemes You Qualify For</h1>
+      <p class="hero-subtitle">Match your profile with official Indian Central & State Government scholarships (SDG 4)
+        and skill/employment initiatives (SDG 8) instantly.</p>
     </div>
   </section>
 
   <!-- Main App Layout -->
   <main class="main-container">
-    
+
     <!-- Filter Form Sidebar -->
     <aside>
       <form id="eligibility-form" class="form-card">
@@ -138,6 +148,31 @@
           </select>
         </div>
 
+        <!-- Current Status Dropdown -->
+        <div class="form-group">
+          <label for="current-status">Current Status</label>
+          <select id="current-status" class="form-control">
+            <option value="All">Select status</option>
+            <option value="Student">Student</option>
+            <option value="Job-seeker">Job-seeker / Fresher</option>
+            <option value="Employed">Currently Employed</option>
+            <option value="Entrepreneur">Entrepreneur / Business Owner</option>
+            <option value="Self-employed">Self-employed</option>
+            <option value="Artisan">Artisan or Craftsperson</option>
+            <option value="Street Vendor">Street Vendor</option>
+          </select>
+        </div>
+
+        <!-- Location Type Dropdown -->
+        <div class="form-group">
+          <label for="location-type">Location Type</label>
+          <select id="location-type" class="form-control">
+            <option value="Both">Urban or Rural</option>
+            <option value="Urban">Urban</option>
+            <option value="Rural">Rural</option>
+          </select>
+        </div>
+
         <!-- Disability Checkbox -->
         <div class="checkbox-group">
           <input type="checkbox" id="disability">
@@ -147,11 +182,24 @@
         <!-- Submit Button -->
         <button type="button" id="find-btn" class="btn-primary">
           <span>Find My Schemes</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
         </button>
+
+        <!-- Sample Profile Button -->
+        <button type="button" id="sample-profile-btn" class="btn-sample">
+          Try a Sample Profile &rarr;
+        </button>
+
+        <!-- Clear Saved Form Link -->
+        <div class="clear-saved-container">
+          <button type="button" id="clear-saved-btn" class="clear-saved-btn" style="display: none;">
+            Clear saved form
+          </button>
+        </div>
       </form>
     </aside>
 
@@ -173,4 +221,5 @@
   <!-- Application Logic -->
   <script src="app.js"></script>
 </body>
+
 </html>

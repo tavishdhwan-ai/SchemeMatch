@@ -8,8 +8,13 @@ const incomeMap = {
 };
 
 let allSchemes = [];
+let allSkills = [];
+let filteredScholarships = [];
+let filteredSkills = [];
+let activeTab = 'scholarships'; // 'scholarships' or 'skills'
+let isFiltered = false;
 
-// Fallback JSON data to ensure 100% reliability even if opened directly via file:// protocol
+// Fallback JSON data for SDG 4 Scholarships
 const fallbackSchemes = [
   {
     "id": 1,
@@ -523,46 +528,1018 @@ const fallbackSchemes = [
   }
 ];
 
+// Fallback JSON data for SDG 8 Skills & Employment
+const fallbackSkills = [
+  {
+    "id": "s1",
+    "name": "Pradhan Mantri Kaushal Vikas Yojana 4.0 (PMKVY 4.0)",
+    "provider": "Ministry of Skill Development & Entrepreneurship (MSDE)",
+    "type": "Skilling",
+    "sdg8_connection": "Short-term skill training aligned with NSQF; 400+ courses including AI, 5G, green hydrogen and drone technology",
+    "target_status": ["All"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 15,
+    "age_max": 59,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Free skill training (7.5–30 hrs micro-credentials to full short-term courses), NSQF certificate, placement support",
+    "benefit_type": "Training",
+    "official_url": "https://www.skillindiadigital.gov.in/home",
+    "application_method": "Online via Skill India Digital portal or nearest PMKVY training centre",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": null,
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s2",
+    "name": "Pradhan Mantri National Apprenticeship Promotion Scheme (PM-NAPS)",
+    "provider": "Ministry of Skill Development & Entrepreneurship (MSDE)",
+    "type": "Apprenticeship",
+    "sdg8_connection": "On-the-job apprenticeship training; government pays 25% of stipend (up to ₹1,500/month) to employer via DBT",
+    "target_status": ["Job-seeker", "Student", "Employed"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 14,
+    "age_max": 35,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "25% of monthly stipend (up to ₹1,500/month) paid by GoI via DBT; earn-while-you-learn with industry exposure",
+    "benefit_type": "Stipend",
+    "official_url": "https://www.apprenticeshipindia.gov.in",
+    "application_method": "Online via apprenticeshipindia.gov.in; employers register establishments and apprentices",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": null,
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s3",
+    "name": "Jan Shikshan Sansthan (JSS) Scheme",
+    "provider": "Ministry of Skill Development & Entrepreneurship (MSDE)",
+    "type": "Skilling",
+    "sdg8_connection": "Community-based vocational training for non-literates, neo-literates and rural/urban disadvantaged groups",
+    "target_status": ["All"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 15,
+    "age_max": 45,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Low-cost doorstep vocational training linked with NSQF certification; particular focus on women and rural youth",
+    "benefit_type": "Training",
+    "official_url": "https://jss.gov.in",
+    "application_method": "Apply at nearest Jan Shikshan Sansthan centre (one in each district)",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": null,
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s4",
+    "name": "PM-DAKSH",
+    "provider": "Ministry of Social Justice & Empowerment (MSJE)",
+    "type": "Skilling",
+    "sdg8_connection": "Targeted skilling and employability for SC, OBC, EBC, DNT and safai karamchari communities",
+    "target_status": ["Job-seeker", "All"],
+    "target_categories": ["SC", "OBC"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": 45,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Free skill training, stipend during training, toolkit support, placement assistance; training duration 10–365 days",
+    "benefit_type": "Training",
+    "official_url": "https://www.myscheme.gov.in/schemes/pm-daksh",
+    "application_method": "Online via pmasdaksh.dosje.gov.in; apply through registered training partners",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Primarily targets SC, OBC, EBC and DNT communities; income limit varies by component — check official portal",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s5",
+    "name": "FutureSkills Prime Incentive Program",
+    "provider": "Ministry of Electronics & Information Technology (MeitY)",
+    "type": "Skilling",
+    "sdg8_connection": "Digital and emerging-tech skilling (AI, ML, Big Data, Cloud, IoT, Cybersecurity, AR/VR) for the IT/ITES workforce",
+    "target_status": ["Employed", "Job-seeker"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": "Graduate or equivalent preferred",
+    "benefit": "Subsidised/incentivised training in 10 emerging technologies; certification from industry-recognised bodies",
+    "benefit_type": "Training",
+    "official_url": "https://www.myscheme.gov.in/schemes/fspip",
+    "application_method": "Online via futureskillsprime.in through empanelled training providers",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Verify current enrolment windows on futureskillsprime.in — batch openings vary by course",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s6",
+    "name": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana 2.0 (DDU-GKY 2.0)",
+    "provider": "Ministry of Rural Development (MoRD)",
+    "type": "Skilling",
+    "sdg8_connection": "Placement-linked rural skill training with guaranteed employment in formal sector",
+    "target_status": ["Job-seeker"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Rural",
+    "age_min": 15,
+    "age_max": 35,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Free residential/non-residential training (3–12 months), food, accommodation, post-placement support; 100% placement-linked",
+    "benefit_type": "Training",
+    "official_url": "https://ddugky.gov.in",
+    "application_method": "Apply at nearest District Rural Development Agency (DRDA) or Common Service Centre",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Updated as DDU-GKY 2.0 per May 2025 PIB announcement; eligibility may include up to age 45 in revised version — verify locally",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s7",
+    "name": "DAY-NULM – Employment through Skills Training & Placement (EST&P)",
+    "provider": "Ministry of Housing & Urban Affairs (MoHUA)",
+    "type": "Skilling",
+    "sdg8_connection": "Skill training and placement support for urban poor in cities/towns",
+    "target_status": ["Job-seeker"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Urban",
+    "age_min": 18,
+    "age_max": 45,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Free market-aligned skill training (3–6 months), placement support, post-placement tracking; implemented via Urban Local Bodies",
+    "benefit_type": "Training",
+    "official_url": "https://nulm.gov.in",
+    "application_method": "Apply at your City Livelihood Centre (CLC) or Urban Local Body office",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Implemented by states/ULBs — enrolment depends on local batch availability; contact your city municipality",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s8",
+    "name": "DAY-NRLM (Deendayal Antyodaya Yojana – National Rural Livelihoods Mission)",
+    "provider": "Ministry of Rural Development (MoRD)",
+    "type": "Livelihood",
+    "sdg8_connection": "Rural self-employment and livelihood support through SHG networks, skill training and credit linkage",
+    "target_status": ["All"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Rural",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "SHG formation + revolving fund (₹15,000) + Community Investment Fund + bank credit linkage + skill training; interest subvention on loans",
+    "benefit_type": "Livelihood Support",
+    "official_url": "https://aajeevika.gov.in",
+    "application_method": "Join or form a Self Help Group (SHG) in your village; contact Block Mission Management Unit",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": null,
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s9",
+    "name": "Rural Self Employment Training Institutes (RSETIs)",
+    "provider": "Ministry of Rural Development (MoRD) + Sponsor Banks",
+    "type": "Skilling",
+    "sdg8_connection": "Free short-duration self-employment training for rural youth to start their own businesses",
+    "target_status": ["Job-seeker", "Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Rural",
+    "age_min": 18,
+    "age_max": 45,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Free 2–6 week residential training in trades like tailoring, mobile repair, agri-business etc.; credit linkage support post-training",
+    "benefit_type": "Training",
+    "official_url": "https://www.rseti.in",
+    "application_method": "Apply at nearest RSETI centre (one per district) or via lead bank in your district",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": null,
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s10",
+    "name": "Startup India Seed Fund Scheme (SISFS)",
+    "provider": "DPIIT, Ministry of Commerce & Industry",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "Seed funding for early-stage startups for prototype development and market entry",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Up to ₹20 lakh as grant for concept/prototype; up to ₹50 lakh as convertible debenture/debt for product development; disbursed via incubators",
+    "benefit_type": "Grant/Investment",
+    "official_url": "https://seedfund.startupindia.gov.in",
+    "application_method": "Apply to SISFS-empanelled incubators via seedfund.startupindia.gov.in; startup must be DPIIT-recognised",
+    "deadline_type": "Rolling",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Must be a DPIIT-recognised startup registered <5 years ago; apply through an approved incubator, not directly to DPIIT",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s11",
+    "name": "Atal Innovation Mission (AIM)",
+    "provider": "NITI Aayog",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "Innovation and entrepreneurship ecosystem via Atal Incubation Centres, Atal Tinkering Labs and challenge programmes",
+    "target_status": ["Student", "Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 14,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Access to incubation (₹10 crore seed per AIC), Tinkering Labs in schools, mentoring networks and challenge grants; no direct cash benefit to individuals",
+    "benefit_type": "Programme Access",
+    "official_url": "https://aim.gov.in",
+    "application_method": "Through AIM-empanelled Atal Incubation Centres (AICs) or Atal Tinkering Labs (ATLs) at your institution",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ This is an ecosystem/programme initiative — individual access is through participating institutions and incubators, not a direct scheme",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s12",
+    "name": "NIDHI Programme (National Initiative for Developing and Harnessing Innovations)",
+    "provider": "Dept. of Science & Technology (DST)",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "Technology startup and deep-tech innovation support through incubators and accelerators",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": "Science/Tech background preferred",
+    "benefit": "Incubation support, mentoring, seed funding and infrastructure through DST-funded incubators; NIDHI framework includes multiple components (PRAYAS, EIR, SSS)",
+    "benefit_type": "Programme Access",
+    "official_url": "https://nidhi.dst.gov.in",
+    "application_method": "Apply to DST-supported technology business incubators (TBIs) in your region via nidhi.dst.gov.in",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Institutional programme — apply through a NIDHI-supported TBI, not directly to DST",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s13",
+    "name": "NIDHI-PRAYAS (Promoting and Accelerating Young and Aspiring Innovators & Startups)",
+    "provider": "Dept. of Science & Technology (DST)",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "Prototype and early-stage innovation funding for technology entrepreneurs",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": "Science/Engineering/Technology background",
+    "benefit": "Up to ₹10 lakh per innovator for prototype development; supported through host incubator infrastructure",
+    "benefit_type": "Grant",
+    "official_url": "https://nidhi.dst.gov.in/schemes-programmes/",
+    "application_method": "Apply through NIDHI-PRAYAS host incubators listed on the DST NIDHI portal",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Application is through host incubators, not directly to DST; check nidhi.dst.gov.in for active PRAYAS centres",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s14",
+    "name": "NIDHI-Entrepreneur-in-Residence (EIR)",
+    "provider": "Dept. of Science & Technology (DST)",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "Entrepreneurship support for qualified professionals and PhD scholars to pursue tech startup ideas full-time",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": "PhD or 2+ years professional experience in science/engineering",
+    "benefit": "Monthly stipend of ₹30,000–₹60,000 for up to 2 years while pursuing a tech startup idea within a NIDHI incubator",
+    "benefit_type": "Stipend",
+    "official_url": "https://nidhi.dst.gov.in/schemes-programmes/",
+    "application_method": "Apply through NIDHI EIR host incubators; selection is competitive with periodic call for applications",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Requires PhD or significant professional experience; application through host TBI with periodic calls — check DST portal for open calls",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s15",
+    "name": "TIDE 2.0 (Technology Incubation and Development of Entrepreneurs)",
+    "provider": "Ministry of Electronics & Information Technology (MeitY)",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "ICT and deep-tech entrepreneurship support through technology business incubators",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": "Technical background in ICT/software/electronics",
+    "benefit": "Incubation, mentoring, infrastructure and seed funding (up to ₹7 lakh as grant) through 51 TIDE 2.0 Technology Business Incubators",
+    "benefit_type": "Grant/Incubation",
+    "official_url": "https://tide.meity.gov.in",
+    "application_method": "Apply to one of the 51 TIDE 2.0 Technology Business Incubators listed on tide.meity.gov.in",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Apply through an empanelled TIDE TBI; availability depends on each incubator's intake cycle",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s16",
+    "name": "ASPIRE (A Scheme for Promotion of Innovation, Rural Industry and Entrepreneurship)",
+    "provider": "Ministry of MSME",
+    "type": "Entrepreneurship",
+    "sdg8_connection": "Rural entrepreneurship and agri-based industry incubation through Livelihood Business Incubators (LBIs) and Technology Business Incubators (TBIs)",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Rural",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Incubation support, mentoring and seed funding through ASPIRE Livelihood Business Incubators (LBIs); focused on agri-tech and rural enterprises",
+    "benefit_type": "Incubation",
+    "official_url": "https://aspire.msme.gov.in",
+    "application_method": "Apply to ASPIRE LBIs or TBIs listed on aspire.msme.gov.in",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Programme-level scheme; apply through registered incubators — check aspire.msme.gov.in for active LBIs in your region",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s17",
+    "name": "Prime Minister's Employment Generation Programme (PMEGP)",
+    "provider": "Ministry of MSME via KVIC/KVIB/DIC",
+    "type": "Credit",
+    "sdg8_connection": "Credit-linked capital subsidy for setting up new micro-enterprises in manufacturing and service sectors",
+    "target_status": ["Entrepreneur", "Job-seeker"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": "Class 8 pass (for projects above ₹10L manufacturing / ₹5L service)",
+    "benefit": "15–35% margin money subsidy on project cost. Max project: ₹50L (manufacturing), ₹20L (service). Beneficiary contribution: 10% General / 5% Special categories (SC/ST/OBC/Women/Disabled/Ex-servicemen/NER/Hill areas/Border areas)",
+    "benefit_type": "Subsidy",
+    "official_url": "https://www.kviconline.gov.in/pmegpeportal",
+    "application_method": "Online application on kviconline.gov.in/pmegpeportal; existing units and those who already availed govt subsidy are NOT eligible",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "No income ceiling. Cannot have availed benefits under any other GoI/State Govt subsidy scheme previously",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s18",
+    "name": "Pradhan Mantri MUDRA Yojana (PMMY)",
+    "provider": "MUDRA / Department of Financial Services (DFS)",
+    "type": "Credit",
+    "sdg8_connection": "Collateral-free micro-enterprise credit for non-farm, non-corporate businesses (trading, manufacturing, services)",
+    "target_status": ["Entrepreneur", "Self-employed"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": 65,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Collateral-free loans in 4 tiers: Shishu (up to ₹50,000) | Kishore (₹50,001–₹5 lakh) | Tarun (₹5–₹10 lakh) | TarunPlus (₹10–₹20 lakh, for Tarun repayers only). No processing fee for Shishu. Women borrowers get preferential rates.",
+    "benefit_type": "Loan",
+    "official_url": "https://www.mudra.org.in",
+    "application_method": "Apply at any scheduled commercial bank, RRB, NBFC or MFI; or online via udyamimitra.in",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Business must be non-farm and non-corporate. TarunPlus category only for those who have successfully repaid a Tarun loan.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s19",
+    "name": "Stand-Up India Scheme",
+    "provider": "Department of Financial Services (DFS), Ministry of Finance",
+    "type": "Credit",
+    "sdg8_connection": "Greenfield enterprise financing for SC/ST and women entrepreneurs through bank loans",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["SC", "ST"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Composite bank loan of ₹10 lakh to ₹1 crore (75% of project cost). For SC/ST or women entrepreneurs. First-time venture (greenfield) only. 7-year repayment with 18-month moratorium. No collateral under CGSSI guarantee.",
+    "benefit_type": "Loan",
+    "official_url": "https://www.standupmitra.in",
+    "application_method": "Online via standupmitra.in or at any scheduled commercial bank branch",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "For SC/ST borrowers AND/OR women (either qualifies). Must be first-time venture. Borrower must not be in default with any bank.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s20",
+    "name": "PM SVANidhi (PM Street Vendor's AtmaNirbhar Nidhi)",
+    "provider": "Ministry of Housing & Urban Affairs (MoHUA) + DFS",
+    "type": "Credit",
+    "sdg8_connection": "Working capital loans for urban street vendors to restart and expand livelihoods",
+    "target_status": ["Street Vendor"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Urban",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Collateral-free working capital loans in 3 progressive tranches: ₹15,000 (1st) → ₹25,000 (2nd) → ₹50,000 (3rd). 7% interest subsidy on timely repayment. UPI-linked RuPay credit card (₹30,000 limit) after 2nd tranche. Extended to 31 March 2030.",
+    "benefit_type": "Loan",
+    "official_url": "https://pmsvanidhi.mohua.gov.in",
+    "application_method": "Online via pmsvanidhi.mohua.gov.in or nearest Common Service Centre or lending bank",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Must be an urban street vendor with a Certificate of Vending or Identity Card issued by ULB, OR identified in the ULB vendor survey",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s21",
+    "name": "PM Vishwakarma Scheme",
+    "provider": "Ministry of MSME",
+    "type": "Credit",
+    "sdg8_connection": "End-to-end support for traditional artisans and craftspeople in 18 specified trades",
+    "target_status": ["Artisan"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "PM Vishwakarma Certificate + ID card | ₹500/day stipend during skill training | ₹15,000 toolkit e-voucher | Collateral-free loan: ₹1 lakh (1st tranche) then ₹2 lakh (2nd tranche) at 5% interest | Digital transaction incentives",
+    "benefit_type": "Multiple",
+    "official_url": "https://pmvishwakarma.gov.in",
+    "application_method": "Online via pmvishwakarma.gov.in or at Common Service Centre (CSC); Aadhaar + mobile number required",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Covers 18 trades: Carpenter, Blacksmith, Goldsmith, Potter, Cobbler, Mason, Tailor, Barber, Washerman, and 9 more. Must not have availed PMEGP, PM SVANidhi or MUDRA in the past 5 years. Government employees not eligible.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s22",
+    "name": "PM Formalisation of Micro Food Processing Enterprises (PMFME)",
+    "provider": "Ministry of Food Processing Industries (MoFPI)",
+    "type": "Credit",
+    "sdg8_connection": "Support for existing micro food processing enterprises to formalise, upgrade and scale",
+    "target_status": ["Entrepreneur", "Self-employed"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "35% credit-linked capital subsidy on project cost up to ₹10 lakh (max subsidy ₹3.5 lakh) for existing micro food enterprises; also supports SHG and FPO-based enterprises with higher grants",
+    "benefit_type": "Subsidy",
+    "official_url": "https://pmfme.mofpi.gov.in",
+    "application_method": "Online via pmfme.mofpi.gov.in; apply through the nodal bank in your state",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Only for EXISTING micro food processing enterprises (not new startups). Must be registered under Udyam Assist or equivalent.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s23",
+    "name": "SFURTI (Scheme of Fund for Regeneration of Traditional Industries)",
+    "provider": "Ministry of MSME",
+    "type": "Industry",
+    "sdg8_connection": "Cluster development for traditional industry groups (khadi, coir, jute, handicrafts) to improve competitiveness and employment",
+    "target_status": ["Artisan", "Self-employed"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Cluster-level funding of ₹2.5–₹10 crore for soft interventions (training, capacity building) and hard interventions (common facility centres, tools, equipment) for artisan clusters",
+    "benefit_type": "Cluster Grant",
+    "official_url": "https://sfurti.msme.gov.in",
+    "application_method": "Cluster applications submitted by Implementing Agencies (NGOs, institutions, industry associations) — individual artisans benefit by joining a notified cluster",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Not a direct individual scheme — benefits flow through industry clusters. Check if your trade/region has an active SFURTI cluster.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s24",
+    "name": "National SC-ST Hub",
+    "provider": "Ministry of MSME",
+    "type": "Industry",
+    "sdg8_connection": "Entrepreneurship support, procurement facilitation and mentoring for SC/ST entrepreneurs in MSME ecosystem",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["SC", "ST"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Procurement facilitation (25% public procurement reservation for MSMEs includes SC/ST sub-target), mentoring, credit facilitation, vendor development and skill training for SC/ST entrepreneurs",
+    "benefit_type": "Programme Access",
+    "official_url": "https://scsthub.in",
+    "application_method": "Register on scsthub.in; workshops and programmes announced periodically",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Must be an SC/ST entrepreneur running an MSME. Provides facilitation support, not direct cash benefit.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s25",
+    "name": "Entrepreneurship and Skill Development Programme (ESDP)",
+    "provider": "Ministry of MSME / O/o DC-MSME",
+    "type": "Skilling",
+    "sdg8_connection": "Short-duration entrepreneurship development and skill training programmes for aspiring entrepreneurs",
+    "target_status": ["Job-seeker", "Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Low-cost/free short-term EDP and skill training programmes (1 week to 3 months) at MSME-DI centres and partner institutions across India",
+    "benefit_type": "Training",
+    "official_url": "https://msme.gov.in",
+    "application_method": "Contact nearest MSME Development & Facilitation Office (MSME-DFO / MSME-DI) or check msme.gov.in for upcoming programmes",
+    "deadline_type": "Programme-based",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Programmes are announced periodically with varying schedules — check the MSME portal or your nearest MSME-DI for upcoming batches",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s26",
+    "name": "Coir Udyami Yojana",
+    "provider": "Coir Board, Ministry of MSME",
+    "type": "Credit",
+    "sdg8_connection": "Credit-linked subsidy for setting up coir processing and manufacturing enterprises",
+    "target_status": ["Entrepreneur"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "40% government subsidy on projects up to ₹10 lakh (max subsidy ₹4 lakh) for setting up coir units; balance financed by bank loan (55%) and beneficiary contribution (5%)",
+    "benefit_type": "Subsidy",
+    "official_url": "https://coirboard.gov.in",
+    "application_method": "Apply via coirboard.gov.in or nearest Coir Board regional office",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Specific to coir industry enterprises. Coir Board verifies technical and commercial viability before sanctioning.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s27",
+    "name": "Start-up Village Entrepreneurship Programme (SVEP)",
+    "provider": "Ministry of Rural Development (MoRD) under DAY-NRLM",
+    "type": "Livelihood",
+    "sdg8_connection": "Rural micro-enterprise development through community cadres (Community Resource Persons for Enterprise Promotion — CRPs-EP)",
+    "target_status": ["Entrepreneur", "Self-employed"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Rural",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": null,
+    "education_req": null,
+    "benefit": "Start-up loan (₹50,000–₹1 lakh), enterprise promotion training, handholding support by CRPs-EP and business development services for rural micro-enterprises under NRLM SHG network",
+    "benefit_type": "Loan + Support",
+    "official_url": "https://aajeevika.gov.in",
+    "application_method": "Connect with your Block Mission Management Unit (BMMU) or Cluster Level Federation (CLF) under DAY-NRLM",
+    "deadline_type": "Rolling",
+    "verify_before_use": false,
+    "verification_note": "Implemented via DAY-NRLM SHG ecosystem in specific blocks — availability depends on whether your block is a SVEP block",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s28",
+    "name": "NSFDC Skill Development Programmes",
+    "provider": "National Scheduled Castes Finance & Development Corporation (NSFDC)",
+    "type": "Skilling",
+    "sdg8_connection": "Skill training and livelihood development for SC communities through SHG and individual beneficiary models",
+    "target_status": ["Job-seeker", "All"],
+    "target_categories": ["SC"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": 300000,
+    "education_req": null,
+    "benefit": "Free/subsidised skill training in market-linked trades; credit linkage for self-employment post-training; implemented through State Channelising Agencies (SCAs)",
+    "benefit_type": "Training",
+    "official_url": "https://www.nsfdc.nic.in",
+    "application_method": "Apply via your State Channelising Agency (SCA) — usually the state SC Development Corporation",
+    "deadline_type": "Rolling",
+    "verify_before_use": true,
+    "verification_note": "⚠️ Income limit typically ₹3 lakh/year (double the poverty line income); apply through your state's SC Development Corporation, not directly to NSFDC",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s29",
+    "name": "Craftsmen Training Scheme (CTS) – ITI Training",
+    "provider": "Directorate General of Training (DGT) / Ministry of Skill Development & Entrepreneurship",
+    "type": "Skilling",
+    "sdg8_connection": "Long-duration (1–2 year) vocational training in 130+ trades at Industrial Training Institutes for formal employment and self-employment",
+    "target_status": ["Student", "Job-seeker"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 14,
+    "age_max": 40,
+    "income_limit": null,
+    "education_req": "Class 8 pass minimum (Class 10 for certain trades)",
+    "benefit": "NSQF-aligned ITI certificate recognised by industry + government; training in engineering and non-engineering trades; SC/ST/Women fee concessions at government ITIs",
+    "benefit_type": "Training",
+    "official_url": "https://dgt.gov.in",
+    "application_method": "Annual admission via state ITI admission portal; check dgt.gov.in for centralised counselling calendar",
+    "deadline_type": "Annual",
+    "verify_before_use": false,
+    "verification_note": "Annual intake typically in July–August. SC/ST/OBC/Women get seat reservations and fee waivers at government ITIs as per state rules.",
+    "last_verified": "Sep 2026"
+  },
+  {
+    "id": "s30",
+    "name": "Pradhan Mantri Viksit Bharat Rozgar Yojana (PM-VBRY)",
+    "provider": "Ministry of Labour & Employment / EPFO",
+    "type": "Employment",
+    "sdg8_connection": "Employment-linked financial incentive for first-time formal sector employees and employers creating additional jobs",
+    "target_status": ["Job-seeker", "Employed"],
+    "target_categories": ["All"],
+    "gender_specific": null,
+    "location_type": "Both",
+    "age_min": 18,
+    "age_max": null,
+    "income_limit": 100000,
+    "education_req": null,
+    "benefit": "Part A (Employees): One-time incentive = 1 month's EPF wage, capped at ₹15,000, paid in instalments after 6 and 12 months of service. Part B (Employers): Up to ₹3,000/month per additional employee for 2 years (4 years in manufacturing). Total scheme outlay: ₹99,446 crore.",
+    "benefit_type": "Incentive",
+    "official_url": "https://pmvbry.labour.gov.in",
+    "application_method": "Registration via EPFO UAN; Aadhaar-authenticated via Face Authentication on UMANG app; employer registers on Shram Suvidha portal",
+    "deadline_type": "Annual",
+    "verify_before_use": false,
+    "verification_note": "Must be a FIRST-TIME EPFO member (not previously registered). Monthly wage must be ≤₹1 lakh. Registration window: 1 Aug 2025 – 31 Jul 2027. Launched 15 Aug 2025 (formerly ELI Scheme).",
+    "last_verified": "Sep 2026"
+  }
+];
+
 // Initialize application
 document.addEventListener("DOMContentLoaded", () => {
-  loadSchemesData();
+  restoreFormFromLocalStorage();
+  loadData();
 
-  // Attach event listener to "Find My Schemes" button
+  // Event listener for "Find My Schemes" button
   const findBtn = document.getElementById("find-btn");
   if (findBtn) {
-    findBtn.addEventListener("click", filterAndDisplaySchemes);
+    findBtn.addEventListener("click", () => {
+      saveFormToLocalStorage();
+      filterAndDisplaySchemes();
+    });
   }
 
-  // Also support form submission
+  // Event listener for "Try a Sample Profile" button
+  const sampleBtn = document.getElementById("sample-profile-btn");
+  if (sampleBtn) {
+    sampleBtn.addEventListener("click", applySampleProfile);
+  }
+
+  // Event listener for "Clear saved form" link
+  const clearBtn = document.getElementById("clear-saved-btn");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", clearSavedForm);
+  }
+
+  // Support form submission
   const form = document.getElementById("eligibility-form");
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      saveFormToLocalStorage();
       filterAndDisplaySchemes();
     });
   }
 });
 
-// Load schemes.json via fetch or fallback
-async function loadSchemesData() {
+// Save current form values to localStorage
+function saveFormToLocalStorage() {
+  try {
+    const formData = {
+      gender: document.getElementById("gender").value,
+      category: document.getElementById("category").value,
+      income: document.getElementById("income").value,
+      course: document.getElementById("course").value,
+      state: document.getElementById("state").value,
+      status: document.getElementById("current-status") ? document.getElementById("current-status").value : "All",
+      location: document.getElementById("location-type") ? document.getElementById("location-type").value : "Both",
+      disability: document.getElementById("disability").checked
+    };
+    localStorage.setItem("schematch_form", JSON.stringify(formData));
+
+    const clearBtn = document.getElementById("clear-saved-btn");
+    if (clearBtn) {
+      clearBtn.style.display = "inline-block";
+    }
+  } catch (e) {
+    console.warn("Could not save form to localStorage:", e);
+  }
+}
+
+// Restore saved form values from localStorage
+function restoreFormFromLocalStorage() {
+  try {
+    const saved = localStorage.getItem("schematch_form");
+    if (!saved) return false;
+
+    const data = JSON.parse(saved);
+    if (data.gender) document.getElementById("gender").value = data.gender;
+    if (data.category) document.getElementById("category").value = data.category;
+    if (data.income) document.getElementById("income").value = data.income;
+    if (data.course) document.getElementById("course").value = data.course;
+    if (data.state) document.getElementById("state").value = data.state;
+    if (data.status && document.getElementById("current-status")) {
+      document.getElementById("current-status").value = data.status;
+    }
+    if (data.location && document.getElementById("location-type")) {
+      document.getElementById("location-type").value = data.location;
+    }
+    if (data.disability !== undefined) {
+      document.getElementById("disability").checked = !!data.disability;
+    }
+
+    const clearBtn = document.getElementById("clear-saved-btn");
+    if (clearBtn) {
+      clearBtn.style.display = "inline-block";
+    }
+    return true;
+  } catch (e) {
+    console.warn("Could not restore form from localStorage:", e);
+    return false;
+  }
+}
+
+// Clear saved form from localStorage and reset form
+function clearSavedForm() {
+  try {
+    localStorage.removeItem("schematch_form");
+  } catch (e) {
+    console.warn("Could not clear localStorage:", e);
+  }
+
+  const form = document.getElementById("eligibility-form");
+  if (form) {
+    form.reset();
+  }
+
+  const clearBtn = document.getElementById("clear-saved-btn");
+  if (clearBtn) {
+    clearBtn.style.display = "none";
+  }
+
+  showDefaultState();
+}
+
+// Cycling Sample Profiles
+let sampleIndex = 0;
+
+const sampleProfiles = [
+  // Profile 1 — SC Female UG Student, Delhi, Low Income
+  {
+    gender: "Female",
+    category: "SC",
+    income: "Below 1L",
+    course: "UG",
+    state: "Delhi",
+    status: "Student",
+    location: "Both",
+    disability: false
+  },
+  // Profile 2 — OBC Male Class 11-12, Bihar, Low Income
+  {
+    gender: "Male",
+    category: "OBC",
+    income: "1–2.5L",
+    course: "Class 11-12",
+    state: "Bihar",
+    status: "Student",
+    location: "Rural",
+    disability: false
+  },
+  // Profile 3 — General Female PG, Maharashtra, Mid Income
+  {
+    gender: "Female",
+    category: "General",
+    income: "2.5–5L",
+    course: "PG",
+    state: "Maharashtra",
+    status: "Student",
+    location: "Urban",
+    disability: false
+  },
+  // Profile 4 — ST Male, Graduated/Working, Jharkhand, Rural
+  {
+    gender: "Male",
+    category: "ST",
+    income: "Below 1L",
+    course: "Graduated/Working",
+    state: "Jharkhand",
+    status: "Job-seeker",
+    location: "Rural",
+    disability: false
+  },
+  // Profile 5 — Minority Female UG, Uttar Pradesh, Low Income
+  {
+    gender: "Female",
+    category: "Minority",
+    income: "1–2.5L",
+    course: "UG",
+    state: "Uttar Pradesh",
+    status: "Student",
+    location: "Urban",
+    disability: false
+  },
+  // Profile 6 — General Male, Entrepreneur, Urban, Mid Income
+  {
+    gender: "Male",
+    category: "General",
+    income: "2.5–5L",
+    course: "Graduated/Working",
+    state: "Karnataka",
+    status: "Entrepreneur",
+    location: "Urban",
+    disability: false
+  },
+  // Profile 7 — SC Male with Disability, Class 9-10, MP
+  {
+    gender: "Male",
+    category: "SC",
+    income: "Below 1L",
+    course: "Class 9-10",
+    state: "Madhya Pradesh",
+    status: "Student",
+    location: "Both",
+    disability: true
+  },
+  // Profile 8 — EWS Female, Street Vendor, West Bengal
+  {
+    gender: "Female",
+    category: "EWS",
+    income: "Below 1L",
+    course: "Graduated/Working",
+    state: "West Bengal",
+    status: "Street Vendor",
+    location: "Urban",
+    disability: false
+  }
+];
+
+// Helper to safely set select option values
+function setSelectValue(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  let valToMatch = val;
+  if (valToMatch === "1-2.5L") valToMatch = "1–2.5L";
+  if (valToMatch === "2.5-5L") valToMatch = "2.5–5L";
+
+  const hasOpt = Array.from(el.options).some(opt => opt.value === valToMatch);
+  if (hasOpt) {
+    el.value = valToMatch;
+  } else if (id === "course" && valToMatch === "Graduated/Working") {
+    el.value = "UG";
+  }
+}
+
+// Apply Sample Profile sequentially from the 8 profiles
+function applySampleProfile() {
+  const profile = sampleProfiles[sampleIndex];
+
+  setSelectValue("gender", profile.gender);
+  setSelectValue("category", profile.category);
+  setSelectValue("income", profile.income);
+  setSelectValue("course", profile.course);
+  setSelectValue("state", profile.state);
+  setSelectValue("current-status", profile.status);
+  setSelectValue("location-type", profile.location);
+
+  const disEl = document.getElementById("disability");
+  if (disEl) {
+    disEl.checked = !!profile.disability;
+  }
+
+  // Trigger search directly without saving sample loads to localStorage
+  filterAndDisplaySchemes();
+
+  // Update button label dynamically
+  const sampleBtn = document.getElementById("sample-profile-btn");
+  if (sampleBtn) {
+    sampleBtn.textContent = `← Profile ${sampleIndex + 1} of 8 · Try Next →`;
+  }
+
+  // Advance index and wrap back to 0 after index 7
+  sampleIndex = (sampleIndex + 1) % sampleProfiles.length;
+}
+
+// Load schemes.json and skills.json via fetch with fallbacks
+async function loadData() {
   try {
     const response = await fetch("schemes.json");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (response.ok) {
+      const data = await response.json();
+      allSchemes = data.schemes || fallbackSchemes;
+    } else {
+      allSchemes = fallbackSchemes;
     }
-    const data = await response.json();
-    allSchemes = data.schemes || fallbackSchemes;
   } catch (error) {
-    console.warn("Could not fetch schemes.json directly (possibly file:// CORS), using loaded dataset fallback.", error);
+    console.warn("Using fallback schemes data:", error);
     allSchemes = fallbackSchemes;
   }
 
-  // Run initial match on page load
-  filterAndDisplaySchemes();
+  try {
+    const response = await fetch("skills.json");
+    if (response.ok) {
+      const data = await response.json();
+      allSkills = data.skills || fallbackSkills;
+    } else {
+      allSkills = fallbackSkills;
+    }
+  } catch (error) {
+    console.warn("Using fallback skills data:", error);
+    allSkills = fallbackSkills;
+  }
+
+  showDefaultState();
 }
 
-// Filtering logic implementation according to Part 3 requirements
+// Default Browse State (show all schemes, no filtering, reset badges)
+function showDefaultState() {
+  isFiltered = false;
+
+  filteredScholarships = [...allSchemes];
+  filteredScholarships.sort((a, b) => (b.amount_per_year || 0) - (a.amount_per_year || 0));
+
+  const typePriority = {
+    "Employment": 1,
+    "Credit": 2,
+    "Skilling": 3,
+    "Apprenticeship": 3.5,
+    "Livelihood": 4,
+    "Entrepreneurship": 5,
+    "Industry": 6
+  };
+
+  filteredSkills = [...allSkills];
+  filteredSkills.sort((a, b) => {
+    const aTypeOrder = typePriority[a.type] || 99;
+    const bTypeOrder = typePriority[b.type] || 99;
+    return aTypeOrder - bTypeOrder;
+  });
+
+  renderResultsView();
+}
+
+// Filter datasets for both tabs according to requirements
 function filterAndDisplaySchemes() {
+  isFiltered = true;
+
   const gender = document.getElementById("gender").value;
   const category = document.getElementById("category").value;
   const incomeSelected = document.getElementById("income").value;
@@ -570,33 +1547,32 @@ function filterAndDisplaySchemes() {
   const state = document.getElementById("state").value;
   const disabilityChecked = document.getElementById("disability").checked;
 
+  const currentStatusSelect = document.getElementById("current-status");
+  const locationTypeSelect = document.getElementById("location-type");
+  const userStatus = currentStatusSelect ? currentStatusSelect.value : "All";
+  const userLocation = locationTypeSelect ? locationTypeSelect.value : "Both";
+
   const userIncome = incomeMap[incomeSelected] !== undefined ? incomeMap[incomeSelected] : 100000;
 
-  // Filter schemes
-  const filtered = allSchemes.filter(scheme => {
-    // 1. Category check: eligible_categories includes category OR length === 6
+  // --- 1. FILTER SDG 4 SCHOLARSHIPS ---
+  filteredScholarships = allSchemes.filter(scheme => {
     const catMatch = scheme.eligible_categories.includes(category) || scheme.eligible_categories.length === 6;
     if (!catMatch) return false;
 
-    // 2. Max income check: max_income is null OR userIncome <= max_income
     const incomeMatch = scheme.max_income === null || userIncome <= scheme.max_income;
     if (!incomeMatch) return false;
 
-    // 3. Course check: eligible_courses includes user course
     const courseMatch = scheme.eligible_courses.includes(course);
     if (!courseMatch) return false;
 
-    // 4. Gender check: if gender_specific === "Female" -> user gender must be "Female"
     if (scheme.gender_specific === "Female" && gender !== "Female") {
       return false;
     }
 
-    // 5. Disability check: if disability_required === true -> user disability must be checked
     if (scheme.disability_required === true && !disabilityChecked) {
       return false;
     }
 
-    // 6. State check: if state_specific is not null -> user state must match scheme.state_specific
     if (scheme.state_specific !== null && state !== scheme.state_specific) {
       return false;
     }
@@ -604,75 +1580,207 @@ function filterAndDisplaySchemes() {
     return true;
   });
 
-  // Sort by amount_per_year descending
-  filtered.sort((a, b) => b.amount_per_year - a.amount_per_year);
+  // Sort scholarships by annual amount descending
+  filteredScholarships.sort((a, b) => b.amount_per_year - a.amount_per_year);
 
-  // Render results
-  renderResults(filtered);
+  // --- 2. FILTER SDG 8 SKILLS & EMPLOYMENT ---
+  const statusUnselected = userStatus === "All";
+
+  filteredSkills = allSkills.filter(scheme => {
+    // 1. Status check: scheme.target_status includes userStatus OR includes "All" (or userStatus === "All")
+    const statusMatch = (userStatus === "All") ||
+                        scheme.target_status.includes(userStatus) ||
+                        scheme.target_status.includes("All");
+    if (!statusMatch) return false;
+
+    // 2. Category check: scheme.target_categories includes userCategory OR includes "All"
+    const catMatch = scheme.target_categories.includes(category) ||
+                     scheme.target_categories.includes("All");
+    if (!catMatch) return false;
+
+    // 3. Gender check: if gender_specific === "Female" -> userGender must be "Female"
+    if (scheme.gender_specific === "Female" && gender !== "Female") {
+      return false;
+    }
+
+    // 4. Location check: scheme.location_type === "Both" OR userLocation === "Both" OR matches userLocation
+    const locMatch = (userLocation === "Both") ||
+                     (scheme.location_type === "Both") ||
+                     (scheme.location_type === userLocation);
+    if (!locMatch) return false;
+
+    // 5. Income limit check: scheme.income_limit is null OR userIncome <= scheme.income_limit
+    const incomeMatch = (scheme.income_limit === null) || (userIncome <= scheme.income_limit);
+    if (!incomeMatch) return false;
+
+    return true;
+  }).map(scheme => {
+    const hasSpecificStatus = !scheme.target_status.includes("All");
+    const isPotential = scheme.verify_before_use || (statusUnselected && hasSpecificStatus);
+    const matchType = isPotential ? "potential" : "eligible";
+    return { ...scheme, matchType };
+  });
+
+  // Sort skills:
+  // 1. Eligible schemes first (matchType === "eligible"), then Potentially Eligible (matchType === "potential")
+  // 2. Within each group, sort by type in order: Employment, Credit, Skilling, Livelihood, Entrepreneurship, Industry
+  const typePriority = {
+    "Employment": 1,
+    "Credit": 2,
+    "Skilling": 3,
+    "Apprenticeship": 3.5,
+    "Livelihood": 4,
+    "Entrepreneurship": 5,
+    "Industry": 6
+  };
+
+  filteredSkills.sort((a, b) => {
+    const aVerify = a.matchType === "potential" ? 1 : 0;
+    const bVerify = b.matchType === "potential" ? 1 : 0;
+    if (aVerify !== bVerify) {
+      return aVerify - bVerify;
+    }
+
+    const aTypeOrder = typePriority[a.type] || 99;
+    const bTypeOrder = typePriority[b.type] || 99;
+    return aTypeOrder - bTypeOrder;
+  });
+
+  // Render current active tab view
+  renderResultsView();
 }
 
-// Render Results Section
-function renderResults(schemes) {
+// Master Render function handling Tab bar and Active Tab content
+function renderResultsView() {
   const resultsContainer = document.getElementById("results");
   if (!resultsContainer) return;
 
   resultsContainer.innerHTML = "";
 
-  // 1. Header with count
+  // Render Tabs Navigation Header
+  const tabNav = document.createElement("nav");
+  tabNav.className = "results-tabs";
+  tabNav.setAttribute("aria-label", "Results Tabs");
+
+  // Tab 1: Scholarships
+  const tab1 = document.createElement("button");
+  tab1.type = "button";
+  tab1.className = `tab-btn ${activeTab === 'scholarships' ? 'active' : ''}`;
+  tab1.innerHTML = `
+    <span>📚 Scholarships</span>
+    <span class="tab-badge">${filteredScholarships.length}</span>
+  `;
+  tab1.addEventListener("click", () => {
+    if (activeTab !== 'scholarships') {
+      activeTab = 'scholarships';
+      renderResultsView();
+    }
+  });
+
+  // Tab 2: Skills & Employment
+  const tab2 = document.createElement("button");
+  tab2.type = "button";
+  tab2.className = `tab-btn ${activeTab === 'skills' ? 'active' : ''}`;
+  tab2.innerHTML = `
+    <span>💼 Skills & Employment</span>
+    <span class="tab-badge">${filteredSkills.length}</span>
+  `;
+  tab2.addEventListener("click", () => {
+    if (activeTab !== 'skills') {
+      activeTab = 'skills';
+      renderResultsView();
+    }
+  });
+
+  tabNav.appendChild(tab1);
+  tabNav.appendChild(tab2);
+  resultsContainer.appendChild(tabNav);
+
+  // Render Active Tab Content
+  if (activeTab === 'scholarships') {
+    renderScholarshipsTab(resultsContainer);
+  } else {
+    renderSkillsTab(resultsContainer);
+  }
+}
+
+// Render Scholarship Tab Content (SDG 4)
+function renderScholarshipsTab(container) {
+  // Results Header
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
   
+  const titleContainer = document.createElement("div");
+  titleContainer.style.display = "flex";
+  titleContainer.style.alignItems = "baseline";
+  titleContainer.style.gap = "0.75rem";
+  titleContainer.style.flexWrap = "wrap";
+
   const countTitle = document.createElement("h2");
   countTitle.className = "results-count-title";
-  countTitle.textContent = `${schemes.length} ${schemes.length === 1 ? 'scheme' : 'schemes'} matched`;
-  
+  countTitle.textContent = isFiltered
+    ? `${filteredScholarships.length} ${filteredScholarships.length === 1 ? 'scheme' : 'schemes'} matched`
+    : `${filteredScholarships.length} ${filteredScholarships.length === 1 ? 'scheme' : 'schemes'}`;
+
+  titleContainer.appendChild(countTitle);
+
+  if (isFiltered) {
+    const showAllBtn = document.createElement("button");
+    showAllBtn.type = "button";
+    showAllBtn.className = "clear-saved-btn";
+    showAllBtn.style.fontSize = "0.85rem";
+    showAllBtn.textContent = "Show All Schemes";
+    showAllBtn.addEventListener("click", showDefaultState);
+    titleContainer.appendChild(showAllBtn);
+  }
+
   const sortInfo = document.createElement("span");
   sortInfo.className = "results-sort-info";
   sortInfo.textContent = "Sorted by annual amount (high to low)";
 
-  resultsHeader.appendChild(countTitle);
+  resultsHeader.appendChild(titleContainer);
   resultsHeader.appendChild(sortInfo);
-  resultsContainer.appendChild(resultsHeader);
+  container.appendChild(resultsHeader);
 
-  // 2. Check for empty state
-  if (schemes.length === 0) {
+  // Empty state
+  if (filteredScholarships.length === 0) {
     const emptyState = document.createElement("div");
     emptyState.className = "empty-state";
     emptyState.innerHTML = `
-      <div class="empty-icon">📁</div>
-      <h3 class="empty-title">No schemes found</h3>
-      <p class="empty-subtitle">Try broadening your search criteria (e.g. adjust course level, income range, or state selection) to find eligible scholarships.</p>
+      <div class="empty-icon">🎓</div>
+      <h3 class="empty-title">No scholarship schemes matched</h3>
+      <p class="empty-subtitle">Try adjusting your category, income range, course level, or state to see more scholarship opportunities.</p>
     `;
-    resultsContainer.appendChild(emptyState);
+    container.appendChild(emptyState);
     return;
   }
 
-  // 3. Scheme cards container
+  // List of scholarship cards
   const schemesList = document.createElement("div");
   schemesList.className = "schemes-list";
 
-  schemes.forEach(scheme => {
+  filteredScholarships.forEach((scheme, index) => {
     const card = document.createElement("article");
     card.className = "scheme-card";
 
-    // Format annual amount label
-    let amountDisplay = scheme.amount_per_year > 0 
+    const amountDisplay = scheme.amount_per_year > 0 
       ? `₹${scheme.amount_per_year.toLocaleString('en-IN')}`
       : "Free Coaching";
 
-    // Badge "⚠️ Verify Details" on any scheme where deadline contains "Check"
     const isVerify = scheme.deadline && scheme.deadline.includes("Check");
 
-    // Special eligibility block
     const specialEligibilityHTML = scheme.special_eligibility 
       ? `<div class="special-eligibility-box">
            <strong>Special Eligibility:</strong> ${escapeHTML(scheme.special_eligibility)}
          </div>`
       : "";
 
-    // Verify badge HTML
     const verifyBadgeHTML = isVerify 
       ? `<span class="verify-badge">⚠️ Verify Details</span>`
+      : "";
+
+    const bestMatchBadgeHTML = (isFiltered && index === 0)
+      ? `<span class="best-match-badge">⭐ Best Match</span>` 
       : "";
 
     card.innerHTML = `
@@ -681,9 +1789,12 @@ function renderResults(schemes) {
           <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
-        <div class="amount-badge">
-          <span>${amountDisplay}</span>
-          <span class="amount-subtext">Est. Max / Year</span>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+          ${bestMatchBadgeHTML}
+          <div class="amount-badge">
+            <span>${amountDisplay}</span>
+            <span class="amount-subtext">Est. Max / Year</span>
+          </div>
         </div>
       </div>
 
@@ -714,7 +1825,126 @@ function renderResults(schemes) {
     schemesList.appendChild(card);
   });
 
-  resultsContainer.appendChild(schemesList);
+  container.appendChild(schemesList);
+}
+
+// Render Skills & Employment Tab Content (SDG 8)
+function renderSkillsTab(container) {
+  // Results Header
+  const resultsHeader = document.createElement("div");
+  resultsHeader.className = "results-header";
+  
+  const titleContainer = document.createElement("div");
+  titleContainer.style.display = "flex";
+  titleContainer.style.alignItems = "baseline";
+  titleContainer.style.gap = "0.75rem";
+  titleContainer.style.flexWrap = "wrap";
+
+  const countTitle = document.createElement("h2");
+  countTitle.className = "results-count-title";
+  countTitle.textContent = isFiltered
+    ? `${filteredSkills.length} ${filteredSkills.length === 1 ? 'scheme' : 'schemes'} matched`
+    : `${filteredSkills.length} ${filteredSkills.length === 1 ? 'scheme' : 'schemes'}`;
+
+  titleContainer.appendChild(countTitle);
+
+  if (isFiltered) {
+    const showAllBtn = document.createElement("button");
+    showAllBtn.type = "button";
+    showAllBtn.className = "clear-saved-btn";
+    showAllBtn.style.fontSize = "0.85rem";
+    showAllBtn.textContent = "Show All Schemes";
+    showAllBtn.addEventListener("click", showDefaultState);
+    titleContainer.appendChild(showAllBtn);
+  }
+
+  const sortInfo = document.createElement("span");
+  sortInfo.className = "results-sort-info";
+  sortInfo.textContent = isFiltered ? "Sorted by eligibility & scheme type" : "Sorted by scheme type";
+
+  resultsHeader.appendChild(titleContainer);
+  resultsHeader.appendChild(sortInfo);
+  container.appendChild(resultsHeader);
+
+  // Empty state
+  if (filteredSkills.length === 0) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "empty-state";
+    emptyState.innerHTML = `
+      <div class="empty-icon">💼</div>
+      <h3 class="empty-title">No skills & employment schemes matched</h3>
+      <p class="empty-subtitle">Try selecting "Select status" or "Urban or Rural" location type to explore all available skill & employment schemes.</p>
+    `;
+    container.appendChild(emptyState);
+    return;
+  }
+
+  // List of skill cards
+  const schemesList = document.createElement("div");
+  schemesList.className = "schemes-list";
+
+  filteredSkills.forEach((scheme, index) => {
+    const card = document.createElement("article");
+    card.className = "scheme-card";
+
+    // Match status badge: ONLY shown in filtered state
+    const matchBadgeHTML = isFiltered
+      ? (scheme.matchType === "potential"
+          ? `<span class="match-badge match-potential">🔍 Potentially Eligible</span>`
+          : `<span class="match-badge match-eligible">✅ Eligible</span>`)
+      : "";
+
+    // Best Match Badge: ONLY shown in filtered state on index === 0 if scheme.matchType === "eligible"
+    const bestMatchBadgeHTML = (isFiltered && index === 0 && scheme.matchType === "eligible")
+      ? `<span class="best-match-badge">⭐ Best Match</span>`
+      : "";
+
+    // Type badge class
+    const typeClass = `type-${(scheme.type || 'skilling').toLowerCase()}`;
+
+    // Verification callout: ONLY shown in filtered state if verify_before_use is true
+    const verificationCalloutHTML = (isFiltered && scheme.verify_before_use && scheme.verification_note)
+      ? `<div class="verification-callout">
+           ${escapeHTML(scheme.verification_note)}
+         </div>`
+      : "";
+
+    card.innerHTML = `
+      <div class="card-top-row">
+        <div>
+          <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
+          <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+          <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+          ${bestMatchBadgeHTML}
+          ${matchBadgeHTML}
+        </div>
+      </div>
+
+      <p class="scheme-description">${escapeHTML(scheme.sdg8_connection || '')}</p>
+
+      <div class="scheme-details-meta">
+        <p><strong>Benefit:</strong> ${escapeHTML(scheme.benefit)}</p>
+        ${scheme.application_method ? `<p style="font-size: 0.85rem; color: var(--text-medium); margin-top: 0.25rem;"><strong>How to Apply:</strong> ${escapeHTML(scheme.application_method)}</p>` : ''}
+      </div>
+
+      ${verificationCalloutHTML}
+
+      <div class="card-footer">
+        <div class="deadline-info">
+          <span>📅 Deadline: <strong>${escapeHTML(scheme.deadline_type)}</strong></span>
+        </div>
+        <a href="${escapeHTML(scheme.official_url)}" target="_blank" rel="noopener noreferrer" class="apply-btn">
+          <span>Apply / Learn More →</span>
+        </a>
+      </div>
+    `;
+
+    schemesList.appendChild(card);
+  });
+
+  container.appendChild(schemesList);
 }
 
 // Utility to escape HTML strings safely
@@ -727,3 +1957,4 @@ function escapeHTML(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
