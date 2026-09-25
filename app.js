@@ -9,9 +9,11 @@ const incomeMap = {
 
 let allSchemes = [];
 let allSkills = [];
+let povertySchemes = [];
 let filteredScholarships = [];
 let filteredSkills = [];
-let activeTab = 'scholarships'; // 'scholarships' or 'skills'
+let filteredPoverty = [];
+let activeTab = 'scholarships'; // 'scholarships', 'skills', or 'poverty'
 let isFiltered = false;
 
 // Fallback JSON data for SDG 4 Scholarships
@@ -951,7 +953,8 @@ const fallbackSkills = [
     "type": "Credit",
     "sdg8_connection": "Greenfield enterprise financing for SC/ST and women entrepreneurs through bank loans",
     "target_status": ["Entrepreneur"],
-    "target_categories": ["SC", "ST"],
+    "target_categories": ["All"],
+    "eligible_for_all_women": true,
     "gender_specific": null,
     "location_type": "Both",
     "age_min": 18,
@@ -1222,10 +1225,644 @@ const fallbackSkills = [
   }
 ];
 
+// Fallback JSON data for SDG 1 No Poverty Schemes
+const fallbackPoverty = [
+  {
+    "name": "MGNREGS / MGNREGA",
+    "provider": "Ministry of Rural Development",
+    "type": "Employment",
+    "description": "Guarantees 100 days of unskilled wage employment per financial year to any rural household willing to do manual work. Wage rates range from ~₹230–375/day depending on state.",
+    "amount_per_year": 36000,
+    "eligible_categories": ["All"],
+    "max_income": "1-2.5L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://nrega.nic.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "DAY-NRLM (Aajeevika)",
+    "provider": "Ministry of Rural Development",
+    "type": "Livelihood",
+    "description": "Organises rural women into Self-Help Groups and provides revolving fund (₹15,000 per SHG), skill training, and livelihood support with bank linkage.",
+    "amount_per_year": 15000,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Rural",
+    "gender_specific": "Female",
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://aajeevika.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "DAY-NULM",
+    "provider": "Ministry of Housing and Urban Affairs",
+    "type": "Livelihood",
+    "description": "Supports urban poor through skill training, SHG formation, credit linkage, and shelter for homeless. Specifically covers urban street vendors and job-seekers.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["Job-seeker", "Self-employed", "Street Vendor"],
+    "location_type": "Urban",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://nulm.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "National Social Assistance Programme (NSAP)",
+    "provider": "Ministry of Rural Development",
+    "type": "Social Protection",
+    "description": "Monthly pensions for BPL households: old age pension ₹200–500/month (IGNOAPS), widow pension ₹300–500/month (IGNWPS), disability pension ₹300/month (IGNDPS). States top up.",
+    "amount_per_year": 6000,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://nsap.nic.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM Awas Yojana – Gramin (PMAY-G)",
+    "provider": "Ministry of Rural Development",
+    "type": "Housing",
+    "description": "Financial assistance of ₹1.2 lakh (plains) or ₹1.3 lakh (hilly/NE areas) for construction of a pucca house. SC/ST, minorities, and women-headed households are prioritised.",
+    "amount_per_year": 120000,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmayg.nic.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM Awas Yojana – Urban 2.0 (PMAY-U 2.0)",
+    "provider": "Ministry of Housing and Urban Affairs",
+    "type": "Housing",
+    "description": "Housing assistance for urban EWS/LIG/MIG families. EWS (income up to ₹3L) and LIG (₹3–6L) get interest subsidy up to ₹2.5 lakh on home loans.",
+    "amount_per_year": 250000,
+    "eligible_categories": ["All"],
+    "max_income": "2.5-5L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Urban",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmaymis.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "Pradhan Mantri Jan Dhan Yojana (PMJDY)",
+    "provider": "Ministry of Finance",
+    "type": "Financial Inclusion",
+    "description": "Zero-balance bank account with RuPay debit card, ₹10,000 overdraft facility, and ₹2 lakh accidental insurance cover. Gateway to all government DBT benefits.",
+    "amount_per_year": 10000,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmjdy.gov.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+    "provider": "Ministry of Finance",
+    "type": "Insurance",
+    "description": "Life insurance cover of ₹2 lakh at a premium of just ₹436/year for bank account holders aged 18–50. Premium auto-debited annually from bank account.",
+    "amount_per_year": 200000,
+    "eligible_categories": ["All"],
+    "max_income": "2.5-5L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — enrol by 31 May each year",
+    "apply_link": "https://jansuraksha.gov.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+    "provider": "Ministry of Finance",
+    "type": "Insurance",
+    "description": "Accidental death and disability cover of ₹2 lakh at just ₹20/year for bank account holders aged 18–70.",
+    "amount_per_year": 200000,
+    "eligible_categories": ["All"],
+    "max_income": "2.5-5L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — renew by 31 May each year",
+    "apply_link": "https://jansuraksha.gov.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "Atal Pension Yojana (APY)",
+    "provider": "PFRDA",
+    "type": "Pension",
+    "description": "Guaranteed pension of ₹1,000–5,000/month after age 60 for unorganised sector workers. Monthly contribution of ₹42–210 depending on age of entry and chosen pension amount.",
+    "amount_per_year": 60000,
+    "eligible_categories": ["All"],
+    "max_income": "2.5-5L",
+    "eligible_courses": ["All"],
+    "target_status": ["Self-employed", "Job-seeker", "Artisan", "Street Vendor", "Farmer"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — enrol before age 40",
+    "apply_link": "https://www.npscra.nsdl.co.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "PM-KISAN",
+    "provider": "Ministry of Agriculture and Farmers Welfare",
+    "type": "Income Support",
+    "description": "Direct income support of ₹6,000/year in three installments of ₹2,000 each to all farmer families with cultivable land, regardless of land size.",
+    "amount_per_year": 6000,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["Farmer"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmkisan.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+    "provider": "Ministry of Agriculture and Farmers Welfare",
+    "type": "Insurance",
+    "description": "Crop insurance for farmers. Farmer pays just 1.5–5% of sum insured as premium; government pays the rest. Covers pre-sowing, standing crop, and post-harvest losses.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["Farmer"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Seasonal — varies by crop and state",
+    "apply_link": "https://pmfby.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM-Kisan Maandhan Yojana (PM-KMY)",
+    "provider": "Ministry of Agriculture and Farmers Welfare",
+    "type": "Pension",
+    "description": "Pension of ₹3,000/month after age 60 for small and marginal farmers. Monthly contribution of ₹55–200 depending on age of entry. Must enrol between ages 18–40.",
+    "amount_per_year": 36000,
+    "eligible_categories": ["All"],
+    "max_income": "1-2.5L",
+    "eligible_courses": ["All"],
+    "target_status": ["Farmer"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — enrol between age 18–40",
+    "apply_link": "https://maandhan.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM SVANidhi",
+    "provider": "Ministry of Housing and Urban Affairs",
+    "type": "Micro Credit",
+    "description": "Collateral-free working capital loans for street vendors: ₹10,000 (1st loan) → ₹20,000 (2nd) → ₹50,000 (3rd). 7% interest subsidy on timely repayment.",
+    "amount_per_year": 50000,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["Street Vendor"],
+    "location_type": "Urban",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmsvanidhi.mohua.gov.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "PM Vishwakarma",
+    "provider": "Ministry of MSME",
+    "type": "Livelihood",
+    "description": "Support for 18 traditional trades (carpenter, blacksmith, goldsmith, potter, tailor, etc.): free skill training + ₹500/day stipend, ₹15,000 toolkit grant, and collateral-free loans up to ₹3 lakh.",
+    "amount_per_year": 300000,
+    "eligible_categories": ["All"],
+    "max_income": "1-2.5L",
+    "eligible_courses": ["All"],
+    "target_status": ["Artisan"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmvishwakarma.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM Formalisation of Micro Food Processing (PMFME)",
+    "provider": "Ministry of Food Processing Industries",
+    "type": "Entrepreneurship",
+    "description": "35% capital subsidy (max ₹10 lakh) for existing micro food processing units, SHGs, and FPOs. Covers equipment upgrades, FSSAI certification, and market access support.",
+    "amount_per_year": 1000000,
+    "eligible_categories": ["All"],
+    "max_income": "2.5-5L",
+    "eligible_courses": ["All"],
+    "target_status": ["Entrepreneur", "Self-employed"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://www.mofpi.gov.in/pmfme",
+    "verify_before_use": true
+  },
+  {
+    "name": "Prime Minister's Employment Generation Programme (PMEGP)",
+    "provider": "Ministry of MSME / KVIC",
+    "type": "Entrepreneurship",
+    "description": "Subsidy of 15–35% on project cost to set up micro enterprises. SC/ST/women/rural/PH applicants get 25–35% subsidy. Manufacturing projects up to ₹50L; service projects up to ₹20L.",
+    "amount_per_year": 1750000,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["Entrepreneur", "Job-seeker"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://www.kviconline.gov.in/pmegpeportal",
+    "verify_before_use": true
+  },
+  {
+    "name": "Pradhan Mantri MUDRA Yojana (PMMY)",
+    "provider": "Ministry of Finance / MUDRA",
+    "type": "Micro Credit",
+    "description": "Collateral-free business loans for non-farm micro enterprises: Shishu (up to ₹50K), Kishore (₹50K–5L), Tarun (₹5L–10L), Tarun Plus (₹10L–20L).",
+    "amount_per_year": 2000000,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["Entrepreneur", "Self-employed", "Artisan", "Street Vendor"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://www.mudra.org.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "Stand-Up India",
+    "provider": "Ministry of Finance / SIDBI",
+    "type": "Entrepreneurship",
+    "description": "Bank loans of ₹10 lakh to ₹1 crore for SC/ST and women entrepreneurs to set up greenfield enterprises. Also listed under SDG 8 (Skills and Employment tab).",
+    "amount_per_year": 10000000,
+    "eligible_categories": ["SC", "ST"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["Entrepreneur"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": true,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://www.standupmitra.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+    "provider": "Ministry of Petroleum and Natural Gas",
+    "type": "Welfare",
+    "description": "Free LPG connection including cylinder and stove for BPL households. Targeted at women from SC/ST, PMAY-G beneficiaries, AAY and BPL families.",
+    "amount_per_year": 1600,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": "Female",
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://www.pmuy.gov.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "National Food Security Act (NFSA) / Free Grain",
+    "provider": "Ministry of Consumer Affairs, Food and Public Distribution",
+    "type": "Food Security",
+    "description": "5 kg of free food grains (rice, wheat, or coarse cereals) per person per month through PDS ration card under PM Garib Kalyan Anna Yojana (PMGKAY).",
+    "amount_per_year": 6000,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://dfpd.gov.in/nfsa.htm",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM POSHAN (Mid-Day Meal Scheme)",
+    "provider": "Ministry of Education",
+    "type": "Nutrition",
+    "description": "Free hot nutritious meal every school day for children in government schools from Class 1 to Class 8. Note: scheme covers up to Class 8 only — verify current scope.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["Class 9-10"],
+    "target_status": ["Student"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmposhan.education.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+    "provider": "Ministry of Women and Child Development",
+    "type": "Maternity Benefit",
+    "description": "Cash incentive of ₹5,000 in three installments for the first live birth. Requires registration at healthcare provider and minimum two antenatal check-ups. Applicant must be aged 19+.",
+    "amount_per_year": 5000,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": "Female",
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmmvy.wcd.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "Ayushman Bharat – PM-JAY",
+    "provider": "National Health Authority",
+    "type": "Health Insurance",
+    "description": "Cashless health insurance cover of ₹5 lakh per family per year for secondary and tertiary hospitalisation at empanelled hospitals. Covers bottom 40% of population by SECC data.",
+    "amount_per_year": 500000,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Both",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://pmjay.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM-JANMAN",
+    "provider": "Ministry of Tribal Affairs",
+    "type": "Tribal Development",
+    "description": "Comprehensive development package for 75 Particularly Vulnerable Tribal Group (PVTG) communities: housing, clean water, education, health, and livelihood support.",
+    "amount_per_year": 0,
+    "eligible_categories": ["ST"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://tribal.nic.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "PM Adarsh Gram Yojana (PM-AJAY)",
+    "provider": "Ministry of Social Justice and Empowerment",
+    "type": "Village Development",
+    "description": "Integrated development of villages where SC population exceeds 50%: roads, schools, health centres, and convergence of social welfare schemes for SC communities.",
+    "amount_per_year": 0,
+    "eligible_categories": ["SC"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing",
+    "apply_link": "https://socialjustice.gov.in",
+    "verify_before_use": true
+  },
+  {
+    "name": "Rural Self Employment Training Institutes (RSETI)",
+    "provider": "Ministry of Rural Development / Banks",
+    "type": "Skill Training",
+    "description": "Free short-term residential skill training (3–26 weeks) for rural youth with bank credit linkage for self-employment. Run by banks at district level across India.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": "1-2.5L",
+    "eligible_courses": ["All"],
+    "target_status": ["Job-seeker", "Student"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Batches ongoing throughout the year",
+    "apply_link": "https://rseti.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "DDU-GKY",
+    "provider": "Ministry of Rural Development",
+    "type": "Skill Training",
+    "description": "Free residential skill training for rural poor youth aged 15–35 with guaranteed placement assistance. Prioritises SC/ST, minorities, women, and BPL households.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": "Below 1L",
+    "eligible_courses": ["Class 9-10", "Class 11-12", "UG", "Graduated/Working"],
+    "target_status": ["Job-seeker", "Student"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — batch admissions",
+    "apply_link": "https://ddugky.gov.in",
+    "verify_before_use": false
+  },
+  {
+    "name": "Watershed Development (WDC-PMKSY)",
+    "provider": "Department of Land Resources, MoRD",
+    "type": "Agricultural Support",
+    "description": "Improves water retention, soil health, and land productivity in rainfed/drought-prone areas through water harvesting, afforestation, and livelihood activities for farmer communities.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": "1-2.5L",
+    "eligible_courses": ["All"],
+    "target_status": ["Farmer", "Self-employed"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — district/area specific",
+    "apply_link": "https://dolr.gov.in/pmksy",
+    "verify_before_use": true
+  },
+  {
+    "name": "Pradhan Mantri Gram Sadak Yojana (PMGSY)",
+    "provider": "Ministry of Rural Development",
+    "type": "Infrastructure",
+    "description": "All-weather road connectivity to unconnected rural habitations (≥500 population in plains, ≥250 in hilly/tribal areas). Benefits entire rural communities through improved market and service access.",
+    "amount_per_year": 0,
+    "eligible_categories": ["All"],
+    "max_income": null,
+    "eligible_courses": ["All"],
+    "target_status": ["All"],
+    "location_type": "Rural",
+    "gender_specific": null,
+    "eligible_for_all_women": false,
+    "disability_required": false,
+    "state_specific": null,
+    "deadline": "Ongoing — apply through Gram Panchayat",
+    "apply_link": "https://pmgsy.nic.in",
+    "verify_before_use": true
+  }
+];
+
 // Initialize application
 document.addEventListener("DOMContentLoaded", () => {
   restoreFormFromLocalStorage();
   loadData();
+
+  // SDG 8 conditional sub-sections listener
+  const situationSel = document.getElementById("sdg8-situation");
+  const subMap = {
+    'Student':       'sub-student',
+    'Unemployed':    'sub-unemployed',
+    'Employed':      'sub-employed',
+    'Self-employed': 'sub-entrepreneur',
+    'Entrepreneur':  'sub-entrepreneur',
+    'Farmer':        'sub-farmer',
+    'Artisan':       'sub-artisan',
+    'Street Vendor': 'sub-vendor'
+  };
+
+  function updateSubSections(val) {
+    document.querySelectorAll('.sdg8-sub').forEach(el => {
+      el.style.display = 'none';
+    });
+    const targetId = subMap[val];
+    if (targetId) {
+      const target = document.getElementById(targetId);
+      if (target) target.style.display = 'block';
+    }
+  }
+
+  if (situationSel) {
+    situationSel.addEventListener("change", function () {
+      updateSubSections(this.value);
+    });
+  }
+
+  // Event listener for SDG 4 Form Submit
+  const submitSDG4 = document.getElementById("submit-sdg4");
+  if (submitSDG4) {
+    submitSDG4.addEventListener("click", () => {
+      syncSDG4ToFilter();
+      saveFormToLocalStorage();
+      filterAndDisplaySchemes();
+    });
+  }
+
+  // Event listener for SDG 8 Form Submit
+  const submitSDG8 = document.getElementById("submit-sdg8");
+  if (submitSDG8) {
+    submitSDG8.addEventListener("click", () => {
+      syncSDG8ToFilter();
+      saveFormToLocalStorage();
+      filterAndDisplaySchemes();
+    });
+  }
+
+  // Event listener for SDG 1 Form Submit
+  const submitSDG1 = document.getElementById("submit-sdg1");
+  if (submitSDG1) {
+    submitSDG1.addEventListener("click", () => {
+      syncSDG1ToFilter();
+      saveFormToLocalStorage();
+      filterAndDisplaySchemes();
+    });
+  }
 
   // Event listener for "Find My Schemes" button
   const findBtn = document.getElementById("find-btn");
@@ -1258,6 +1895,84 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// Sync helpers to populate filter fields from SDG specific forms
+function syncSDG4ToFilter() {
+  const gender = document.getElementById("sdg4-gender");
+  const cat = document.getElementById("sdg4-category");
+  const income = document.getElementById("sdg4-income");
+  const eduStatus = document.getElementById("sdg4-edu-status");
+  const state = document.getElementById("sdg4-state");
+  const dis = document.querySelector('input[name="sdg4-disability"]:checked');
+
+  if (gender && document.getElementById("gender")) document.getElementById("gender").value = gender.value;
+  if (cat && document.getElementById("category")) document.getElementById("category").value = cat.value;
+  if (income && document.getElementById("income")) document.getElementById("income").value = income.value;
+  if (state && document.getElementById("state")) document.getElementById("state").value = state.value;
+  if (document.getElementById("current-status")) document.getElementById("current-status").value = "Student";
+  if (document.getElementById("location-type")) document.getElementById("location-type").value = "Both";
+  if (dis && document.getElementById("disability")) {
+    document.getElementById("disability").checked = (dis.value === "Yes");
+  }
+  if (eduStatus && document.getElementById("course")) {
+    const v = eduStatus.value;
+    if (v === "School") document.getElementById("course").value = "Class 11-12";
+    else if (v === "PG") document.getElementById("course").value = "PG";
+    else document.getElementById("course").value = "UG";
+  }
+}
+
+function syncSDG8ToFilter() {
+  const gender = document.getElementById("sdg8-gender");
+  const cat = document.getElementById("sdg8-category");
+  const income = document.getElementById("sdg8-income");
+  const state = document.getElementById("sdg8-state");
+  const situation = document.getElementById("sdg8-situation");
+  const dis = document.querySelector('input[name="sdg8-disability"]:checked');
+
+  if (gender && document.getElementById("gender")) document.getElementById("gender").value = gender.value;
+  if (cat && document.getElementById("category")) document.getElementById("category").value = cat.value;
+  if (income && document.getElementById("income")) document.getElementById("income").value = income.value;
+  if (state && document.getElementById("state")) document.getElementById("state").value = state.value;
+  if (dis && document.getElementById("disability")) {
+    document.getElementById("disability").checked = (dis.value === "Yes");
+  }
+  if (situation && document.getElementById("current-status")) {
+    const sitVal = situation.value;
+    if (sitVal === "Unemployed") document.getElementById("current-status").value = "Job-seeker";
+    else if (sitVal) document.getElementById("current-status").value = sitVal;
+    else document.getElementById("current-status").value = "All";
+  }
+}
+
+function syncSDG1ToFilter() {
+  const gender = document.getElementById("sdg1-gender");
+  const cat = document.getElementById("sdg1-category");
+  const income = document.getElementById("sdg1-income");
+  const state = document.getElementById("sdg1-state");
+  const loc = document.querySelector('input[name="sdg1-location"]:checked');
+  const dis = document.querySelector('input[name="sdg1-disability"]:checked');
+  const source = document.getElementById("sdg1-income-source");
+
+  if (gender && document.getElementById("gender")) document.getElementById("gender").value = gender.value;
+  if (cat && document.getElementById("category")) document.getElementById("category").value = cat.value;
+  if (income && document.getElementById("income")) document.getElementById("income").value = income.value;
+  if (state && document.getElementById("state")) document.getElementById("state").value = state.value;
+  if (loc && document.getElementById("location-type")) document.getElementById("location-type").value = loc.value;
+  if (dis && document.getElementById("disability")) {
+    document.getElementById("disability").checked = (dis.value === "Yes");
+  }
+  if (source && document.getElementById("current-status")) {
+    const s = source.value;
+    if (s === "Agriculture") document.getElementById("current-status").value = "Farmer";
+    else if (s === "Street vending") document.getElementById("current-status").value = "Street Vendor";
+    else if (s === "Artisan") document.getElementById("current-status").value = "Artisan";
+    else if (s === "Wage labour") document.getElementById("current-status").value = "Job-seeker";
+    else if (s === "Self-employment") document.getElementById("current-status").value = "Self-employed";
+    else if (s === "Salaried employment") document.getElementById("current-status").value = "Employed";
+    else document.getElementById("current-status").value = "All";
+  }
+}
 
 // Save current form values to localStorage
 function saveFormToLocalStorage() {
@@ -1381,7 +2096,7 @@ const sampleProfiles = [
     income: "Below 1L",
     course: "Graduated/Working",
     state: "Jharkhand",
-    status: "Job-seeker",
+    status: "Farmer",
     location: "Rural",
     disability: false
   },
@@ -1478,7 +2193,7 @@ function applySampleProfile() {
   sampleIndex = (sampleIndex + 1) % sampleProfiles.length;
 }
 
-// Load schemes.json and skills.json via fetch with fallbacks
+// Load schemes.json, skills.json, and poverty.json via fetch with fallbacks
 async function loadData() {
   try {
     const response = await fetch("schemes.json");
@@ -1504,6 +2219,19 @@ async function loadData() {
   } catch (error) {
     console.warn("Using fallback skills data:", error);
     allSkills = fallbackSkills;
+  }
+
+  try {
+    const response = await fetch("poverty.json");
+    if (response.ok) {
+      const data = await response.json();
+      povertySchemes = Array.isArray(data) ? data : (data.schemes || data.poverty || fallbackPoverty);
+    } else {
+      povertySchemes = fallbackPoverty;
+    }
+  } catch (error) {
+    console.warn("Using fallback poverty data:", error);
+    povertySchemes = fallbackPoverty;
   }
 
   showDefaultState();
@@ -1533,10 +2261,21 @@ function showDefaultState() {
     return aTypeOrder - bTypeOrder;
   });
 
+  filteredPoverty = [...povertySchemes];
+  filteredPoverty.sort((a, b) => (b.amount_per_year || 0) - (a.amount_per_year || 0));
+
   renderResultsView();
 }
 
-// Filter datasets for both tabs according to requirements
+// Helper function to get income bracket index
+function getIncomeIndex(val) {
+  if (!val) return -1;
+  const normalized = String(val).replace("–", "-");
+  const brackets = ["Below 1L", "1-2.5L", "2.5-5L", "Above 5L"];
+  return brackets.indexOf(normalized);
+}
+
+// Filter datasets for all tabs according to requirements
 function filterAndDisplaySchemes() {
   isFiltered = true;
 
@@ -1553,6 +2292,17 @@ function filterAndDisplaySchemes() {
   const userLocation = locationTypeSelect ? locationTypeSelect.value : "Both";
 
   const userIncome = incomeMap[incomeSelected] !== undefined ? incomeMap[incomeSelected] : 100000;
+  const statusUnselected = userStatus === "All";
+
+  // Helper: detect if a scheme has a specific status requirement (not "All", not null/undefined)
+  function schemeHasSpecificStatus(scheme) {
+    const ts = scheme.target_status;
+    if (ts === null || ts === undefined) return false;
+    if (Array.isArray(ts)) {
+      return ts.length > 0 && !ts.includes("All");
+    }
+    return ts !== "All";
+  }
 
   // --- 1. FILTER SDG 4 SCHOLARSHIPS ---
   filteredScholarships = allSchemes.filter(scheme => {
@@ -1577,6 +2327,11 @@ function filterAndDisplaySchemes() {
       return false;
     }
 
+    // If status is unselected and scheme requires a specific status, do not show as eligible
+    if (statusUnselected && schemeHasSpecificStatus(scheme)) {
+      return false;
+    }
+
     return true;
   });
 
@@ -1584,46 +2339,47 @@ function filterAndDisplaySchemes() {
   filteredScholarships.sort((a, b) => b.amount_per_year - a.amount_per_year);
 
   // --- 2. FILTER SDG 8 SKILLS & EMPLOYMENT ---
-  const statusUnselected = userStatus === "All";
-
   filteredSkills = allSkills.filter(scheme => {
-    // 1. Status check: scheme.target_status includes userStatus OR includes "All" (or userStatus === "All")
+    // 1. Status check
     const statusMatch = (userStatus === "All") ||
                         scheme.target_status.includes(userStatus) ||
                         scheme.target_status.includes("All");
     if (!statusMatch) return false;
 
-    // 2. Category check: scheme.target_categories includes userCategory OR includes "All"
-    const catMatch = scheme.target_categories.includes(category) ||
+    // 2. Category check
+    const isFemale = (gender === "Female");
+    const catMatch = (scheme.eligible_for_all_women === true && isFemale) ||
+                     scheme.target_categories.includes(category) ||
                      scheme.target_categories.includes("All");
     if (!catMatch) return false;
 
-    // 3. Gender check: if gender_specific === "Female" -> userGender must be "Female"
+    // 3. Gender check
     if (scheme.gender_specific === "Female" && gender !== "Female") {
       return false;
     }
 
-    // 4. Location check: scheme.location_type === "Both" OR userLocation === "Both" OR matches userLocation
+    // 4. Location check
     const locMatch = (userLocation === "Both") ||
                      (scheme.location_type === "Both") ||
                      (scheme.location_type === userLocation);
     if (!locMatch) return false;
 
-    // 5. Income limit check: scheme.income_limit is null OR userIncome <= scheme.income_limit
+    // 5. Income limit check
     const incomeMatch = (scheme.income_limit === null) || (userIncome <= scheme.income_limit);
     if (!incomeMatch) return false;
 
     return true;
   }).map(scheme => {
-    const hasSpecificStatus = !scheme.target_status.includes("All");
-    const isPotential = scheme.verify_before_use || (statusUnselected && hasSpecificStatus);
+    const hasSpecificStatus = schemeHasSpecificStatus(scheme);
+    const statusGated = statusUnselected && hasSpecificStatus;
+    const isPotential = scheme.verify_before_use || statusGated;
     const matchType = isPotential ? "potential" : "eligible";
-    return { ...scheme, matchType };
+    const statusReason = statusGated
+      ? "Select your current status above to confirm eligibility"
+      : null;
+    return { ...scheme, matchType, statusReason };
   });
 
-  // Sort skills:
-  // 1. Eligible schemes first (matchType === "eligible"), then Potentially Eligible (matchType === "potential")
-  // 2. Within each group, sort by type in order: Employment, Credit, Skilling, Livelihood, Entrepreneurship, Industry
   const typePriority = {
     "Employment": 1,
     "Credit": 2,
@@ -1646,28 +2402,126 @@ function filterAndDisplaySchemes() {
     return aTypeOrder - bTypeOrder;
   });
 
+  // --- 3. FILTER SDG 1 NO POVERTY SCHEMES ---
+  const userIncomeIdx = getIncomeIndex(incomeSelected);
+
+  filteredPoverty = povertySchemes.filter(scheme => {
+    // CHECK 1 — Category
+    const isFemale = (gender === "Female");
+    const catMatch = (scheme.eligible_categories && scheme.eligible_categories.includes("All")) ||
+                     (scheme.eligible_categories && scheme.eligible_categories.includes(category)) ||
+                     (scheme.eligible_for_all_women === true && isFemale);
+    if (!catMatch) return false;
+
+    // CHECK 2 — Income
+    if (scheme.max_income !== null && scheme.max_income !== undefined) {
+      const schemeIncomeIdx = getIncomeIndex(scheme.max_income);
+      if (schemeIncomeIdx !== -1 && userIncomeIdx !== -1) {
+        if (userIncomeIdx > schemeIncomeIdx) {
+          return false;
+        }
+      }
+    }
+
+    // CHECK 3 — Location
+    const locMatch = (userLocation === "Both") ||
+                     (scheme.location_type === "Both") ||
+                     (scheme.location_type === userLocation);
+    if (!locMatch) return false;
+
+    // CHECK 4 — Status (Hard check if status is selected and scheme has specific status)
+    const hasSpecificStatus = schemeHasSpecificStatus(scheme);
+    if (!statusUnselected && hasSpecificStatus) {
+      if (Array.isArray(scheme.target_status)) {
+        if (!scheme.target_status.includes(userStatus)) return false;
+      } else if (scheme.target_status !== userStatus) {
+        return false;
+      }
+    }
+
+    // CHECK 6 — Disability
+    if (scheme.disability_required === true && !disabilityChecked) {
+      return false;
+    }
+
+    // CHECK 7 — State
+    if (scheme.state_specific !== null && scheme.state_specific !== undefined && scheme.state_specific !== state) {
+      return false;
+    }
+
+    return true;
+  }).map(scheme => {
+    const hasSpecificStatus = schemeHasSpecificStatus(scheme);
+    const statusGated = statusUnselected && hasSpecificStatus;
+    const genderMismatched = (scheme.gender_specific !== null && scheme.gender_specific !== undefined && gender !== scheme.gender_specific);
+    const isPotential = scheme.verify_before_use || statusGated || genderMismatched;
+    const matchType = isPotential ? "potential" : "eligible";
+
+    const reasons = [];
+    if (statusGated) {
+      reasons.push("Select your current status above to confirm eligibility");
+    }
+    if (genderMismatched) {
+      reasons.push(`This scheme is specifically for ${scheme.gender_specific} applicants`);
+    }
+
+    return {
+      ...scheme,
+      matchType,
+      reasons
+    };
+  });
+
+  filteredPoverty.sort((a, b) => {
+    const aVerify = a.matchType === "potential" ? 1 : 0;
+    const bVerify = b.matchType === "potential" ? 1 : 0;
+    if (aVerify !== bVerify) {
+      return aVerify - bVerify;
+    }
+    return (b.amount_per_year || 0) - (a.amount_per_year || 0);
+  });
+
   // Render current active tab view
   renderResultsView();
+}
+
+// Synchronize left eligibility form with active tab
+function updateActiveSDGForm() {
+  const form4 = document.getElementById("form-sdg4");
+  const form8 = document.getElementById("form-sdg8");
+  const form1 = document.getElementById("form-sdg1");
+
+  if (form4) form4.style.display = activeTab === 'scholarships' ? 'block' : 'none';
+  if (form8) form8.style.display = activeTab === 'skills' ? 'block' : 'none';
+  if (form1) form1.style.display = activeTab === 'poverty' ? 'block' : 'none';
 }
 
 // Master Render function handling Tab bar and Active Tab content
 function renderResultsView() {
   const resultsContainer = document.getElementById("results");
+  const povertyPanel = document.getElementById("panel-poverty");
+  const povertyResults = document.getElementById("poverty-results");
+  const povertyDisclaimer = document.getElementById("poverty-disclaimer");
+
+  // Keep the left eligibility form in sync with activeTab
+  updateActiveSDGForm();
+
   if (!resultsContainer) return;
 
   resultsContainer.innerHTML = "";
 
-  // Render Tabs Navigation Header
+  // Render Tabs Navigation Header (Single source of truth for SDG selection)
   const tabNav = document.createElement("nav");
   tabNav.className = "results-tabs";
   tabNav.setAttribute("aria-label", "Results Tabs");
 
-  // Tab 1: Scholarships
+  // Tab 1: Scholarships (SDG 4)
   const tab1 = document.createElement("button");
   tab1.type = "button";
+  tab1.id = "tab-scholarships";
   tab1.className = `tab-btn ${activeTab === 'scholarships' ? 'active' : ''}`;
   tab1.innerHTML = `
-    <span>📚 Scholarships</span>
+    <span>🎓 Scholarships</span>
     <span class="tab-badge">${filteredScholarships.length}</span>
   `;
   tab1.addEventListener("click", () => {
@@ -1677,9 +2531,10 @@ function renderResultsView() {
     }
   });
 
-  // Tab 2: Skills & Employment
+  // Tab 2: Skills & Employment (SDG 8)
   const tab2 = document.createElement("button");
   tab2.type = "button";
+  tab2.id = "tab-skills";
   tab2.className = `tab-btn ${activeTab === 'skills' ? 'active' : ''}`;
   tab2.innerHTML = `
     <span>💼 Skills & Employment</span>
@@ -1692,15 +2547,49 @@ function renderResultsView() {
     }
   });
 
+  // Tab 3: No Poverty (SDG 1)
+  const tab3 = document.createElement("button");
+  tab3.type = "button";
+  tab3.id = "tab-poverty";
+  tab3.className = `tab-btn ${activeTab === 'poverty' ? 'active' : ''}`;
+  tab3.innerHTML = `
+    <span>🌱 No Poverty</span>
+    <span class="tab-badge">${filteredPoverty.length}</span>
+  `;
+  tab3.addEventListener("click", () => {
+    if (activeTab !== 'poverty') {
+      activeTab = 'poverty';
+      renderResultsView();
+    }
+  });
+
   tabNav.appendChild(tab1);
   tabNav.appendChild(tab2);
+  tabNav.appendChild(tab3);
   resultsContainer.appendChild(tabNav);
 
-  // Render Active Tab Content
+  // Render poverty cards into #poverty-results regardless of active tab so DOM container is always updated
+  if (povertyResults) {
+    renderPovertyCardsList(povertyResults);
+  }
+
+  // Handle Tab Panels Visibility and Active Content
   if (activeTab === 'scholarships') {
+    if (povertyPanel) povertyPanel.style.display = 'none';
     renderScholarshipsTab(resultsContainer);
-  } else {
+  } else if (activeTab === 'skills') {
+    if (povertyPanel) povertyPanel.style.display = 'none';
     renderSkillsTab(resultsContainer);
+  } else if (activeTab === 'poverty') {
+    if (povertyPanel) {
+      povertyPanel.style.display = 'flex';
+      povertyPanel.style.flexDirection = 'column';
+      povertyPanel.style.gap = '1.25rem';
+    }
+    if (povertyDisclaimer) {
+      povertyDisclaimer.style.display = 'block';
+    }
+    renderPovertyTabHeader(resultsContainer);
   }
 }
 
@@ -1900,14 +2789,22 @@ function renderSkillsTab(container) {
       : "";
 
     // Type badge class
-    const typeClass = `type-${(scheme.type || 'skilling').toLowerCase()}`;
+    const typeClass = `type-${(scheme.type || 'skilling').toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
 
-    // Verification callout: ONLY shown in filtered state if verify_before_use is true
-    const verificationCalloutHTML = (isFiltered && scheme.verify_before_use && scheme.verification_note)
-      ? `<div class="verification-callout">
-           ${escapeHTML(scheme.verification_note)}
-         </div>`
-      : "";
+    // Verification callout: shown in filtered state if verify_before_use is true OR if status is gated
+    let verificationCalloutHTML = "";
+    if (isFiltered) {
+      const parts = [];
+      if (scheme.verify_before_use && scheme.verification_note) {
+        parts.push(escapeHTML(scheme.verification_note));
+      }
+      if (scheme.statusReason) {
+        parts.push(`<em>${escapeHTML(scheme.statusReason)}</em>`);
+      }
+      if (parts.length > 0) {
+        verificationCalloutHTML = `<div class="verification-callout">${parts.join("<br>")}</div>`;
+      }
+    }
 
     card.innerHTML = `
       <div class="card-top-row">
@@ -1947,6 +2844,149 @@ function renderSkillsTab(container) {
   container.appendChild(schemesList);
 }
 
+// Render Results Header for SDG 1 Poverty Tab
+function renderPovertyTabHeader(container) {
+  const resultsHeader = document.createElement("div");
+  resultsHeader.className = "results-header";
+  
+  const titleContainer = document.createElement("div");
+  titleContainer.style.display = "flex";
+  titleContainer.style.alignItems = "baseline";
+  titleContainer.style.gap = "0.75rem";
+  titleContainer.style.flexWrap = "wrap";
+
+  const countTitle = document.createElement("h2");
+  countTitle.className = "results-count-title";
+  countTitle.textContent = isFiltered
+    ? `${filteredPoverty.length} ${filteredPoverty.length === 1 ? 'scheme' : 'schemes'} matched`
+    : `${filteredPoverty.length} ${filteredPoverty.length === 1 ? 'scheme' : 'schemes'}`;
+
+  titleContainer.appendChild(countTitle);
+
+  if (isFiltered) {
+    const showAllBtn = document.createElement("button");
+    showAllBtn.type = "button";
+    showAllBtn.className = "clear-saved-btn";
+    showAllBtn.style.fontSize = "0.85rem";
+    showAllBtn.textContent = "Show All Schemes";
+    showAllBtn.addEventListener("click", showDefaultState);
+    titleContainer.appendChild(showAllBtn);
+  }
+
+  const sortInfo = document.createElement("span");
+  sortInfo.className = "results-sort-info";
+  sortInfo.textContent = isFiltered ? "Sorted by eligibility & annual amount" : "Sorted by annual amount (high to low)";
+
+  resultsHeader.appendChild(titleContainer);
+  resultsHeader.appendChild(sortInfo);
+  container.appendChild(resultsHeader);
+}
+
+// Render Cards into #poverty-results Container
+function renderPovertyCardsList(targetElement) {
+  if (!targetElement) return;
+  targetElement.innerHTML = "";
+
+  if (filteredPoverty.length === 0) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "empty-state";
+    emptyState.innerHTML = `
+      <div class="empty-icon">🌱</div>
+      <h3 class="empty-title">No poverty alleviation schemes matched</h3>
+      <p class="empty-subtitle">Try adjusting your income range, status, or location to explore available welfare and poverty alleviation programmes.</p>
+    `;
+    targetElement.appendChild(emptyState);
+    return;
+  }
+
+  const schemesList = document.createElement("div");
+  schemesList.className = "schemes-list";
+
+  filteredPoverty.forEach((scheme, index) => {
+    const card = document.createElement("article");
+    card.className = "scheme-card";
+
+    // Match status badge: ONLY shown in filtered state
+    const matchBadgeHTML = isFiltered
+      ? (scheme.matchType === "potential"
+          ? `<span class="match-badge match-potential">🔍 Potentially Eligible</span>`
+          : `<span class="match-badge match-eligible">✅ Eligible</span>`)
+      : "";
+
+    // Best Match Badge: ONLY shown in filtered state on index === 0 if scheme.matchType === "eligible"
+    const bestMatchBadgeHTML = (isFiltered && index === 0 && scheme.matchType === "eligible")
+      ? `<span class="best-match-badge">⭐ Best Match</span>`
+      : "";
+
+    // Amount display formatting
+    let amountDisplay = "";
+    let subtext = "Est. Max / Year";
+    if (scheme.amount_per_year > 0) {
+      amountDisplay = `₹${scheme.amount_per_year.toLocaleString('en-IN')}`;
+    } else if (scheme.type === "Infrastructure" || scheme.type === "Village Development") {
+      amountDisplay = "Community benefit";
+      subtext = "Public Support";
+    } else {
+      amountDisplay = "In-kind / Free";
+      subtext = "Direct Support";
+    }
+
+    const typeClass = `type-${(scheme.type || 'welfare').toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+
+    // Verification callout
+    let verificationCalloutHTML = "";
+    if (isFiltered) {
+      const parts = [];
+      if (scheme.reasons && scheme.reasons.length > 0) {
+        scheme.reasons.forEach(r => parts.push(escapeHTML(r)));
+      }
+      if (parts.length > 0) {
+        verificationCalloutHTML = `<div class="verification-callout">${parts.join("<br>")}</div>`;
+      }
+    }
+
+    card.innerHTML = `
+      <div class="card-top-row">
+        <div>
+          <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
+          <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+          <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+          ${bestMatchBadgeHTML}
+          ${matchBadgeHTML}
+          <div class="amount-badge">
+            <span>${amountDisplay}</span>
+            <span class="amount-subtext">${subtext}</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="scheme-description">${escapeHTML(scheme.description || '')}</p>
+
+      ${verificationCalloutHTML}
+
+      <div class="card-footer">
+        <div class="deadline-info">
+          <span>📅 Deadline: <strong>${escapeHTML(scheme.deadline || 'Ongoing')}</strong></span>
+        </div>
+        <a href="${escapeHTML(scheme.apply_link)}" target="_blank" rel="noopener noreferrer" class="apply-btn">
+          <span>Apply Now</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    `;
+
+    schemesList.appendChild(card);
+  });
+
+  targetElement.appendChild(schemesList);
+}
+
 // Utility to escape HTML strings safely
 function escapeHTML(str) {
   if (!str) return '';
@@ -1957,4 +2997,5 @@ function escapeHTML(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
 

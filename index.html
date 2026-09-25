@@ -15,6 +15,146 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .results-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .results-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    #skills-disclaimer,
+    #poverty-disclaimer,
+    .poverty-disclaimer {
+      background: #E8F0FE;
+      border-left: 3px solid #1A73E8;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #202124;
+      line-height: 1.5;
+    }
+
+    .sdg-badge.sdg-1 {
+      background-color: #FFEBEE;
+      color: #C62828;
+      border: 1px solid #FFCDD2;
+    }
+
+    .sdg-badge.sdg-1 .sdg-badge-icon {
+      background-color: #E5243B;
+    }
+
+    .sdg-badge.sdg-5 {
+      background-color: #FFF3E0;
+      color: #E65100;
+      border: 1px solid #FFE0B2;
+    }
+
+    .sdg-badge.sdg-5 .sdg-badge-icon {
+      background-color: #FF3A21;
+    }
+
+    /* ── Form Context Subtitle ── */
+    .form-subtitle {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1A73E8;
+      background: #E8F0FE;
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin: 0 0 16px 0;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Form Sections ── */
+    .form-section {
+      margin-bottom: 18px;
+    }
+
+    .form-section-heading {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #1A73E8;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid #E8F0FE;
+      padding-bottom: 5px;
+      margin: 0 0 12px 0;
+    }
+
+    /* ── Radio & Checkbox groups ── */
+    .radio-group,
+    .checkbox-group-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .radio-group label,
+    .checkbox-group-inline label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.85rem;
+      color: #3C4043;
+      cursor: pointer;
+      font-weight: 400;
+    }
+
+    /* ── Conditional sub-sections (SDG 8) ── */
+    .sdg8-sub {
+      display: none;
+      background: #F8F9FA;
+      border: 1px solid #E8EAED;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+
+    /* ── SDG-form submit buttons ── */
+    .btn-sdg-submit {
+      display: block;
+      width: 100%;
+      background: #1A73E8;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.18s ease, transform 0.1s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-sdg-submit:hover {
+      background: #1557B0;
+      transform: translateY(-1px);
+    }
+
+    .btn-sdg-submit:active {
+      transform: translateY(0);
+    }
+
+    /* SDG forms: form-sdg4 visible by default */
+    #form-sdg4 {
+      display: block;
+    }
+    #form-sdg8,
+    #form-sdg1 {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -27,13 +167,21 @@
         <div class="logo-text">Scheme<span>Match</span></div>
       </div>
       <div class="sdg-badges">
+        <div class="sdg-badge sdg-1">
+          <span class="sdg-badge-icon">1</span>
+          <span>🌱 SDG 1 · No Poverty</span>
+        </div>
         <div class="sdg-badge sdg-4">
           <span class="sdg-badge-icon">4</span>
-          <span>SDG 4 — Quality Education</span>
+          <span>🎓 SDG 4 · Quality Education</span>
         </div>
         <div class="sdg-badge sdg-8">
           <span class="sdg-badge-icon">8</span>
-          <span>SDG 8 — Decent Work & Economic Growth</span>
+          <span>💼 SDG 8 · Decent Work</span>
+        </div>
+        <div class="sdg-badge sdg-5">
+          <span class="sdg-badge-icon">5</span>
+          <span>♀ SDG 5 · Gender Equality</span>
         </div>
       </div>
     </div>
@@ -43,7 +191,7 @@
   <section class="hero-section">
     <div class="hero-content">
       <h1 class="hero-title">Find Government Schemes You Qualify For</h1>
-      <p class="hero-subtitle">Match your profile with official Indian Central & State Government scholarships (SDG 4)
+      <p class="hero-subtitle">Match your profile with official Indian Central &amp; State Government scholarships (SDG 4)
         and skill/employment initiatives (SDG 8) instantly.</p>
     </div>
   </section>
@@ -53,25 +201,628 @@
 
     <!-- Filter Form Sidebar -->
     <aside>
-      <form id="eligibility-form" class="form-card">
+      <div class="form-card">
         <h2 class="form-title">
           <span class="form-title-icon">🔍</span> Check Eligibility
         </h2>
 
-        <!-- Gender Dropdown -->
-        <div class="form-group">
-          <label for="gender">Gender</label>
-          <select id="gender" class="form-control">
+        <!-- SDG 4: Scholarships Form (SDG 4) -->
+        <form id="form-sdg4" novalidate>
+          <div class="form-subtitle">SDG 4 — Quality Education</div>
+
+          <!-- Section A: About You -->
+          <div class="form-section">
+            <p class="form-section-heading">About You</p>
+
+            <div class="form-group">
+              <label for="sdg4-gender">Gender</label>
+              <select id="sdg4-gender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-category">Social Category</label>
+              <select id="sdg4-category" class="form-control">
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+                <option value="EWS">EWS</option>
+                <option value="Minority">Minority</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-age">Age</label>
+              <input type="number" id="sdg4-age" class="form-control" min="5" max="60" placeholder="e.g. 20">
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-state">State / UT</label>
+              <select id="sdg4-state" class="form-control">
+                <option value="Andaman &amp; Nicobar Islands">Andaman &amp; Nicobar Islands</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Dadra &amp; Nagar Haveli and Daman &amp; Diu">Dadra &amp; Nagar Haveli and Daman &amp; Diu</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jammu &amp; Kashmir">Jammu &amp; Kashmir</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Puducherry">Puducherry</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Other / Not Listed" selected>Other / Not Listed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Person with Disability</label>
+              <div class="radio-group">
+                <label><input type="radio" name="sdg4-disability" value="No" checked> No</label>
+                <label><input type="radio" name="sdg4-disability" value="Yes"> Yes (40%+)</label>
+              </div>
+            </div>
+          </div><!-- /Section A -->
+
+          <!-- Section B: Your Education -->
+          <div class="form-section">
+            <p class="form-section-heading">Your Education</p>
+
+            <div class="form-group">
+              <label for="sdg4-edu-status">Current Education Status</label>
+              <select id="sdg4-edu-status" class="form-control">
+                <option value="School">School student</option>
+                <option value="UG" selected>Undergraduate</option>
+                <option value="PG">Postgraduate</option>
+                <option value="Diploma">Diploma</option>
+                <option value="ITI">ITI</option>
+                <option value="Vocational">Vocational</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-course">Current Course / Degree</label>
+              <input type="text" id="sdg4-course" class="form-control" placeholder="e.g. B.Tech, BA, Class 10">
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-field">Field of Study</label>
+              <input type="text" id="sdg4-field" class="form-control" placeholder="e.g. Engineering, Arts">
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-year">Year of Study</label>
+              <input type="number" id="sdg4-year" class="form-control" min="1" max="6" placeholder="e.g. 2">
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-inst-type">Institution Type</label>
+              <select id="sdg4-inst-type" class="form-control">
+                <option value="Government">Government</option>
+                <option value="Government-aided">Government-aided</option>
+                <option value="Private">Private</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg4-marks">Previous Academic % / CGPA</label>
+              <input type="number" id="sdg4-marks" class="form-control" min="0" max="100" step="0.1" placeholder="e.g. 85.5">
+            </div>
+          </div><!-- /Section B -->
+
+          <!-- Section C: Family & Finance -->
+          <div class="form-section">
+            <p class="form-section-heading">Family &amp; Finance</p>
+
+            <div class="form-group">
+              <label for="sdg4-income">Annual Family Income</label>
+              <select id="sdg4-income" class="form-control">
+                <option value="Below 1L">Below ₹1L</option>
+                <option value="1–2.5L">₹1–2.5L</option>
+                <option value="2.5–5L">₹2.5–5L</option>
+                <option value="5–8L">₹5–8L</option>
+                <option value="Above 8L">Above ₹8L</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Currently receiving another scholarship?</label>
+              <div class="radio-group">
+                <label><input type="radio" name="sdg4-other-scholarship" value="No" checked> No</label>
+                <label><input type="radio" name="sdg4-other-scholarship" value="Yes"> Yes</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>First-generation college student?</label>
+              <div class="radio-group">
+                <label><input type="radio" name="sdg4-first-gen" value="No" checked> No</label>
+                <label><input type="radio" name="sdg4-first-gen" value="Yes"> Yes</label>
+              </div>
+            </div>
+          </div><!-- /Section C -->
+
+          <button type="button" id="submit-sdg4" class="btn-sdg-submit">Find Education Schemes &#8594;</button>
+        </form><!-- /#form-sdg4 -->
+
+
+        <!-- SDG 8: Work & Skills Form (SDG 8) -->
+        <form id="form-sdg8" novalidate>
+          <div class="form-subtitle">SDG 8 — Decent Work &amp; Economic Growth</div>
+
+          <!-- Section A: About You -->
+          <div class="form-section">
+            <p class="form-section-heading">About You</p>
+
+            <div class="form-group">
+              <label for="sdg8-gender">Gender</label>
+              <select id="sdg8-gender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg8-category">Social Category</label>
+              <select id="sdg8-category" class="form-control">
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+                <option value="EWS">EWS</option>
+                <option value="Minority">Minority</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg8-age">Age</label>
+              <input type="number" id="sdg8-age" class="form-control" min="5" max="60" placeholder="e.g. 25">
+            </div>
+
+            <div class="form-group">
+              <label for="sdg8-state">State / UT</label>
+              <select id="sdg8-state" class="form-control">
+                <option value="Andaman &amp; Nicobar Islands">Andaman &amp; Nicobar Islands</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Dadra &amp; Nagar Haveli and Daman &amp; Diu">Dadra &amp; Nagar Haveli and Daman &amp; Diu</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jammu &amp; Kashmir">Jammu &amp; Kashmir</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Puducherry">Puducherry</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Other / Not Listed" selected>Other / Not Listed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Person with Disability</label>
+              <div class="radio-group">
+                <label><input type="radio" name="sdg8-disability" value="No" checked> No</label>
+                <label><input type="radio" name="sdg8-disability" value="Yes"> Yes (40%+)</label>
+              </div>
+            </div>
+          </div><!-- /Section A -->
+
+          <!-- Section B: Current Situation -->
+          <div class="form-section">
+            <p class="form-section-heading">Your Current Situation</p>
+
+            <div class="form-group">
+              <label for="sdg8-situation" style="font-weight:600;font-size:0.88rem;">What best describes you right now?</label>
+              <select id="sdg8-situation" class="form-control">
+                <option value="">&#8212; Select &#8212;</option>
+                <option value="Student">Student</option>
+                <option value="Unemployed">Unemployed &#8212; looking for work</option>
+                <option value="Employed">Employed</option>
+                <option value="Self-employed">Self-employed</option>
+                <option value="Entrepreneur">Entrepreneur</option>
+                <option value="Farmer">Farmer</option>
+                <option value="Artisan">Artisan or craft worker</option>
+                <option value="Street Vendor">Street vendor</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <!-- Sub-section: Student -->
+            <div class="sdg8-sub" id="sub-student">
+              <div class="form-group">
+                <label for="sdg8-edu-level">Current Education Level</label>
+                <select id="sdg8-edu-level" class="form-control">
+                  <option value="School">School</option>
+                  <option value="Diploma">Diploma / ITI</option>
+                  <option value="UG">Undergraduate</option>
+                  <option value="PG">Postgraduate</option>
+                  <option value="Vocational">Vocational</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="sdg8-student-skills">Skills you want to learn</label>
+                <input type="text" id="sdg8-student-skills" class="form-control" placeholder="e.g. Coding, Welding">
+              </div>
+              <div class="form-group">
+                <label>Looking for:</label>
+                <div class="checkbox-group-inline">
+                  <label><input type="checkbox" name="sdg8-student-looking" value="Skill training"> Skill training</label>
+                  <label><input type="checkbox" name="sdg8-student-looking" value="Internship"> Internship</label>
+                  <label><input type="checkbox" name="sdg8-student-looking" value="Apprenticeship"> Apprenticeship</label>
+                  <label><input type="checkbox" name="sdg8-student-looking" value="Employment"> Employment</label>
+                </div>
+              </div>
+            </div><!-- /#sub-student -->
+
+            <!-- Sub-section: Unemployed -->
+            <div class="sdg8-sub" id="sub-unemployed">
+              <div class="form-group">
+                <label for="sdg8-unemployed-edu">Highest Education</label>
+                <select id="sdg8-unemployed-edu" class="form-control">
+                  <option value="Below 10th">Below 10th</option>
+                  <option value="10th">10th / SSC</option>
+                  <option value="12th">12th / HSC</option>
+                  <option value="Diploma">Diploma / ITI</option>
+                  <option value="UG">Undergraduate</option>
+                  <option value="PG">Postgraduate</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="sdg8-unemployed-exp">Work Experience (years)</label>
+                <input type="number" id="sdg8-unemployed-exp" class="form-control" min="0" max="40" placeholder="0">
+              </div>
+              <div class="form-group">
+                <label for="sdg8-unemployed-skills">Skills you want to learn</label>
+                <input type="text" id="sdg8-unemployed-skills" class="form-control" placeholder="e.g. Tailoring, IT">
+              </div>
+              <div class="form-group">
+                <label>Looking for:</label>
+                <div class="checkbox-group-inline">
+                  <label><input type="checkbox" name="sdg8-unemployed-looking" value="Training"> Training</label>
+                  <label><input type="checkbox" name="sdg8-unemployed-looking" value="Apprenticeship"> Apprenticeship</label>
+                  <label><input type="checkbox" name="sdg8-unemployed-looking" value="Job"> Job</label>
+                  <label><input type="checkbox" name="sdg8-unemployed-looking" value="Self-employment support"> Self-employment support</label>
+                </div>
+              </div>
+            </div><!-- /#sub-unemployed -->
+
+            <!-- Sub-section: Employed -->
+            <div class="sdg8-sub" id="sub-employed">
+              <div class="form-group">
+                <label for="sdg8-employed-sector">Occupation / Sector</label>
+                <input type="text" id="sdg8-employed-sector" class="form-control" placeholder="e.g. Manufacturing, IT">
+              </div>
+              <div class="form-group">
+                <label for="sdg8-employed-exp">Years of Work Experience</label>
+                <input type="number" id="sdg8-employed-exp" class="form-control" min="0" max="50" placeholder="e.g. 5">
+              </div>
+              <div class="form-group">
+                <label>Interested in upskilling?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="sdg8-upskill" value="Yes"> Yes</label>
+                  <label><input type="radio" name="sdg8-upskill" value="No" checked> No</label>
+                </div>
+              </div>
+            </div><!-- /#sub-employed -->
+
+            <!-- Sub-section: Entrepreneur / Self-employed -->
+            <div class="sdg8-sub" id="sub-entrepreneur">
+              <div class="form-group">
+                <label for="sdg8-biz-sector">Business Sector</label>
+                <input type="text" id="sdg8-biz-sector" class="form-control" placeholder="e.g. Retail, Food, Tech">
+              </div>
+              <div class="form-group">
+                <label for="sdg8-biz-stage">Business Stage</label>
+                <select id="sdg8-biz-stage" class="form-control">
+                  <option value="Idea stage">Idea stage</option>
+                  <option value="Just starting">Just starting</option>
+                  <option value="Running">Running</option>
+                  <option value="Expanding">Expanding</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Support needed:</label>
+                <div class="checkbox-group-inline">
+                  <label><input type="checkbox" name="sdg8-biz-support" value="Loan"> Loan</label>
+                  <label><input type="checkbox" name="sdg8-biz-support" value="Seed funding"> Seed funding</label>
+                  <label><input type="checkbox" name="sdg8-biz-support" value="Training"> Training</label>
+                  <label><input type="checkbox" name="sdg8-biz-support" value="Equipment"> Equipment</label>
+                  <label><input type="checkbox" name="sdg8-biz-support" value="Market support"> Market support</label>
+                </div>
+              </div>
+            </div><!-- /#sub-entrepreneur -->
+
+            <!-- Sub-section: Farmer -->
+            <div class="sdg8-sub" id="sub-farmer">
+              <div class="form-group">
+                <label for="sdg8-farm-type">Type of Farming Activity</label>
+                <input type="text" id="sdg8-farm-type" class="form-control" placeholder="e.g. Crop farming, Dairy, Fishery">
+              </div>
+              <div class="form-group">
+                <label>Do you own agricultural land?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="sdg8-own-land" value="Yes"> Yes</label>
+                  <label><input type="radio" name="sdg8-own-land" value="No" checked> No</label>
+                </div>
+              </div>
+            </div><!-- /#sub-farmer -->
+
+            <!-- Sub-section: Artisan -->
+            <div class="sdg8-sub" id="sub-artisan">
+              <div class="form-group">
+                <label for="sdg8-craft">Craft / Trade</label>
+                <input type="text" id="sdg8-craft" class="form-control" placeholder="e.g. Weaving, Pottery, Woodwork">
+              </div>
+            </div><!-- /#sub-artisan -->
+
+            <!-- Sub-section: Street Vendor -->
+            <div class="sdg8-sub" id="sub-vendor">
+              <div class="form-group">
+                <label>Do you have a vending certificate?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="sdg8-vend-cert" value="Yes"> Yes</label>
+                  <label><input type="radio" name="sdg8-vend-cert" value="No" checked> No</label>
+                </div>
+              </div>
+            </div><!-- /#sub-vendor -->
+          </div><!-- /Section B -->
+
+          <!-- Section C: Income -->
+          <div class="form-section">
+            <p class="form-section-heading">Income</p>
+            <div class="form-group">
+              <label for="sdg8-income">Annual Household Income</label>
+              <select id="sdg8-income" class="form-control">
+                <option value="Below 1L">Below &#8377;1L</option>
+                <option value="1–2.5L">&#8377;1&#8211;2.5L</option>
+                <option value="2.5–5L">&#8377;2.5&#8211;5L</option>
+                <option value="5–8L">&#8377;5&#8211;8L</option>
+                <option value="Above 8L">Above &#8377;8L</option>
+              </select>
+            </div>
+          </div><!-- /Section C -->
+
+          <button type="button" id="submit-sdg8" class="btn-sdg-submit">Find Work &amp; Skills Schemes &#8594;</button>
+        </form><!-- /#form-sdg8 -->
+
+
+        <!-- SDG 1: Household & Social Support Form (SDG 1) -->
+        <form id="form-sdg1" novalidate>
+          <div class="form-subtitle">SDG 1 — No Poverty</div>
+
+          <!-- Section A: Your Household -->
+          <div class="form-section">
+            <p class="form-section-heading">Your Household</p>
+
+            <div class="form-group">
+              <label for="sdg1-state">State / UT</label>
+              <select id="sdg1-state" class="form-control">
+                <option value="Andaman &amp; Nicobar Islands">Andaman &amp; Nicobar Islands</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Dadra &amp; Nagar Haveli and Daman &amp; Diu">Dadra &amp; Nagar Haveli and Daman &amp; Diu</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jammu &amp; Kashmir">Jammu &amp; Kashmir</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Puducherry">Puducherry</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Other / Not Listed" selected>Other / Not Listed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Location Type</label>
+              <div class="radio-group">
+                <label><input type="radio" name="sdg1-location" value="Rural" checked> Rural</label>
+                <label><input type="radio" name="sdg1-location" value="Urban"> Urban</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg1-household-size">Household Size</label>
+              <input type="number" id="sdg1-household-size" class="form-control" min="1" max="20" placeholder="e.g. 4">
+            </div>
+
+            <div class="form-group">
+              <label for="sdg1-income">Annual Household Income</label>
+              <select id="sdg1-income" class="form-control">
+                <option value="Below 1L">Below &#8377;1L</option>
+                <option value="1–2.5L">&#8377;1&#8211;2.5L</option>
+                <option value="2.5–5L">&#8377;2.5&#8211;5L</option>
+                <option value="Above 5L">Above &#8377;5L</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg1-category">Social Category</label>
+              <select id="sdg1-category" class="form-control">
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+                <option value="EWS">EWS</option>
+                <option value="Minority">Minority</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg1-gender">Gender</label>
+              <select id="sdg1-gender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+          </div><!-- /Section A -->
+
+          <!-- Section B: Your Situation -->
+          <div class="form-section">
+            <p class="form-section-heading">Your Situation</p>
+
+            <div class="form-group">
+              <label for="sdg1-income-source">Main Source of Income</label>
+              <select id="sdg1-income-source" class="form-control">
+                <option value="Agriculture">Agriculture</option>
+                <option value="Wage labour">Wage labour</option>
+                <option value="Salaried employment">Salaried employment</option>
+                <option value="Self-employment">Self-employment</option>
+                <option value="Street vending">Street vending</option>
+                <option value="Artisan">Artisan</option>
+                <option value="Pension">Pension</option>
+                <option value="No regular income">No regular income</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sdg1-house">House Ownership</label>
+              <select id="sdg1-house" class="form-control">
+                <option value="Own">Own</option>
+                <option value="Rent">Rent</option>
+                <option value="No permanent housing">No permanent housing</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Disability in Household?</label>
+              <div class="radio-group">
+                <label><input type="radio" name="sdg1-disability" value="No" checked> No</label>
+                <label><input type="radio" name="sdg1-disability" value="Yes"> Yes</label>
+              </div>
+            </div>
+          </div><!-- /Section B -->
+
+          <!-- Section C: Who are you? -->
+          <div class="form-section">
+            <p class="form-section-heading">Who Are You?</p>
+            <p style="font-size:0.82rem;color:#5F6368;margin:0 0 10px 0;">Select all that apply to you or your household:</p>
+            <div class="checkbox-group-inline" style="flex-direction:column;gap:7px;">
+              <label><input type="checkbox" name="sdg1-identity" value="Farmer"> Farmer / agricultural worker</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Landless labourer"> Landless labourer</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Street vendor"> Street vendor</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Artisan"> Artisan / craft worker</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Senior citizen"> Senior citizen (60+)</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Person with disability"> Person with disability</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Woman-headed household"> Woman-headed household</label>
+              <label><input type="checkbox" name="sdg1-identity" value="Pregnant or new mother"> Pregnant woman or new mother</label>
+              <label><input type="checkbox" name="sdg1-identity" value="BPL card holder"> BPL card holder</label>
+            </div>
+          </div><!-- /Section C -->
+
+          <!-- Section D: What support do you need? -->
+          <div class="form-section">
+            <p class="form-section-heading">What Support Do You Need?</p>
+            <p style="font-size:0.82rem;color:#5F6368;margin:0 0 10px 0;">What are you looking for? (Select all that apply)</p>
+            <div class="checkbox-group-inline" style="flex-direction:column;gap:7px;">
+              <label><input type="checkbox" name="sdg1-need" value="Employment support"> Employment support</label>
+              <label><input type="checkbox" name="sdg1-need" value="Housing assistance"> Housing assistance</label>
+              <label><input type="checkbox" name="sdg1-need" value="Food / ration support"> Food / ration support</label>
+              <label><input type="checkbox" name="sdg1-need" value="Health protection"> Health protection</label>
+              <label><input type="checkbox" name="sdg1-need" value="Financial assistance"> Financial assistance</label>
+              <label><input type="checkbox" name="sdg1-need" value="Pension"> Pension</label>
+              <label><input type="checkbox" name="sdg1-need" value="Insurance"> Insurance</label>
+              <label><input type="checkbox" name="sdg1-need" value="Business or livelihood support"> Business or livelihood support</label>
+              <label><input type="checkbox" name="sdg1-need" value="Skill training"> Skill training</label>
+            </div>
+          </div><!-- /Section D -->
+
+          <button type="button" id="submit-sdg1" class="btn-sdg-submit">Find Support Schemes &#8594;</button>
+        </form><!-- /#form-sdg1 -->
+
+        <!-- Legacy hidden inputs kept for app.js compatibility -->
+        <form id="eligibility-form" style="display:none;" aria-hidden="true">
+          <select id="gender">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
-        </div>
-
-        <!-- Category Dropdown -->
-        <div class="form-group">
-          <label for="category">Category</label>
-          <select id="category" class="form-control">
+          <select id="category">
             <option value="General">General</option>
             <option value="OBC">OBC</option>
             <option value="SC">SC</option>
@@ -79,142 +830,85 @@
             <option value="EWS">EWS</option>
             <option value="Minority">Minority</option>
           </select>
-        </div>
-
-        <!-- Annual Family Income Dropdown -->
-        <div class="form-group">
-          <label for="income">Annual Family Income</label>
-          <select id="income" class="form-control">
+          <select id="income">
             <option value="Below 1L">Below 1L</option>
             <option value="1–2.5L">1–2.5L</option>
             <option value="2.5–5L">2.5–5L</option>
             <option value="Above 5L">Above 5L</option>
           </select>
-        </div>
-
-        <!-- Course Level Dropdown -->
-        <div class="form-group">
-          <label for="course">Course Level</label>
-          <select id="course" class="form-control">
+          <select id="course">
             <option value="Class 9-10">Class 9-10</option>
             <option value="Class 11-12">Class 11-12</option>
             <option value="UG" selected>UG (Undergraduate)</option>
             <option value="PG">PG (Postgraduate)</option>
             <option value="PhD">PhD</option>
           </select>
-        </div>
-
-        <!-- State Dropdown -->
-        <div class="form-group">
-          <label for="state">State of Domicile</label>
-          <select id="state" class="form-control">
-            <option value="Andaman & Nicobar Islands">Andaman & Nicobar Islands</option>
-            <option value="Andhra Pradesh">Andhra Pradesh</option>
-            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-            <option value="Assam">Assam</option>
-            <option value="Bihar">Bihar</option>
-            <option value="Chandigarh">Chandigarh</option>
-            <option value="Chhattisgarh">Chhattisgarh</option>
-            <option value="Dadra & Nagar Haveli and Daman & Diu">Dadra & Nagar Haveli and Daman & Diu</option>
-            <option value="Delhi">Delhi</option>
-            <option value="Goa">Goa</option>
-            <option value="Gujarat">Gujarat</option>
-            <option value="Haryana">Haryana</option>
-            <option value="Himachal Pradesh">Himachal Pradesh</option>
-            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
-            <option value="Jharkhand">Jharkhand</option>
-            <option value="Karnataka">Karnataka</option>
-            <option value="Kerala">Kerala</option>
-            <option value="Ladakh">Ladakh</option>
-            <option value="Lakshadweep">Lakshadweep</option>
-            <option value="Madhya Pradesh">Madhya Pradesh</option>
-            <option value="Maharashtra">Maharashtra</option>
-            <option value="Manipur">Manipur</option>
-            <option value="Meghalaya">Meghalaya</option>
-            <option value="Mizoram">Mizoram</option>
-            <option value="Nagaland">Nagaland</option>
-            <option value="Odisha">Odisha</option>
-            <option value="Puducherry">Puducherry</option>
-            <option value="Punjab">Punjab</option>
-            <option value="Rajasthan">Rajasthan</option>
-            <option value="Sikkim">Sikkim</option>
-            <option value="Tamil Nadu">Tamil Nadu</option>
-            <option value="Telangana">Telangana</option>
-            <option value="Tripura">Tripura</option>
-            <option value="Uttar Pradesh">Uttar Pradesh</option>
-            <option value="Uttarakhand">Uttarakhand</option>
-            <option value="West Bengal">West Bengal</option>
+          <select id="state">
             <option value="Other / Not Listed" selected>Other / Not Listed</option>
           </select>
-        </div>
-
-        <!-- Current Status Dropdown -->
-        <div class="form-group">
-          <label for="current-status">Current Status</label>
-          <select id="current-status" class="form-control">
+          <select id="current-status">
             <option value="All">Select status</option>
             <option value="Student">Student</option>
             <option value="Job-seeker">Job-seeker / Fresher</option>
             <option value="Employed">Currently Employed</option>
             <option value="Entrepreneur">Entrepreneur / Business Owner</option>
             <option value="Self-employed">Self-employed</option>
+            <option value="Farmer">Farmer / Agricultural Worker</option>
             <option value="Artisan">Artisan or Craftsperson</option>
             <option value="Street Vendor">Street Vendor</option>
           </select>
-        </div>
-
-        <!-- Location Type Dropdown -->
-        <div class="form-group">
-          <label for="location-type">Location Type</label>
-          <select id="location-type" class="form-control">
+          <select id="location-type">
             <option value="Both">Urban or Rural</option>
             <option value="Urban">Urban</option>
             <option value="Rural">Rural</option>
           </select>
-        </div>
-
-        <!-- Disability Checkbox -->
-        <div class="checkbox-group">
           <input type="checkbox" id="disability">
-          <label for="disability" class="checkbox-label">Person with Disability (40%+)</label>
-        </div>
+          <button type="button" id="find-btn">Find My Schemes</button>
+          <button type="button" id="sample-profile-btn">Try a Sample Profile</button>
+          <div class="clear-saved-container">
+            <button type="button" id="clear-saved-btn" class="clear-saved-btn" style="display: none;">
+              Clear saved form
+            </button>
+          </div>
+        </form>
 
-        <!-- Submit Button -->
-        <button type="button" id="find-btn" class="btn-primary">
-          <span>Find My Schemes</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-
-        <!-- Sample Profile Button -->
-        <button type="button" id="sample-profile-btn" class="btn-sample">
-          Try a Sample Profile &rarr;
-        </button>
-
-        <!-- Clear Saved Form Link -->
-        <div class="clear-saved-container">
-          <button type="button" id="clear-saved-btn" class="clear-saved-btn" style="display: none;">
-            Clear saved form
-          </button>
-        </div>
-      </form>
+      </div><!-- /.form-card -->
     </aside>
 
-    <!-- Results Container -->
-    <section id="results" class="results-section">
-      <!-- Results content dynamically rendered via app.js -->
-    </section>
+    <!-- Results & Disclaimer Wrapper -->
+    <div class="results-wrapper">
+
+      <!-- Results Container (Contains tab bar and active tab content) -->
+      <section id="results" class="results-section">
+        <!-- Results content dynamically rendered via app.js -->
+      </section>
+
+      <!-- Panel Scholarships -->
+      <div id="panel-scholarships" class="tab-panel" style="display: none;"></div>
+
+      <!-- Panel Skills -->
+      <div id="panel-skills" class="tab-panel" style="display: none;">
+        <div id="skills-disclaimer" class="skills-disclaimer" aria-live="polite">
+          &#8505;&#65039; Scheme details and eligibility criteria are subject to change. Verify all information on the official government portal before applying.
+        </div>
+      </div>
+
+      <!-- Panel Poverty -->
+      <div id="panel-poverty" class="tab-panel" style="display: none;">
+        <div id="poverty-disclaimer" class="poverty-disclaimer" aria-live="polite">
+          &#8505;&#65039; Schemes listed under SDG 1 include welfare, insurance, housing, and livelihood programmes. Some schemes (PMGSY, PM-AJAY) are community-level infrastructure &#8212; individual eligibility may vary. Always verify on the official government portal.
+        </div>
+        <div id="poverty-results" class="poverty-results"></div>
+      </div>
+
+    </div>
 
   </main>
 
   <!-- Footer -->
   <footer>
     <div class="footer-content">
-      <p>SchemeMatch — Supporting SDG 4: Quality Education for All Indian Students.</p>
-      <p>Data sourced from National Scholarship Portal (NSP) & myScheme.</p>
+      <p>SchemeMatch covers schemes under SDG 4 (Quality Education) and SDG 8 (Decent Work &amp; Economic Growth). Data sourced from NSP, PMKVY, PM Internship Scheme, MSME portals, and official government sources. Always verify eligibility on the official portal before applying.</p>
     </div>
   </footer>
 
