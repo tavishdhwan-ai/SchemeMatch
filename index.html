@@ -154,10 +154,150 @@
     #form-sdg1 {
       display: none;
     }
-  </style>
+
+    /* ── Top Hero Section (#hero-section) ── */
+    #hero-section {
+      background: linear-gradient(135deg, #1A73E8 0%, #0D47A1 100%);
+      padding: 48px 40px;
+      color: white;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    #hero-section h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    #hero-section p.hero-subheading {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 560px;
+      margin: 0 auto 24px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .hero-stat-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 12px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      opacity: 0.8;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .hero-scroll-hint {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 20px;
+    }
+
+      @media (max-width: 600px) {
+        #hero-section {
+          padding: 32px 20px;
+        }
+        #hero-section h1 {
+          font-size: 1.4rem;
+        }
+        .hero-stats {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .hero-stat-badge {
+          min-width: 90px;
+        }
+        #share-btn {
+          padding: 7px 12px;
+          font-size: 0.8rem;
+        }
+      }
+
+      /* ── Share Button ── */
+      #share-btn {
+        position: fixed;
+        top: 16px;
+        right: 20px;
+        z-index: 1000;
+        background: #FFFFFF;
+        border: 1.5px solid #DADCE0;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1A73E8;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        font-family: inherit;
+      }
+
+      #share-btn:hover {
+        background: #E8F0FE;
+        border-color: #1A73E8;
+      }
+    </style>
 </head>
 
 <body>
+
+  <!-- Share Button -->
+  <button id="share-btn">🔗 Share</button>
+
+  <!-- Top Hero Section -->
+  <div id="hero-section">
+    <span class="hero-badge">SDG Innovation Challenge 2026</span>
+    <h1>Find Government Schemes You're Eligible For</h1>
+    <p class="hero-subheading">Answer a few questions. Instantly discover central and state schemes for education, employment, and social support.</p>
+    <div class="hero-stats">
+      <div class="hero-stat-badge">
+        <span class="stat-number">100+</span>
+        <span class="stat-label">Schemes Covered</span>
+      </div>
+      <div class="hero-stat-badge">
+        <span class="stat-number">3</span>
+        <span class="stat-label">SDG Goals</span>
+      </div>
+      <div class="hero-stat-badge">
+        <span class="stat-number">Free</span>
+        <span class="stat-label">No Login Needed</span>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">↓ Select an SDG goal to begin</div>
+  </div>
 
   <!-- Navigation / Header -->
   <header>
@@ -911,6 +1051,54 @@
       <p>SchemeMatch covers schemes under SDG 4 (Quality Education) and SDG 8 (Decent Work &amp; Economic Growth). Data sourced from NSP, PMKVY, PM Internship Scheme, MSME portals, and official government sources. Always verify eligibility on the official portal before applying.</p>
     </div>
   </footer>
+
+  <!-- Share Logic -->
+  <script>
+    document.getElementById('share-btn')?.addEventListener('click', async () => {
+      const shareData = {
+        title: 'SchemeMatch — Find Government Schemes You Qualify For',
+        text: 'Discover central and state government schemes for education, employment, and social support — free, no login needed.',
+        url: window.location.href
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          await navigator.clipboard.writeText(window.location.href);
+          showShareToast();
+        }
+      } catch (err) {
+        // user cancelled or clipboard failed — do nothing
+      }
+    });
+
+    function showShareToast() {
+      const toast = document.createElement('div');
+      toast.textContent = '🔗 Link copied to clipboard!';
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #202124;
+        color: #FFFFFF;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.2s;
+      `;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => { toast.style.opacity = '1'; });
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+  </script>
 
   <!-- Application Logic -->
   <script src="app.js"></script>
