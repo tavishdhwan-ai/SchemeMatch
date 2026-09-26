@@ -372,7 +372,6 @@
     .empty-subtitle,
     .scheme-description,
     .amount-subtext,
-    .stat-label,
     footer p,
     .form-group label,
     .radio-group label,
@@ -614,7 +613,7 @@
 
     .stat-label {
       font-size: 0.78rem;
-      opacity: 0.8;
+      color: #FFFFFF;
       display: block;
       margin-top: 2px;
     }
@@ -883,9 +882,134 @@
       border-color: var(--border-color);
     }
 
+    /* ── Scheme Card Ambient Hover Glow ── */
+    .scheme-card {
+      --card-accent-glow: rgba(245, 158, 11, 0.18);
+      --card-border-hover: var(--accent);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.25s ease;
+    }
+
+    .scheme-card::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: calc(var(--radius-md, 12px) + 4px);
+      background: radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        var(--card-accent-glow) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: -1;
+      filter: blur(8px);
+    }
+
+    /* Light Theme SDG Accent Glows (Subtle Warm Amber/Gold) */
+    .scheme-card:has(.type-badge) {
+      --card-accent-glow: rgba(245, 158, 11, 0.18);
+      --card-border-hover: #2E7D32;
+    }
+
+    #panel-poverty .scheme-card,
+    #poverty-results .scheme-card {
+      --card-accent-glow: rgba(245, 158, 11, 0.18);
+      --card-border-hover: #E5243B;
+    }
+
+    /* Dark Theme SDG Accent Glows */
+    [data-theme="dark"] .scheme-card {
+      --card-accent-glow: rgba(99, 177, 255, 0.18);
+    }
+
+    [data-theme="dark"] .scheme-card:has(.type-badge) {
+      --card-accent-glow: rgba(152, 225, 161, 0.18);
+      --card-border-hover: #7BC78D;
+    }
+
+    [data-theme="dark"] #panel-poverty .scheme-card,
+    [data-theme="dark"] #poverty-results .scheme-card {
+      --card-accent-glow: rgba(255, 155, 166, 0.18);
+      --card-border-hover: #FF7081;
+    }
+
+    [data-theme="dark"] .scheme-card::after {
+      inset: -3px;
+      filter: blur(5px);
+      background: radial-gradient(
+        400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        var(--card-accent-glow) 0%,
+        transparent 65%
+      );
+    }
+
     .scheme-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 20px 38px -30px var(--shadow-strong);
+      transform: translateY(-3px);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 10px 24px -12px var(--card-accent-glow), 0 4px 16px var(--shadow);
+    }
+
+    .scheme-card:hover::after {
+      opacity: 1;
+    }
+
+    /* ── Reset Form Button ── */
+    .form-action-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .btn-reset-form {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .btn-reset-form:hover {
+      background-color: var(--bg-card-muted);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .btn-reset-form:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* ── Official Source Link ── */
+    .official-source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.18s ease;
+      margin-left: 8px;
+    }
+
+    .official-source-link:hover {
+      color: var(--accent);
+      text-decoration: underline;
     }
 
     .results-tabs {
@@ -1298,7 +1422,7 @@
   <!-- Top Hero Section -->
   <div id="hero-section">
     <h1>Find Government Schemes You're Eligible For</h1>
-    <p class="hero-subheading">Answer a few questions. Instantly discover central and state schemes for education, employment, and social support.</p>
+    <p class="hero-subheading">Answer a few questions. Discover government schemes matched to your profile — from scholarships and employment support to social protection.</p>
     <div class="hero-stats">
       <div class="hero-stat-badge">
         <span class="stat-number">90</span>
@@ -1352,8 +1476,7 @@
   <section class="hero-section">
     <div class="hero-content">
       <h1 class="hero-title">Find Government Schemes You Qualify For</h1>
-      <p class="hero-subtitle">Match your profile with official Indian Central &amp; State Government scholarships (SDG 4)
-        and skill/employment initiatives (SDG 8) instantly.</p>
+      <p class="hero-subtitle">Answer a few questions. Discover government schemes matched to your profile — from scholarships and employment support to social protection.</p>
     </div>
   </section>
 
@@ -1534,7 +1657,10 @@
             </div>
           </div><!-- /Section C -->
 
-          <button type="button" id="submit-sdg4" class="btn-sdg-submit">Find Education Schemes &#8594;</button>
+          <div class="form-action-group">
+            <button type="button" id="submit-sdg4" class="btn-sdg-submit">Find Education Schemes &#8594;</button>
+            <button type="button" class="btn-reset-form" data-form="form-sdg4">↻ Reset</button>
+          </div>
         </form><!-- /#form-sdg4 -->
 
 
@@ -1800,7 +1926,10 @@
             </div>
           </div><!-- /Section C -->
 
-          <button type="button" id="submit-sdg8" class="btn-sdg-submit">Find Work &amp; Skills Schemes &#8594;</button>
+          <div class="form-action-group">
+            <button type="button" id="submit-sdg8" class="btn-sdg-submit">Find Work &amp; Skills Schemes &#8594;</button>
+            <button type="button" class="btn-reset-form" data-form="form-sdg8">↻ Reset</button>
+          </div>
         </form><!-- /#form-sdg8 -->
 
 
@@ -1973,7 +2102,10 @@
             </div>
           </div><!-- /Section D -->
 
-          <button type="button" id="submit-sdg1" class="btn-sdg-submit">Find Support Schemes &#8594;</button>
+          <div class="form-action-group">
+            <button type="button" id="submit-sdg1" class="btn-sdg-submit">Find Support Schemes &#8594;</button>
+            <button type="button" class="btn-reset-form" data-form="form-sdg1">↻ Reset</button>
+          </div>
         </form><!-- /#form-sdg1 -->
 
         <!-- Legacy hidden inputs kept for app.js compatibility -->
@@ -2130,6 +2262,72 @@
         setTimeout(() => toast.remove(), 300);
       }, 2500);
     }
+
+    // Dynamic boundary glow cursor tracking on scheme cards
+    document.addEventListener('pointermove', (e) => {
+      const card = e.target.closest('.scheme-card');
+      if (card) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      }
+    }, { passive: true });
+
+    // ── Reset Form Handler ──
+    document.querySelectorAll('.btn-reset-form').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetFormId = e.currentTarget.getAttribute('data-form');
+        const form = document.getElementById(targetFormId);
+        if (form) {
+          form.reset();
+          if (targetFormId === 'form-sdg8') {
+            document.querySelectorAll('.sdg8-sub').forEach(el => el.style.display = 'none');
+          }
+          if (typeof showDefaultState === 'function') {
+            showDefaultState();
+          }
+        }
+      });
+    });
+
+    // ── Official Source Link Enhancer for Scheme Cards ──
+    function enhanceSchemeCards() {
+      const cards = document.querySelectorAll('.scheme-card');
+      cards.forEach(card => {
+        if (card.querySelector('.official-source-link')) return;
+
+        const applyBtn = card.querySelector('.apply-btn');
+        const url = applyBtn ? applyBtn.getAttribute('href') : null;
+        if (!url || url.startsWith('javascript:') || url === '#') return;
+
+        const deadlineInfo = card.querySelector('.deadline-info');
+        const footer = card.querySelector('.card-footer');
+
+        const sourceLink = document.createElement('a');
+        sourceLink.className = 'official-source-link';
+        sourceLink.href = url;
+        sourceLink.target = '_blank';
+        sourceLink.rel = 'noopener noreferrer';
+        sourceLink.innerHTML = '🏛️ Official Source ↗';
+
+        if (deadlineInfo) {
+          deadlineInfo.appendChild(sourceLink);
+        } else if (footer) {
+          footer.prepend(sourceLink);
+        }
+      });
+    }
+
+    const cardObserver = new MutationObserver(enhanceSchemeCards);
+    const resultsContainer = document.getElementById('results');
+    const povertyContainer = document.getElementById('panel-poverty');
+    if (resultsContainer) cardObserver.observe(resultsContainer, { childList: true, subtree: true });
+    if (povertyContainer) cardObserver.observe(povertyContainer, { childList: true, subtree: true });
+
+    window.addEventListener('DOMContentLoaded', enhanceSchemeCards);
+    setTimeout(enhanceSchemeCards, 300);
   </script>
 
   <!-- Application Logic -->
