@@ -1012,6 +1012,219 @@
       text-decoration: underline;
     }
 
+    /* ── Feature 1: Why This Appeared Box ── */
+    .why-appeared-box {
+      background: var(--bg-card-muted);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm, 8px);
+      padding: 10px 14px;
+      margin-top: 6px;
+    }
+
+    .why-appeared-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .why-appeared-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .why-appeared-list li {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .match-confirmed {
+      color: #2E7D32;
+    }
+
+    .match-verify {
+      color: #B06000;
+    }
+
+    [data-theme="dark"] .match-confirmed {
+      color: #8BE0A5;
+    }
+
+    [data-theme="dark"] .match-verify {
+      color: #FFD27A;
+    }
+
+    /* ── Feature 2: Personalized Results Summary ── */
+    .personalized-summary-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md, 12px);
+      padding: 1.1rem 1.35rem;
+      box-shadow: 0 4px 14px -8px var(--shadow-strong);
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+
+    .summary-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .summary-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .summary-subtitle {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    .summary-tags-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .summary-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 14px;
+    }
+
+    .tag-likely {
+      background-color: color-mix(in srgb, #DDF4E4 75%, var(--bg-card) 25%);
+      color: #1D6A38;
+      border: 1px solid color-mix(in srgb, #7BC78D 40%, var(--border-color) 60%);
+    }
+
+    .tag-verify {
+      background-color: color-mix(in srgb, #FFF4CC 75%, var(--bg-card) 25%);
+      color: #A15C00;
+      border: 1px solid color-mix(in srgb, #FFD76B 45%, var(--border-color) 55%);
+    }
+
+    [data-theme="dark"] .tag-likely {
+      background-color: rgba(96, 197, 128, 0.16);
+      color: #8BE0A5;
+      border-color: rgba(96, 197, 128, 0.3);
+    }
+
+    [data-theme="dark"] .tag-verify {
+      background-color: rgba(255, 196, 89, 0.16);
+      color: #FFD27A;
+      border-color: rgba(255, 196, 89, 0.3);
+    }
+
+    /* ── Feature 3: Last Verified Tag ── */
+    .last-verified-tag {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
+    /* ── Feature 4: How SchemeMatch Works ── */
+    .how-it-works-section {
+      max-width: 1200px;
+      margin: 3rem auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    .how-it-works-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg, 16px);
+      padding: 2.5rem 2rem;
+      box-shadow: 0 16px 36px -30px var(--shadow-strong);
+      text-align: center;
+    }
+
+    .how-it-works-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .how-it-works-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .how-it-works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      text-align: left;
+    }
+
+    .how-step-card {
+      background: var(--bg-card-muted);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md, 12px);
+      padding: 1.4rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .how-step-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .step-number {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 0.85rem;
+    }
+
+    .step-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .step-desc {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Feature 5: Empty State Reset Button ── */
+    .empty-state .btn-reset-form {
+      margin-top: 1.25rem;
+    }
+
     .results-tabs {
       background-color: var(--bg-card);
     }
@@ -2198,6 +2411,34 @@
 
   </main>
 
+  <!-- How SchemeMatch Works Section -->
+  <section class="how-it-works-section">
+    <div class="how-it-works-container">
+      <h2 class="how-it-works-title">How SchemeMatch Works</h2>
+      <p class="how-it-works-subtitle">Simple, transparent, and direct access to official Indian government schemes.</p>
+      
+      <div class="how-it-works-grid">
+        <div class="how-step-card">
+          <span class="step-number">01</span>
+          <h3 class="step-title">Tell us about yourself</h3>
+          <p class="step-desc">Answer a few questions about your category, income, location, education, or work status.</p>
+        </div>
+
+        <div class="how-step-card">
+          <span class="step-number">02</span>
+          <h3 class="step-title">Check eligibility</h3>
+          <p class="step-desc">Your profile is evaluated instantly against central &amp; state government eligibility criteria.</p>
+        </div>
+
+        <div class="how-step-card">
+          <span class="step-number">03</span>
+          <h3 class="step-title">Discover relevant schemes</h3>
+          <p class="step-desc">See matched schemes, understand why they appeared, and navigate directly to official government portals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <div class="footer-content">
@@ -2320,14 +2561,164 @@
       });
     }
 
-    const cardObserver = new MutationObserver(enhanceSchemeCards);
+    const cardObserver = new MutationObserver(enhanceProductFeatures);
     const resultsContainer = document.getElementById('results');
     const povertyContainer = document.getElementById('panel-poverty');
     if (resultsContainer) cardObserver.observe(resultsContainer, { childList: true, subtree: true });
     if (povertyContainer) cardObserver.observe(povertyContainer, { childList: true, subtree: true });
 
-    window.addEventListener('DOMContentLoaded', enhanceSchemeCards);
-    setTimeout(enhanceSchemeCards, 300);
+    // ── Features 1, 2, 3, 5: Dynamic Card Details & Results Summary Enhancer ──
+    function enhanceProductFeatures() {
+      enhanceSchemeCards();
+
+      const formFiltered = typeof isFiltered !== 'undefined' ? isFiltered : false;
+      const currentCategory = document.getElementById('category')?.value || 
+                              document.getElementById('sdg4-category')?.value || 
+                              document.getElementById('sdg8-category')?.value || '';
+      const currentState = document.getElementById('state')?.value || 
+                           document.getElementById('sdg4-state')?.value || 
+                           document.getElementById('sdg8-state')?.value || '';
+      const currentIncome = document.getElementById('income')?.value || 
+                            document.getElementById('sdg4-income')?.value || 
+                            document.getElementById('sdg8-income')?.value || '';
+
+      const cards = document.querySelectorAll('.scheme-card');
+      cards.forEach(card => {
+        // Feature 1: "Why this appeared" (When form is filtered)
+        if (formFiltered && !card.querySelector('.why-appeared-box')) {
+          const whyBox = document.createElement('div');
+          whyBox.className = 'why-appeared-box';
+
+          const title = document.createElement('div');
+          title.className = 'why-appeared-title';
+          title.textContent = 'Why this appeared';
+          whyBox.appendChild(title);
+
+          const ul = document.createElement('ul');
+          ul.className = 'why-appeared-list';
+
+          // Confirmed criteria
+          if (currentCategory && currentCategory !== 'General') {
+            const li = document.createElement('li');
+            li.className = 'match-confirmed';
+            li.innerHTML = `<span>✓</span> Category matched (${escapeHTML(currentCategory)})`;
+            ul.appendChild(li);
+          } else {
+            const li = document.createElement('li');
+            li.className = 'match-confirmed';
+            li.innerHTML = `<span>✓</span> Open to all social categories`;
+            ul.appendChild(li);
+          }
+
+          if (currentState && currentState !== 'Other / Not Listed') {
+            const li = document.createElement('li');
+            li.className = 'match-confirmed';
+            li.innerHTML = `<span>✓</span> State domicile matched (${escapeHTML(currentState)})`;
+            ul.appendChild(li);
+          } else {
+            const li = document.createElement('li');
+            li.className = 'match-confirmed';
+            li.innerHTML = `<span>✓</span> Applicable central / multi-state scheme`;
+            ul.appendChild(li);
+          }
+
+          if (currentIncome && currentIncome !== 'Above 8L' && currentIncome !== 'Above 5L') {
+            const li = document.createElement('li');
+            li.className = 'match-confirmed';
+            li.innerHTML = `<span>✓</span> Household income within eligibility limit (${escapeHTML(currentIncome)})`;
+            ul.appendChild(li);
+          }
+
+          // Verification items
+          const isVerifyCard = card.querySelector('.verify-badge, .verification-callout, .match-potential');
+          if (isVerifyCard) {
+            const li = document.createElement('li');
+            li.className = 'match-verify';
+            li.innerHTML = `<span>⚠</span> Specific marks, course, or document verification required at portal`;
+            ul.appendChild(li);
+          }
+
+          whyBox.appendChild(ul);
+
+          const desc = card.querySelector('.scheme-description');
+          if (desc && desc.nextSibling) {
+            card.insertBefore(whyBox, desc.nextSibling);
+          } else {
+            card.appendChild(whyBox);
+          }
+        }
+
+        // Feature 3: "Last verified" (if dataset property exists)
+        const deadlineInfo = card.querySelector('.deadline-info');
+        if (deadlineInfo && !card.querySelector('.last-verified-tag')) {
+          const lastVer = card.dataset.lastVerified;
+          if (lastVer) {
+            const tag = document.createElement('span');
+            tag.className = 'last-verified-tag';
+            tag.textContent = `· Verified: ${escapeHTML(lastVer)}`;
+            deadlineInfo.appendChild(tag);
+          }
+        }
+      });
+
+      // Feature 2: Personalized Results Summary (When filtered)
+      const resultsHeader = document.querySelector('.results-header');
+      if (resultsHeader && formFiltered && !resultsHeader.querySelector('.personalized-summary-card')) {
+        let activeArray = [];
+        if (typeof activeTab !== 'undefined') {
+          if (activeTab === 'scholarships' && typeof filteredScholarships !== 'undefined') activeArray = filteredScholarships;
+          else if (activeTab === 'skills' && typeof filteredSkills !== 'undefined') activeArray = filteredSkills;
+          else if (activeTab === 'poverty' && typeof filteredPoverty !== 'undefined') activeArray = filteredPoverty;
+        }
+
+        const totalMatched = activeArray.length;
+        const likelyCount = activeArray.filter(item => item.matchType !== 'potential' && !item.verify_before_use).length;
+        const verifyCount = totalMatched - likelyCount;
+
+        const summaryCard = document.createElement('div');
+        summaryCard.className = 'personalized-summary-card';
+        summaryCard.innerHTML = `
+          <span class="summary-eyebrow">Your Results</span>
+          <div class="summary-title">${totalMatched} ${totalMatched === 1 ? 'scheme matches' : 'schemes match'} your profile</div>
+          <div class="summary-subtitle">Based on your submitted category, state, income, and status criteria.</div>
+          <div class="summary-tags-row">
+            <span class="summary-tag tag-likely">🟢 ${likelyCount} Likely matches</span>
+            <span class="summary-tag tag-verify">🟡 ${verifyCount} Need verification</span>
+          </div>
+        `;
+
+        resultsHeader.innerHTML = '';
+        resultsHeader.appendChild(summaryCard);
+      }
+
+      // Feature 5: Empty State Reset Button Injection
+      const emptyStates = document.querySelectorAll('.empty-state');
+      emptyStates.forEach(empty => {
+        if (!empty.querySelector('.empty-reset-btn')) {
+          const title = empty.querySelector('.empty-title');
+          const sub = empty.querySelector('.empty-subtitle');
+          if (title) title.textContent = 'No matching schemes found';
+          if (sub) sub.textContent = "We couldn't find schemes matching the information currently provided. Try adjusting your category, income, state, or work status.";
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-reset-form empty-reset-btn';
+          btn.innerHTML = '↻ Reset Form';
+          btn.addEventListener('click', () => {
+            const activeFormId = typeof activeTab !== 'undefined' 
+              ? (activeTab === 'scholarships' ? 'form-sdg4' : (activeTab === 'skills' ? 'form-sdg8' : 'form-sdg1'))
+              : 'form-sdg4';
+            const form = document.getElementById(activeFormId);
+            if (form) form.reset();
+            if (typeof showDefaultState === 'function') showDefaultState();
+          });
+          empty.appendChild(btn);
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', enhanceProductFeatures);
+    setTimeout(enhanceProductFeatures, 400);
   </script>
 
   <!-- Application Logic -->
