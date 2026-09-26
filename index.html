@@ -1617,6 +1617,322 @@
         font-size: 0.75rem;
       }
     }
+
+    /* ── Ask AI Button ── */
+    .btn-ask-ai {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border-color) 65%);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-ask-ai:hover {
+      background-color: var(--accent-light);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .btn-ask-ai:active {
+      transform: translateY(0);
+    }
+
+    .btn-ask-ai:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* ── Ask AI Drawer ── */
+    #ask-ai-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 8000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    #ask-ai-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #ask-ai-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100dvh;
+      width: min(440px, 100vw);
+      background: var(--bg-card);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -8px 0 40px var(--shadow-strong);
+      z-index: 8001;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    #ask-ai-drawer.open {
+      transform: translateX(0);
+    }
+
+    .ai-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 16px;
+      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(135deg, var(--accent-light) 0%, var(--bg-card) 100%);
+      flex-shrink: 0;
+    }
+
+    .ai-drawer-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ai-drawer-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .ai-drawer-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .ai-drawer-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      margin: 2px 0 0;
+    }
+
+    .ai-drawer-close {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      transition: background 0.15s ease, color 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .ai-drawer-close:hover {
+      background: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .ai-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ai-scheme-pill {
+      background: var(--accent-light);
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border-color) 72%);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .ai-scheme-pill-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .ai-scheme-pill-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .ai-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .ai-prompt-box {
+      background: var(--bg-card-muted);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: inherit;
+    }
+
+    .ai-action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ai-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+
+    .ai-action-btn:active { transform: translateY(1px); }
+
+    .ai-action-btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .ai-action-btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .ai-action-btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+
+    .ai-action-btn-secondary:hover {
+      background: var(--border-soft);
+      border-color: var(--border-strong);
+    }
+
+    .ai-action-btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border-color: var(--border-color);
+    }
+
+    .ai-action-btn-ghost:hover {
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+      background: var(--bg-card-muted);
+    }
+
+    .ai-copy-feedback {
+      font-size: 0.76rem;
+      color: #2E7D32;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    [data-theme="dark"] .ai-copy-feedback {
+      color: #8BE0A5;
+    }
+
+    .ai-copy-feedback.visible {
+      opacity: 1;
+    }
+
+    .ai-divider {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 0;
+    }
+
+    .ai-questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ai-question-chip {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: var(--bg-card-muted);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease;
+      line-height: 1.4;
+    }
+
+    .ai-question-chip:hover {
+      background: var(--accent-light);
+      border-color: color-mix(in srgb, var(--accent) 30%, var(--border-color) 70%);
+      color: var(--accent);
+    }
+
+    .ai-question-chip-icon {
+      flex-shrink: 0;
+      color: var(--accent);
+      margin-top: 1px;
+    }
+
+    @media (max-width: 600px) {
+      #ask-ai-drawer {
+        width: 100vw;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        top: auto;
+        bottom: 0;
+        height: 90dvh;
+        transform: translateY(100%);
+        border-radius: 16px 16px 0 0;
+      }
+      #ask-ai-drawer.open {
+        transform: translateY(0);
+      }
+    }
     </style>
 </head>
 
@@ -1628,6 +1944,24 @@
     <div class="glow-orb orb-middle"></div>
     <div class="glow-orb orb-bottom"></div>
   </div>
+
+  <!-- Ask AI Overlay & Drawer -->
+  <div id="ask-ai-overlay" role="presentation" aria-hidden="true"></div>
+  <aside id="ask-ai-drawer" role="dialog" aria-modal="true" aria-label="Ask AI about this scheme" aria-hidden="true">
+    <div class="ai-drawer-header">
+      <div class="ai-drawer-title-group">
+        <span class="ai-drawer-icon">✨</span>
+        <div>
+          <p class="ai-drawer-title">Ask AI</p>
+          <p class="ai-drawer-subtitle">Get AI-powered guidance on this scheme</p>
+        </div>
+      </div>
+      <button class="ai-drawer-close" id="ask-ai-close-btn" aria-label="Close Ask AI panel" title="Close">✕</button>
+    </div>
+    <div class="ai-drawer-body" id="ask-ai-body">
+      <!-- Content injected by JS -->
+    </div>
+  </aside>
 
   <!-- Share Button -->
   <button id="share-btn">🔗 Share</button>
@@ -2533,30 +2867,240 @@
       });
     });
 
-    // ── Official Source Link Enhancer for Scheme Cards ──
+    // ── Ask AI: Drawer Logic ──
+    const aiOverlay = document.getElementById('ask-ai-overlay');
+    const aiDrawer = document.getElementById('ask-ai-drawer');
+    const aiBody = document.getElementById('ask-ai-body');
+    const aiCloseBtn = document.getElementById('ask-ai-close-btn');
+
+    function openAiDrawer(schemeData) {
+      // Build contextual prompt
+      const prompt = buildAiPrompt(schemeData);
+      const suggestedQuestions = [
+        `Am I eligible for ${schemeData.name}?`,
+        `What documents do I need to apply for ${schemeData.name}?`,
+        `How do I apply for ${schemeData.name} step-by-step?`,
+        `What is the benefit amount and how is it disbursed?`,
+        `Are there any income or category restrictions I should know about?`
+      ];
+
+      aiBody.innerHTML = `
+        <div class="ai-scheme-pill">
+          <span class="ai-scheme-pill-label">Scheme</span>
+          <span class="ai-scheme-pill-name">${escHtml(schemeData.name)}</span>
+        </div>
+
+        <div>
+          <span class="ai-section-label">📋 Ready-to-use AI Prompt</span>
+          <div class="ai-prompt-box" id="ai-prompt-text">${escHtml(prompt)}</div>
+        </div>
+
+        <div class="ai-action-row">
+          <button
+            type="button"
+            id="ai-gemini-btn"
+            class="ai-action-btn ai-action-btn-primary"
+            title="Copy prompt and open Google Gemini"
+          >📋 Copy &amp; Open Gemini</button>
+          <a
+            href="https://chat.openai.com/?q=${encodeURIComponent(prompt)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ai-action-btn ai-action-btn-secondary"
+            title="Open in ChatGPT"
+          >💬 Open in ChatGPT</a>
+          <button
+            type="button"
+            class="ai-action-btn ai-action-btn-ghost"
+            id="ai-copy-btn"
+            title="Copy prompt to clipboard"
+          >📋 Copy Prompt</button>
+        </div>
+        <div class="ai-copy-feedback" id="ai-copy-feedback">✓ Copied to clipboard!</div>
+
+        <hr class="ai-divider">
+
+        <div>
+          <span class="ai-section-label">💡 Suggested Questions</span>
+          <div class="ai-questions-list">
+            ${suggestedQuestions.map(q => `
+              <button
+                type="button"
+                class="ai-question-chip"
+                data-question="${escHtml(q)}"
+              >
+                <span class="ai-question-chip-icon">›</span>
+                <span>${escHtml(q)}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // Gemini: copy prompt then open Gemini
+      document.getElementById('ai-gemini-btn')?.addEventListener('click', () => {
+        const promptText = document.getElementById('ai-prompt-text')?.textContent || prompt;
+        navigator.clipboard.writeText(promptText)
+          .catch(() => { /* clipboard unavailable — open anyway */ })
+          .finally(() => {
+            window.open('https://gemini.google.com', '_blank', 'noopener,noreferrer');
+            showAiToast('📋 Prompt copied! Paste it in Gemini (Ctrl+V / Cmd+V)');
+          });
+      });
+
+      // Copy prompt handler (standalone copy button)
+      document.getElementById('ai-copy-btn')?.addEventListener('click', () => {
+        const promptText = document.getElementById('ai-prompt-text')?.textContent || prompt;
+        navigator.clipboard.writeText(promptText).then(() => {
+          const fb = document.getElementById('ai-copy-feedback');
+          if (fb) {
+            fb.classList.add('visible');
+            setTimeout(() => fb.classList.remove('visible'), 2200);
+          }
+        }).catch(() => {
+          // Fallback: select all text in the box
+          const box = document.getElementById('ai-prompt-text');
+          if (box) {
+            const range = document.createRange();
+            range.selectNodeContents(box);
+            window.getSelection()?.removeAllRanges();
+            window.getSelection()?.addRange(range);
+          }
+        });
+      });
+
+      // Suggested question chips → open in Gemini
+      aiBody.querySelectorAll('.ai-question-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const q = chip.getAttribute('data-question') || '';
+          const fullPrompt = `Context: The scheme is "${escHtml(schemeData.name)}" by ${escHtml(schemeData.provider || 'Indian Government')}. ${escHtml(schemeData.description || '')}\n\nMy question: ${q}`;
+          window.open(`https://gemini.google.com/app?q=${encodeURIComponent(fullPrompt)}`, '_blank', 'noopener,noreferrer');
+        });
+      });
+
+      // Show drawer
+      aiOverlay.classList.add('visible');
+      aiOverlay.setAttribute('aria-hidden', 'false');
+      aiDrawer.classList.add('open');
+      aiDrawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      aiCloseBtn?.focus();
+    }
+
+    function closeAiDrawer() {
+      aiOverlay.classList.remove('visible');
+      aiOverlay.setAttribute('aria-hidden', 'true');
+      aiDrawer.classList.remove('open');
+      aiDrawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function buildAiPrompt(s) {
+      const lines = [
+        `I want to understand a government scheme and check my eligibility.`,
+        ``,
+        `Scheme: ${s.name}`,
+        `Provider: ${s.provider || 'Government of India'}`,
+        `Type: ${s.type || 'Welfare/Support'}`,
+        `Benefit: ${s.benefit || s.benefitLabel || 'As per scheme guidelines'}`,
+        `Deadline: ${s.deadline || 'Ongoing / Check portal'}`,
+        `Description: ${s.description || 'A government scheme for eligible citizens.'}`,
+        ``,
+        `Please explain:`,
+        `1. What is this scheme and who exactly is it for?`,
+        `2. What are the key eligibility requirements (income, category, age, location, etc.)?`,
+        `3. What documents will I need to apply?`,
+        `4. How do I apply step-by-step?`,
+        `5. Are there any important conditions or restrictions I should know about?`,
+      ];
+      return lines.join('\n');
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Global askAI function (called by injected buttons)
+    window.askAI = function(btn) {
+      const schemeData = {
+        name: btn.dataset.name || '',
+        description: btn.dataset.desc || '',
+        type: btn.dataset.type || '',
+        provider: btn.dataset.provider || '',
+        deadline: btn.dataset.deadline || '',
+        benefit: btn.dataset.benefit || '',
+        benefitLabel: btn.dataset.benefit || '',
+      };
+      openAiDrawer(schemeData);
+    };
+
+    // Close handlers
+    aiCloseBtn?.addEventListener('click', closeAiDrawer);
+    aiOverlay?.addEventListener('click', closeAiDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && aiDrawer.classList.contains('open')) closeAiDrawer();
+    });
+
+    // ── Official Source Link & Ask AI Button Enhancer for Scheme Cards ──
     function enhanceSchemeCards() {
       const cards = document.querySelectorAll('.scheme-card');
       cards.forEach(card => {
-        if (card.querySelector('.official-source-link')) return;
-
+        const footer = card.querySelector('.card-footer');
         const applyBtn = card.querySelector('.apply-btn');
         const url = applyBtn ? applyBtn.getAttribute('href') : null;
-        if (!url || url.startsWith('javascript:') || url === '#') return;
 
-        const deadlineInfo = card.querySelector('.deadline-info');
-        const footer = card.querySelector('.card-footer');
+        // Official Source Link
+        if (!card.querySelector('.official-source-link') && url && !url.startsWith('javascript:') && url !== '#') {
+          const deadlineInfo = card.querySelector('.deadline-info');
+          const sourceLink = document.createElement('a');
+          sourceLink.className = 'official-source-link';
+          sourceLink.href = url;
+          sourceLink.target = '_blank';
+          sourceLink.rel = 'noopener noreferrer';
+          sourceLink.innerHTML = '🏛️ Official Source ↗';
+          if (deadlineInfo) {
+            deadlineInfo.appendChild(sourceLink);
+          } else if (footer) {
+            footer.prepend(sourceLink);
+          }
+        }
 
-        const sourceLink = document.createElement('a');
-        sourceLink.className = 'official-source-link';
-        sourceLink.href = url;
-        sourceLink.target = '_blank';
-        sourceLink.rel = 'noopener noreferrer';
-        sourceLink.innerHTML = '🏛️ Official Source ↗';
+        // Ask AI Button injection
+        if (!card.querySelector('.btn-ask-ai') && footer) {
+          const schemeName    = card.querySelector('.scheme-name')?.textContent?.trim() || '';
+          const schemeDesc    = card.querySelector('.scheme-description')?.textContent?.trim() || '';
+          const schemeProvider= card.querySelector('.provider-tag')?.textContent?.trim() || '';
+          const typeBadge     = card.querySelector('.type-badge')?.textContent?.trim() || '';
+          const deadlineEl    = card.querySelector('.deadline-info strong');
+          const schemeDeadline= deadlineEl?.textContent?.trim() || '';
+          const benefitEl     = card.querySelector('.scheme-details-meta p');
+          const schemeBenefit = benefitEl?.textContent?.replace(/^Benefit:\s*/i, '').trim() || '';
 
-        if (deadlineInfo) {
-          deadlineInfo.appendChild(sourceLink);
-        } else if (footer) {
-          footer.prepend(sourceLink);
+          const aiBtn = document.createElement('button');
+          aiBtn.type = 'button';
+          aiBtn.className = 'btn-ask-ai';
+          aiBtn.setAttribute('data-name', schemeName);
+          aiBtn.setAttribute('data-desc', schemeDesc);
+          aiBtn.setAttribute('data-type', typeBadge);
+          aiBtn.setAttribute('data-provider', schemeProvider);
+          aiBtn.setAttribute('data-deadline', schemeDeadline);
+          aiBtn.setAttribute('data-benefit', schemeBenefit);
+          aiBtn.setAttribute('aria-label', `Ask AI about ${schemeName}`);
+          aiBtn.innerHTML = '✨ Ask AI';
+          aiBtn.addEventListener('click', () => window.askAI(aiBtn));
+
+          // Insert before the Apply Now button
+          if (applyBtn) {
+            footer.insertBefore(aiBtn, applyBtn);
+          } else {
+            footer.appendChild(aiBtn);
+          }
         }
       });
     }
