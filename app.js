@@ -2703,14 +2703,17 @@ function renderScholarshipsTab(container) {
 
     card.innerHTML = `
       <div class="card-top-row">
-        <div>
-          <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+        <div class="card-header-main">
+          <div class="card-meta-tags">
+            <span class="type-badge type-scholarship">${escapeHTML(scheme.scheme_type || 'Scholarship')}</span>
+            <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+          </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
-        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+        <div class="card-badges-column">
           ${bestMatchBadgeHTML}
           <div class="amount-badge">
-            <span>${amountDisplay}</span>
+            <span class="amount-value">${amountDisplay}</span>
             <span class="amount-subtext">Est. Max / Year</span>
           </div>
         </div>
@@ -2719,7 +2722,7 @@ function renderScholarshipsTab(container) {
       <p class="scheme-description">${escapeHTML(scheme.description || '')}</p>
 
       <div class="scheme-details-meta">
-        <p><strong>Benefit:</strong> ${escapeHTML(scheme.benefit_label)}</p>
+        <p class="detail-item"><strong>Benefit:</strong> ${escapeHTML(scheme.benefit_label)}</p>
       </div>
 
       ${specialEligibilityHTML}
@@ -2837,12 +2840,14 @@ function renderSkillsTab(container) {
 
     card.innerHTML = `
       <div class="card-top-row">
-        <div>
-          <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
-          <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+        <div class="card-header-main">
+          <div class="card-meta-tags">
+            <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
+            <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+          </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
-        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+        <div class="card-badges-column">
           ${bestMatchBadgeHTML}
           ${matchBadgeHTML}
         </div>
@@ -2851,8 +2856,8 @@ function renderSkillsTab(container) {
       <p class="scheme-description">${escapeHTML(scheme.sdg8_connection || '')}</p>
 
       <div class="scheme-details-meta">
-        <p><strong>Benefit:</strong> ${escapeHTML(scheme.benefit)}</p>
-        ${scheme.application_method ? `<p style="font-size: 0.85rem; color: var(--text-medium); margin-top: 0.25rem;"><strong>How to Apply:</strong> ${escapeHTML(scheme.application_method)}</p>` : ''}
+        <p class="detail-item"><strong>Benefit:</strong> ${escapeHTML(scheme.benefit)}</p>
+        ${scheme.application_method ? `<p class="detail-item" style="font-size: 0.85rem; color: var(--text-medium); margin-top: 0.25rem;"><strong>How to Apply:</strong> ${escapeHTML(scheme.application_method)}</p>` : ''}
       </div>
 
       ${verificationCalloutHTML}
@@ -2862,7 +2867,12 @@ function renderSkillsTab(container) {
           <span>📅 Deadline: <strong>${escapeHTML(scheme.deadline_type)}</strong></span>
         </div>
         <a href="${escapeHTML(scheme.official_url)}" target="_blank" rel="noopener noreferrer" class="apply-btn">
-          <span>Apply / Learn More →</span>
+          <span>Apply / Learn More</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
         </a>
       </div>
     `;
@@ -2976,22 +2986,28 @@ function renderPovertyCardsList(targetElement) {
 
     card.innerHTML = `
       <div class="card-top-row">
-        <div>
-          <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
-          <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+        <div class="card-header-main">
+          <div class="card-meta-tags">
+            <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
+            <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+          </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
-        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+        <div class="card-badges-column">
           ${bestMatchBadgeHTML}
           ${matchBadgeHTML}
           <div class="amount-badge">
-            <span>${amountDisplay}</span>
+            <span class="amount-value">${amountDisplay}</span>
             <span class="amount-subtext">${subtext}</span>
           </div>
         </div>
       </div>
 
       <p class="scheme-description">${escapeHTML(scheme.description || '')}</p>
+
+      <div class="scheme-details-meta">
+        <p class="detail-item"><strong>Benefit:</strong> ${escapeHTML(scheme.benefit || scheme.benefit_summary || amountDisplay)}</p>
+      </div>
 
       ${verificationCalloutHTML}
 
