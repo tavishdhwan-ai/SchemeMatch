@@ -1807,13 +1807,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // SDG 8 conditional sub-sections listener
   const situationSel = document.getElementById("sdg8-situation");
   const subMap = {
-    'Student':       'sub-student',
-    'Unemployed':    'sub-unemployed',
-    'Employed':      'sub-employed',
+    'Student': 'sub-student',
+    'Unemployed': 'sub-unemployed',
+    'Employed': 'sub-employed',
     'Self-employed': 'sub-entrepreneur',
-    'Entrepreneur':  'sub-entrepreneur',
-    'Farmer':        'sub-farmer',
-    'Artisan':       'sub-artisan',
+    'Entrepreneur': 'sub-entrepreneur',
+    'Farmer': 'sub-farmer',
+    'Artisan': 'sub-artisan',
     'Street Vendor': 'sub-vendor'
   };
 
@@ -1896,6 +1896,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// Validate the active SDG form before running eligibility matching
+function validateEligibilityForm(formId) {
+  const form = document.getElementById(formId);
+
+  if (!form) return true;
+
+  const requiredFields = form.querySelectorAll("[required]");
+
+  for (const field of requiredFields) {
+    if (!field.value || !field.value.trim()) {
+      field.focus();
+
+      // Remove any previous validation message
+      const oldMessage = form.querySelector(".validation-message");
+      if (oldMessage) oldMessage.remove();
+
+      const message = document.createElement("p");
+      message.className = "validation-message";
+      message.textContent = "Please complete this field before finding schemes.";
+      message.setAttribute("role", "alert");
+
+      field.insertAdjacentElement("afterend", message);
+
+      return false;
+    }
+  }
+
+  return true;
+}
 // Sync helpers to populate filter fields from SDG specific forms
 function syncSDG4ToFilter() {
   const gender = document.getElementById("sdg4-gender");
@@ -2342,15 +2371,15 @@ function filterAndDisplaySchemes() {
   filteredSkills = allSkills.filter(scheme => {
     // 1. Status check
     const statusMatch = (userStatus === "All") ||
-                        scheme.target_status.includes(userStatus) ||
-                        scheme.target_status.includes("All");
+      scheme.target_status.includes(userStatus) ||
+      scheme.target_status.includes("All");
     if (!statusMatch) return false;
 
     // 2. Category check
     const isFemale = (gender === "Female");
     const catMatch = (scheme.eligible_for_all_women === true && isFemale) ||
-                     scheme.target_categories.includes(category) ||
-                     scheme.target_categories.includes("All");
+      scheme.target_categories.includes(category) ||
+      scheme.target_categories.includes("All");
     if (!catMatch) return false;
 
     // 3. Gender check
@@ -2360,8 +2389,8 @@ function filterAndDisplaySchemes() {
 
     // 4. Location check
     const locMatch = (userLocation === "Both") ||
-                     (scheme.location_type === "Both") ||
-                     (scheme.location_type === userLocation);
+      (scheme.location_type === "Both") ||
+      (scheme.location_type === userLocation);
     if (!locMatch) return false;
 
     // 5. Income limit check
@@ -2409,8 +2438,8 @@ function filterAndDisplaySchemes() {
     // CHECK 1 — Category
     const isFemale = (gender === "Female");
     const catMatch = (scheme.eligible_categories && scheme.eligible_categories.includes("All")) ||
-                     (scheme.eligible_categories && scheme.eligible_categories.includes(category)) ||
-                     (scheme.eligible_for_all_women === true && isFemale);
+      (scheme.eligible_categories && scheme.eligible_categories.includes(category)) ||
+      (scheme.eligible_for_all_women === true && isFemale);
     if (!catMatch) return false;
 
     // CHECK 2 — Income
@@ -2425,8 +2454,8 @@ function filterAndDisplaySchemes() {
 
     // CHECK 3 — Location
     const locMatch = (userLocation === "Both") ||
-                     (scheme.location_type === "Both") ||
-                     (scheme.location_type === userLocation);
+      (scheme.location_type === "Both") ||
+      (scheme.location_type === userLocation);
     if (!locMatch) return false;
 
     // CHECK 4 — Status (Hard check if status is selected and scheme has specific status)
@@ -2598,7 +2627,7 @@ function renderScholarshipsTab(container) {
   // Results Header
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
-  
+
   const titleContainer = document.createElement("div");
   titleContainer.style.display = "flex";
   titleContainer.style.alignItems = "baseline";
@@ -2652,24 +2681,24 @@ function renderScholarshipsTab(container) {
     const card = document.createElement("article");
     card.className = "scheme-card";
 
-    const amountDisplay = scheme.amount_per_year > 0 
+    const amountDisplay = scheme.amount_per_year > 0
       ? `₹${scheme.amount_per_year.toLocaleString('en-IN')}`
       : "Free Coaching";
 
     const isVerify = scheme.deadline && scheme.deadline.includes("Check");
 
-    const specialEligibilityHTML = scheme.special_eligibility 
+    const specialEligibilityHTML = scheme.special_eligibility
       ? `<div class="special-eligibility-box">
            <strong>Special Eligibility:</strong> ${escapeHTML(scheme.special_eligibility)}
          </div>`
       : "";
 
-    const verifyBadgeHTML = isVerify 
+    const verifyBadgeHTML = isVerify
       ? `<span class="verify-badge">⚠️ Verify Details</span>`
       : "";
 
     const bestMatchBadgeHTML = (isFiltered && index === 0)
-      ? `<span class="best-match-badge">⭐ Best Match</span>` 
+      ? `<span class="best-match-badge">⭐ Best Match</span>`
       : "";
 
     card.innerHTML = `
@@ -2722,7 +2751,7 @@ function renderSkillsTab(container) {
   // Results Header
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
-  
+
   const titleContainer = document.createElement("div");
   titleContainer.style.display = "flex";
   titleContainer.style.alignItems = "baseline";
@@ -2779,8 +2808,8 @@ function renderSkillsTab(container) {
     // Match status badge: ONLY shown in filtered state
     const matchBadgeHTML = isFiltered
       ? (scheme.matchType === "potential"
-          ? `<span class="match-badge match-potential">🔍 Potentially Eligible</span>`
-          : `<span class="match-badge match-eligible">✅ Eligible</span>`)
+        ? `<span class="match-badge match-potential">🔍 Potentially Eligible</span>`
+        : `<span class="match-badge match-eligible">✅ Eligible</span>`)
       : "";
 
     // Best Match Badge: ONLY shown in filtered state on index === 0 if scheme.matchType === "eligible"
@@ -2848,7 +2877,7 @@ function renderSkillsTab(container) {
 function renderPovertyTabHeader(container) {
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
-  
+
   const titleContainer = document.createElement("div");
   titleContainer.style.display = "flex";
   titleContainer.style.alignItems = "baseline";
@@ -2909,8 +2938,8 @@ function renderPovertyCardsList(targetElement) {
     // Match status badge: ONLY shown in filtered state
     const matchBadgeHTML = isFiltered
       ? (scheme.matchType === "potential"
-          ? `<span class="match-badge match-potential">🔍 Potentially Eligible</span>`
-          : `<span class="match-badge match-eligible">✅ Eligible</span>`)
+        ? `<span class="match-badge match-potential">🔍 Potentially Eligible</span>`
+        : `<span class="match-badge match-eligible">✅ Eligible</span>`)
       : "";
 
     // Best Match Badge: ONLY shown in filtered state on index === 0 if scheme.matchType === "eligible"
