@@ -1808,22 +1808,338 @@
       text-decoration: underline;
     }
 
-    /* ── Feature 1: Why This Appeared Box ── */
+    /* ── Results Experience & Header System ── */
+    .results-header {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .results-updating {
+      animation: resultsPulse 0.35s ease-out;
+    }
+
+    @keyframes resultsPulse {
+      0% { opacity: 0.7; transform: translateY(3px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .personalized-summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 10px 30px -15px var(--shadow-strong);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: all 0.25s ease;
+      width: 100%;
+    }
+
+    .personalized-summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent) 0%, #34A853 50%, #FBBC05 100%);
+    }
+
+    .summary-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .summary-sdg-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid rgba(26, 115, 232, 0.2);
+    }
+
+    [data-theme="dark"] .summary-sdg-pill {
+      background: rgba(99, 177, 255, 0.15);
+      color: #63B1FF;
+      border-color: rgba(99, 177, 255, 0.3);
+    }
+
+    .summary-action-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-left: auto;
+    }
+
+    .btn-show-all, .btn-reset-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .btn-show-all:hover, .btn-reset-summary:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+    }
+
+    .summary-main-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .summary-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    .summary-subtitle {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .summary-meta-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding-top: 0.65rem;
+      border-top: 1px dashed var(--border-soft);
+    }
+
+    .summary-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 650;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      line-height: 1.2;
+    }
+
+    .tag-likely {
+      background-color: color-mix(in srgb, #DDF4E4 80%, var(--bg-card) 20%);
+      color: #166534;
+      border: 1px solid color-mix(in srgb, #22C55E 35%, var(--border-color) 65%);
+    }
+
+    .tag-verify {
+      background-color: color-mix(in srgb, #FEF3C7 80%, var(--bg-card) 20%);
+      color: #92400E;
+      border: 1px solid color-mix(in srgb, #F59E0B 35%, var(--border-color) 65%);
+    }
+
+    .tag-sort {
+      background-color: var(--bg-card-muted);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-soft);
+      font-size: 0.76rem;
+      margin-left: auto;
+    }
+
+    [data-theme="dark"] .tag-likely {
+      background-color: rgba(34, 197, 94, 0.15);
+      color: #4ADE80;
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    [data-theme="dark"] .tag-verify {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Active Profile Filter Pills in Header */
+    .active-filters-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.15rem;
+    }
+
+    .filter-chip {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      background: var(--bg-card-muted);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ── Result Toast Notification ── */
+    .results-toast {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: color-mix(in srgb, #DDF4E4 90%, var(--bg-card) 10%);
+      color: #166534;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: 10px;
+      padding: 0.65rem 1.1rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+      animation: toastFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] .results-toast {
+      background: rgba(34, 197, 94, 0.15);
+      color: #8BE0A5;
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    @keyframes toastFadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Upgraded Empty State Component ── */
+    .empty-state {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2.25rem 1.75rem;
+      text-align: center;
+      box-shadow: 0 8px 24px -12px var(--shadow-strong);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.1rem;
+      margin: 1.25rem 0;
+      width: 100%;
+    }
+
+    .empty-icon-badge {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      border: 1px solid rgba(26, 115, 232, 0.2);
+    }
+
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .empty-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .empty-suggestions-box {
+      background: var(--bg-card-muted);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .empty-suggestions-title {
+      font-size: 0.74rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-suggestions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .empty-suggestions-list li {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .empty-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.35rem;
+    }
+
+    /* ── Feature 1: Upgraded Why This Appeared Box ── */
     .why-appeared-box {
       background: var(--bg-card-muted);
       border: 1px solid var(--border-soft);
-      border-radius: var(--radius-sm, 8px);
-      padding: 10px 14px;
-      margin-top: 6px;
+      border-radius: 10px;
+      padding: 0.85rem 1.05rem;
+      margin: 0.4rem 0 0.2rem 0;
+      transition: border-color 0.2s ease;
     }
 
     .why-appeared-title {
-      font-size: 0.74rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 750;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 6px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
     .why-appeared-list {
@@ -1832,23 +2148,35 @@
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 0.4rem;
     }
 
     .why-appeared-list li {
-      font-size: 0.8rem;
-      line-height: 1.45;
+      font-size: 0.81rem;
+      line-height: 1.4;
       display: flex;
       align-items: flex-start;
-      gap: 6px;
+      gap: 0.45rem;
     }
 
     .match-confirmed {
-      color: #2E7D32;
+      color: #15803D;
+      font-weight: 500;
+    }
+
+    .match-confirmed span {
+      color: #16A34A;
+      font-weight: 700;
     }
 
     .match-verify {
-      color: #B06000;
+      color: #B45309;
+      font-weight: 500;
+    }
+
+    .match-verify span {
+      color: #D97706;
+      font-weight: 700;
     }
 
     [data-theme="dark"] .match-confirmed {
@@ -1856,81 +2184,7 @@
     }
 
     [data-theme="dark"] .match-verify {
-      color: #FFD27A;
-    }
-
-    /* ── Feature 2: Personalized Results Summary ── */
-    .personalized-summary-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md, 12px);
-      padding: 1.1rem 1.35rem;
-      box-shadow: 0 4px 14px -8px var(--shadow-strong);
-      margin-bottom: 0.5rem;
-      width: 100%;
-    }
-
-    .summary-eyebrow {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .summary-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .summary-subtitle {
-      font-size: 0.84rem;
-      color: var(--text-secondary);
-      margin-top: 3px;
-    }
-
-    .summary-tags-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .summary-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 14px;
-    }
-
-    .tag-likely {
-      background-color: color-mix(in srgb, #DDF4E4 75%, var(--bg-card) 25%);
-      color: #1D6A38;
-      border: 1px solid color-mix(in srgb, #7BC78D 40%, var(--border-color) 60%);
-    }
-
-    .tag-verify {
-      background-color: color-mix(in srgb, #FFF4CC 75%, var(--bg-card) 25%);
-      color: #A15C00;
-      border: 1px solid color-mix(in srgb, #FFD76B 45%, var(--border-color) 55%);
-    }
-
-    [data-theme="dark"] .tag-likely {
-      background-color: rgba(96, 197, 128, 0.16);
-      color: #8BE0A5;
-      border-color: rgba(96, 197, 128, 0.3);
-    }
-
-    [data-theme="dark"] .tag-verify {
-      background-color: rgba(255, 196, 89, 0.16);
-      color: #FFD27A;
-      border-color: rgba(255, 196, 89, 0.3);
+      color: #FCD34D;
     }
 
     /* ── Feature 3: Last Verified Tag ── */
@@ -3969,11 +4223,68 @@
     if (resultsContainer) cardObserver.observe(resultsContainer, { childList: true, subtree: true });
     if (povertyContainer) cardObserver.observe(povertyContainer, { childList: true, subtree: true });
 
+    // ── Helper: Trigger Smooth Results Feedback & Toast ──
+    function triggerResultsFeedback(msg) {
+      const resultsEl = document.getElementById('results') || document.getElementById('results-container');
+      if (resultsEl) {
+        // Trigger subtle entrance pulse
+        resultsEl.classList.remove('results-updating');
+        void resultsEl.offsetWidth; // force reflow
+        resultsEl.classList.add('results-updating');
+
+        // Smooth scroll to results header
+        const rect = resultsEl.getBoundingClientRect();
+        if (rect.top < 0 || rect.top > window.innerHeight) {
+          resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Show brief feedback toast inside results header
+        const existingToast = resultsEl.querySelector('.results-toast');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'results-toast';
+        toast.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span>${msg || 'Profile submitted! Filtered results updated below.'}</span>
+        `;
+
+        resultsEl.insertBefore(toast, resultsEl.firstChild);
+        setTimeout(() => {
+          if (toast && toast.parentNode) {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.4s ease';
+            setTimeout(() => toast.remove(), 400);
+          }
+        }, 3200);
+      }
+    }
+
+    // Attach feedback listeners to submit buttons once DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const sub4 = document.getElementById('submit-sdg4');
+      const sub8 = document.getElementById('submit-sdg8');
+      const sub1 = document.getElementById('submit-sdg1');
+      const find = document.getElementById('find-btn');
+      const sample = document.getElementById('sample-profile-btn');
+
+      if (sub4) sub4.addEventListener('click', () => triggerResultsFeedback('Profile submitted! Showing matched scholarship schemes.'));
+      if (sub8) sub8.addEventListener('click', () => triggerResultsFeedback('Profile submitted! Showing matched skilling & employment schemes.'));
+      if (sub1) sub1.addEventListener('click', () => triggerResultsFeedback('Profile submitted! Showing matched social protection schemes.'));
+      if (find) find.addEventListener('click', () => triggerResultsFeedback('Profile updated! Matching schemes displayed below.'));
+      if (sample) sample.addEventListener('click', () => triggerResultsFeedback('Sample profile applied! Schemes updated below.'));
+    });
+
     // ── Features 1, 2, 3, 5: Dynamic Card Details & Results Summary Enhancer ──
     function enhanceProductFeatures() {
       enhanceSchemeCards();
 
       const formFiltered = typeof isFiltered !== 'undefined' ? isFiltered : false;
+      const curTab = typeof activeTab !== 'undefined' ? activeTab : 'scholarships';
+
       const currentCategory = document.getElementById('category')?.value || 
                               document.getElementById('sdg4-category')?.value || 
                               document.getElementById('sdg8-category')?.value || '';
@@ -3983,6 +4294,8 @@
       const currentIncome = document.getElementById('income')?.value || 
                             document.getElementById('sdg4-income')?.value || 
                             document.getElementById('sdg8-income')?.value || '';
+      const currentCourse = document.getElementById('sdg4-course')?.value || document.getElementById('course')?.value || '';
+      const currentStatus = document.getElementById('sdg8-status')?.value || document.getElementById('current-status')?.value || '';
 
       const cards = document.querySelectorAll('.scheme-card');
       cards.forEach(card => {
@@ -3993,7 +4306,7 @@
 
           const title = document.createElement('div');
           title.className = 'why-appeared-title';
-          title.textContent = 'Why this appeared';
+          title.innerHTML = '<span>🎯</span> Why you qualify for this scheme:';
           whyBox.appendChild(title);
 
           const ul = document.createElement('ul');
@@ -4003,7 +4316,7 @@
           if (currentCategory && currentCategory !== 'General') {
             const li = document.createElement('li');
             li.className = 'match-confirmed';
-            li.innerHTML = `<span>✓</span> Category matched (${escapeHTML(currentCategory)})`;
+            li.innerHTML = `<span>✓</span> Category matched (<strong>${escapeHTML(currentCategory)}</strong>)`;
             ul.appendChild(li);
           } else {
             const li = document.createElement('li');
@@ -4015,7 +4328,7 @@
           if (currentState && currentState !== 'Other / Not Listed') {
             const li = document.createElement('li');
             li.className = 'match-confirmed';
-            li.innerHTML = `<span>✓</span> State domicile matched (${escapeHTML(currentState)})`;
+            li.innerHTML = `<span>✓</span> State domicile matched (<strong>${escapeHTML(currentState)}</strong>)`;
             ul.appendChild(li);
           } else {
             const li = document.createElement('li');
@@ -4027,7 +4340,14 @@
           if (currentIncome && currentIncome !== 'Above 8L' && currentIncome !== 'Above 5L') {
             const li = document.createElement('li');
             li.className = 'match-confirmed';
-            li.innerHTML = `<span>✓</span> Household income within eligibility limit (${escapeHTML(currentIncome)})`;
+            li.innerHTML = `<span>✓</span> Household income within eligibility limit (<strong>${escapeHTML(currentIncome)}</strong>)`;
+            ul.appendChild(li);
+          }
+
+          if (curTab === 'scholarships' && currentCourse) {
+            const li = document.createElement('li');
+            li.className = 'match-confirmed';
+            li.innerHTML = `<span>✓</span> Eligible course level matched (<strong>${escapeHTML(currentCourse)}</strong>)`;
             ul.appendChild(li);
           }
 
@@ -4036,7 +4356,7 @@
           if (isVerifyCard) {
             const li = document.createElement('li');
             li.className = 'match-verify';
-            li.innerHTML = `<span>⚠</span> Specific marks, course, or document verification required at portal`;
+            li.innerHTML = `<span>⚠️</span> Specific document proof or portal verification required during application`;
             ul.appendChild(li);
           }
 
@@ -4063,29 +4383,71 @@
         }
       });
 
-      // Feature 2: Personalized Results Summary (When filtered)
+      // Feature 2: Upgraded Personalized Results Summary Card
       const resultsHeader = document.querySelector('.results-header');
-      if (resultsHeader && formFiltered && !resultsHeader.querySelector('.personalized-summary-card')) {
+      if (resultsHeader && !resultsHeader.querySelector('.personalized-summary-card')) {
         let activeArray = [];
-        if (typeof activeTab !== 'undefined') {
-          if (activeTab === 'scholarships' && typeof filteredScholarships !== 'undefined') activeArray = filteredScholarships;
-          else if (activeTab === 'skills' && typeof filteredSkills !== 'undefined') activeArray = filteredSkills;
-          else if (activeTab === 'poverty' && typeof filteredPoverty !== 'undefined') activeArray = filteredPoverty;
-        }
+        if (curTab === 'scholarships' && typeof filteredScholarships !== 'undefined') activeArray = filteredScholarships;
+        else if (curTab === 'skills' && typeof filteredSkills !== 'undefined') activeArray = filteredSkills;
+        else if (curTab === 'poverty' && typeof filteredPoverty !== 'undefined') activeArray = filteredPoverty;
 
         const totalMatched = activeArray.length;
         const likelyCount = activeArray.filter(item => item.matchType !== 'potential' && !item.verify_before_use).length;
         const verifyCount = totalMatched - likelyCount;
 
+        // SDG Pill Text
+        let sdgPillText = '🎓 SDG 4 · Quality Education';
+        let sortLabel = 'Sorted by Max Benefit';
+        if (curTab === 'skills') {
+          sdgPillText = '💼 SDG 8 · Skilling & Employment';
+          sortLabel = 'Sorted by Scheme Type & Eligibility';
+        } else if (curTab === 'poverty') {
+          sdgPillText = '🏛️ SDG 1 · No Poverty';
+          sortLabel = 'Sorted by Annual Benefit Amount';
+        }
+
+        // Active filter chips
+        const filterChips = [];
+        if (formFiltered) {
+          if (currentState && currentState !== 'Other / Not Listed') filterChips.push(`📍 State: ${escapeHTML(currentState)}`);
+          if (currentCategory && currentCategory !== 'General') filterChips.push(`🏷️ Category: ${escapeHTML(currentCategory)}`);
+          if (currentIncome) filterChips.push(`💰 Income: ${escapeHTML(currentIncome)}`);
+          if (curTab === 'scholarships' && currentCourse) filterChips.push(`🎓 Course: ${escapeHTML(currentCourse)}`);
+          if (curTab === 'skills' && currentStatus && currentStatus !== 'All') filterChips.push(`💼 Status: ${escapeHTML(currentStatus)}`);
+        }
+
+        const filterChipsHTML = filterChips.map(c => `<span class="filter-chip">${c}</span>`).join('');
+
+        const headlineText = formFiltered
+          ? `${totalMatched} ${totalMatched === 1 ? 'Government Scheme Matched' : 'Government Schemes Matched'} Your Profile`
+          : `Showing All ${totalMatched} Available Government Schemes`;
+
+        const subtitleText = formFiltered
+          ? `Based on your submitted category, state, income, and qualification criteria.`
+          : `Submit your profile using the form to filter schemes tailored specifically to your eligibility.`;
+
         const summaryCard = document.createElement('div');
         summaryCard.className = 'personalized-summary-card';
         summaryCard.innerHTML = `
-          <span class="summary-eyebrow">Your Results</span>
-          <div class="summary-title">${totalMatched} ${totalMatched === 1 ? 'scheme matches' : 'schemes match'} your profile</div>
-          <div class="summary-subtitle">Based on your submitted category, state, income, and status criteria.</div>
-          <div class="summary-tags-row">
-            <span class="summary-tag tag-likely">🟢 ${likelyCount} Likely matches</span>
-            <span class="summary-tag tag-verify">🟡 ${verifyCount} Need verification</span>
+          <div class="summary-card-top">
+            <span class="summary-sdg-pill">${sdgPillText}</span>
+            <div class="summary-action-group">
+              ${formFiltered ? `<button type="button" class="btn-show-all" onclick="showDefaultState()">🌐 Show All Schemes</button>` : ''}
+              ${formFiltered ? `<button type="button" class="btn-reset-summary" onclick="resetActiveForm()">↻ Reset Profile</button>` : ''}
+            </div>
+          </div>
+
+          <div class="summary-main-heading">
+            <h2 class="summary-title">${headlineText}</h2>
+            <p class="summary-subtitle">${subtitleText}</p>
+          </div>
+
+          ${filterChipsHTML ? `<div class="active-filters-row">${filterChipsHTML}</div>` : ''}
+
+          <div class="summary-meta-bar">
+            <span class="summary-tag tag-likely">🟢 ${likelyCount} Direct Match${likelyCount === 1 ? '' : 'es'}</span>
+            ${verifyCount > 0 ? `<span class="summary-tag tag-verify">🟡 ${verifyCount} Verification Required</span>` : ''}
+            <span class="summary-tag tag-sort">📊 ${sortLabel}</span>
           </div>
         `;
 
@@ -4093,31 +4455,46 @@
         resultsHeader.appendChild(summaryCard);
       }
 
-      // Feature 5: Empty State Reset Button Injection
+      // Feature 5: Upgraded Civic Empty State Guidance Card
       const emptyStates = document.querySelectorAll('.empty-state');
       emptyStates.forEach(empty => {
-        if (!empty.querySelector('.empty-reset-btn')) {
-          const title = empty.querySelector('.empty-title');
-          const sub = empty.querySelector('.empty-subtitle');
-          if (title) title.textContent = 'No matching schemes found';
-          if (sub) sub.textContent = "We couldn't find schemes matching the information currently provided. Try adjusting your category, income, state, or work status.";
+        if (!empty.querySelector('.empty-icon-badge')) {
+          empty.innerHTML = `
+            <div class="empty-icon-badge">🔍</div>
+            <h3 class="empty-title">No matching schemes found for your profile</h3>
+            <p class="empty-subtitle">We couldn't find active schemes matching all of your exact parameters. Government welfares often update their eligibility limits or offer partial assistance under adjacent rules.</p>
+            <div class="empty-suggestions-box">
+              <div class="empty-suggestions-title">💡 Recommended Adjustments:</div>
+              <ul class="empty-suggestions-list">
+                <li>• Try selecting <strong>"All / Both"</strong> for location type or work status</li>
+                <li>• Adjust household income bracket to see broader options</li>
+                <li>• Explore other SDG tabs (Quality Education, Skilling, Poverty Alleviation)</li>
+              </ul>
+            </div>
+            <div class="empty-actions-row">
+              <button type="button" class="btn-reset-form empty-reset-btn">↻ Reset Profile Filters</button>
+              <button type="button" class="btn-show-all" onclick="showDefaultState()">🌐 Browse All Schemes</button>
+            </div>
+          `;
 
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'btn-reset-form empty-reset-btn';
-          btn.innerHTML = '↻ Reset Form';
-          btn.addEventListener('click', () => {
-            const activeFormId = typeof activeTab !== 'undefined' 
-              ? (activeTab === 'scholarships' ? 'form-sdg4' : (activeTab === 'skills' ? 'form-sdg8' : 'form-sdg1'))
-              : 'form-sdg4';
-            const form = document.getElementById(activeFormId);
-            if (form) form.reset();
-            if (typeof showDefaultState === 'function') showDefaultState();
-          });
-          empty.appendChild(btn);
+          const resetBtn = empty.querySelector('.empty-reset-btn');
+          if (resetBtn) {
+            resetBtn.addEventListener('click', resetActiveForm);
+          }
         }
       });
     }
+
+    // Helper: Reset active SDG form
+    window.resetActiveForm = function() {
+      const activeFormId = typeof activeTab !== 'undefined' 
+        ? (activeTab === 'scholarships' ? 'form-sdg4' : (activeTab === 'skills' ? 'form-sdg8' : 'form-sdg1'))
+        : 'form-sdg4';
+      const form = document.getElementById(activeFormId);
+      if (form) form.reset();
+      if (typeof showDefaultState === 'function') showDefaultState();
+      triggerResultsFeedback('Profile reset. Showing all available government schemes.');
+    };
 
     window.addEventListener('DOMContentLoaded', enhanceProductFeatures);
     setTimeout(enhanceProductFeatures, 400);
