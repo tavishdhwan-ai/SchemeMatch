@@ -537,107 +537,258 @@
     }
 
     /* ── Top Hero Section (#hero-section) ── */
-    #hero-section {
-      background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
-      min-height: 200px;
-      padding: 52px 40px 44px;
+    #hero-section,
+    .hero-wrapper {
+      position: relative;
+      background: linear-gradient(135deg, var(--hero-gradient-start) 0%, #1557B0 50%, var(--hero-gradient-end) 100%);
+      padding: 56px 24px 48px;
       color: var(--hero-text);
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      position: relative;
       z-index: 1;
-      overflow: visible;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px -10px rgba(13, 71, 161, 0.25);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
 
-    .hero-badge,
-    #hero-section h1,
-    #hero-section p.hero-subheading,
-    .hero-stats,
-    .hero-scroll-hint {
+    [data-theme="dark"] #hero-section,
+    [data-theme="dark"] .hero-wrapper {
+      background: linear-gradient(135deg, #0C1E36 0%, #113B77 50%, #071326 100%);
+      border-bottom-color: rgba(99, 177, 255, 0.15);
+      box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Ambient Background Glows */
+    .hero-bg-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+    .hero-bg-glow-1 {
+      top: -25%;
+      left: 10%;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(99, 177, 255, 0.3) 0%, transparent 70%);
+    }
+    .hero-bg-glow-2 {
+      bottom: -35%;
+      right: 10%;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(0, 212, 255, 0.22) 0%, transparent 70%);
+    }
+
+    /* SVG Grid Pattern Overlay */
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    .hero-container {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Hero Badge */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       visibility: visible !important;
       opacity: 1 !important;
-      position: relative;
-      z-index: 1;
     }
 
-    .hero-badge {
+    .hero-badge:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .badge-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #34A853;
+      box-shadow: 0 0 8px #34A853;
       display: inline-block;
-      background: var(--hero-surface);
-      border: 1px solid var(--hero-border);
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
+    }
+
+    .badge-text {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Main Heading */
+    #hero-section h1,
+    .hero-heading {
+      font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       margin-bottom: 16px;
+      color: #FFFFFF;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
-    #hero-section h1 {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 700;
-      line-height: 1.25;
-      margin-bottom: 12px;
-      color: var(--hero-text);
+    .heading-highlight {
+      background: linear-gradient(135deg, #FFFFFF 30%, #AECBFA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline;
     }
 
+    /* Subtitle */
     #hero-section p.hero-subheading {
-      font-size: 1rem;
-      color: var(--hero-text-soft);
-      max-width: 560px;
-      margin: 0 auto 24px;
+      font-size: clamp(0.98rem, 2vw, 1.125rem);
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 620px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+      font-weight: 400;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
+    /* Hero Stats Grid */
     .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 720px;
+      margin-bottom: 28px;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
-    .hero-stat-badge {
-      background: var(--hero-surface-strong);
-      border: 1px solid var(--hero-border-soft);
+    .hero-stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-stat-card:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.38);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon-wrapper {
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
-      padding: 12px 20px;
-      text-align: center;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
     }
 
     .stat-number {
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #FFFFFF;
+      letter-spacing: -0.01em;
       display: block;
-      line-height: 1.2;
     }
 
     .stat-label {
-      font-size: 0.78rem;
-      color: #FFFFFF;
-      display: block;
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
       margin-top: 2px;
+      white-space: nowrap;
+      display: block;
     }
 
+    /* Scroll Hint */
     .hero-scroll-hint {
-      font-size: 0.82rem;
-      color: var(--hero-text-muted);
-      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.78);
+      background: rgba(0, 0, 0, 0.12);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      visibility: visible !important;
+      opacity: 1 !important;
+      transition: all 0.2s ease;
+    }
+
+    .hero-scroll-hint:hover {
+      color: #FFFFFF;
+      background: rgba(0, 0, 0, 0.22);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .scroll-arrow {
+      animation: bounce-subtle 2s infinite ease-in-out;
+      display: inline-block;
+    }
+
+    @keyframes bounce-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(3px); }
+    }
+
+    .hero-section {
+      display: none !important;
     }
 
       @media (max-width: 600px) {
-        #hero-section {
-          padding: 42px 20px 32px;
-        }
-        #hero-section h1 {
-          font-size: 1.4rem;
-        }
-        .hero-stats {
-          flex-wrap: wrap;
-          gap: 10px;
-        }
-        .hero-stat-badge {
-          min-width: 90px;
-        }
         #share-btn {
           padding: 7px 12px;
           font-size: 0.8rem;
@@ -749,12 +900,37 @@
 
 /* Mobile phones */
 @media (max-width: 600px) {
-  /* Hero */
-  #hero-section {
-    padding: 28px 16px !important;
+  /* Hero Mobile Styles */
+  #hero-section,
+  .hero-wrapper {
+    padding: 36px 16px 28px !important;
   }
-  #hero-section h1 {
-    font-size: 1.3rem !important;
+  #hero-section h1,
+  .hero-heading {
+    font-size: 1.5rem !important;
+  }
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+  .hero-stat-card {
+    padding: 10px 6px !important;
+    gap: 6px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+  .stat-icon-wrapper {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.85rem !important;
+  }
+  .stat-number {
+    font-size: 1.05rem !important;
+  }
+  .stat-label {
+    font-size: 0.65rem !important;
+    white-space: normal !important;
   }
 
   /* Nav badges — wrap onto two lines */
@@ -1967,24 +2143,67 @@
   <button id="share-btn">🔗 Share</button>
 
   <!-- Top Hero Section -->
-  <div id="hero-section">
-    <h1>Find Government Schemes You're Eligible For</h1>
-    <p class="hero-subheading">Answer a few questions. Discover government schemes matched to your profile — from scholarships and employment support to social protection.</p>
-    <div class="hero-stats">
-      <div class="hero-stat-badge">
-        <span class="stat-number">90</span>
-        <span class="stat-label">Schemes Covered</span>
+  <div id="hero-section" class="hero-wrapper">
+    <!-- Subtle Background Visual FX -->
+    <div class="hero-bg-glow hero-bg-glow-1"></div>
+    <div class="hero-bg-glow hero-bg-glow-2"></div>
+    <div class="hero-grid-pattern" aria-hidden="true"></div>
+
+    <div class="hero-container">
+      <!-- Badge -->
+      <div class="hero-badge">
+        <span class="badge-pulse"></span>
+        <span class="badge-text">Verified Government Schemes • 2026</span>
       </div>
-      <div class="hero-stat-badge">
-        <span class="stat-number">3</span>
-        <span class="stat-label">SDG Goals</span>
+
+      <!-- Main Heading -->
+      <h1 class="hero-heading">
+        Find Government Schemes <span class="heading-highlight">You're Eligible For</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hero-subheading">
+        Answer a few questions. Discover government schemes matched to your profile — from scholarships and employment support to social protection.
+      </p>
+
+      <!-- Hero Stats & Trust Metrics -->
+      <div class="hero-stats">
+        <div class="hero-stat-card">
+          <div class="stat-icon-wrapper">
+            <span class="stat-icon">📜</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">90+</span>
+            <span class="stat-label">Schemes Covered</span>
+          </div>
+        </div>
+
+        <div class="hero-stat-card">
+          <div class="stat-icon-wrapper">
+            <span class="stat-icon">🎯</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">3</span>
+            <span class="stat-label">SDG Goals</span>
+          </div>
+        </div>
+
+        <div class="hero-stat-card">
+          <div class="stat-icon-wrapper">
+            <span class="stat-icon">⚡</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">Free</span>
+            <span class="stat-label">No Login Needed</span>
+          </div>
+        </div>
       </div>
-      <div class="hero-stat-badge">
-        <span class="stat-number">Free</span>
-        <span class="stat-label">No Login Needed</span>
+
+      <!-- Interactive Scroll / CTA Hint -->
+      <div class="hero-scroll-hint">
+        <span class="scroll-arrow">↓</span> Select an SDG goal below to begin
       </div>
     </div>
-    <div class="hero-scroll-hint">↓ Select an SDG goal to begin</div>
   </div>
 
   <!-- Navigation / Header -->
@@ -2019,13 +2238,7 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
-  <section class="hero-section">
-    <div class="hero-content">
-      <h1 class="hero-title">Find Government Schemes You Qualify For</h1>
-      <p class="hero-subtitle">Answer a few questions. Discover government schemes matched to your profile — from scholarships and employment support to social protection.</p>
-    </div>
-  </section>
+
 
   <!-- Main App Layout -->
   <main class="main-container">
