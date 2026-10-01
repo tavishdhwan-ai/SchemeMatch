@@ -2689,7 +2689,7 @@ function renderScholarshipsTab(container) {
 
     const specialEligibilityHTML = scheme.special_eligibility
       ? `<div class="special-eligibility-box">
-           <strong>Special Eligibility:</strong> ${escapeHTML(scheme.special_eligibility)}
+           <strong>💡 Special Eligibility:</strong> ${escapeHTML(scheme.special_eligibility)}
          </div>`
       : "";
 
@@ -2706,7 +2706,7 @@ function renderScholarshipsTab(container) {
         <div class="card-header-main">
           <div class="card-meta-tags">
             <span class="type-badge type-scholarship">${escapeHTML(scheme.scheme_type || 'Scholarship')}</span>
-            <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+            <span class="provider-tag">🏛️ ${escapeHTML(scheme.provider)}</span>
           </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
@@ -2843,7 +2843,7 @@ function renderSkillsTab(container) {
         <div class="card-header-main">
           <div class="card-meta-tags">
             <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
-            <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+            <span class="provider-tag">🏛️ ${escapeHTML(scheme.provider)}</span>
           </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
@@ -2989,7 +2989,7 @@ function renderPovertyCardsList(targetElement) {
         <div class="card-header-main">
           <div class="card-meta-tags">
             <span class="type-badge ${typeClass}">${escapeHTML(scheme.type)}</span>
-            <span class="provider-tag">${escapeHTML(scheme.provider)}</span>
+            <span class="provider-tag">🏛️ ${escapeHTML(scheme.provider)}</span>
           </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>

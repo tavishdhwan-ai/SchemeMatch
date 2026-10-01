@@ -1431,39 +1431,40 @@
     .schemes-list {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1.35rem;
     }
 
     .scheme-card {
-      --card-accent-glow: rgba(26, 115, 232, 0.15);
+      --card-accent-glow: rgba(26, 115, 232, 0.12);
       --card-border-hover: var(--accent);
       --card-top-bar: var(--accent);
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 1.35rem 1.5rem;
+      border-radius: 16px;
+      padding: 1.5rem 1.65rem;
       box-shadow: 0 4px 18px -6px var(--shadow-strong);
       position: relative;
       z-index: 1;
       display: flex;
       flex-direction: column;
-      gap: 1.05rem;
+      gap: 1.15rem;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                   box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-color 0.25s ease;
+                  border-color 0.25s ease,
+                  background-color 0.2s ease;
       overflow: hidden;
     }
 
-    /* Top Accent Line */
+    /* Top Accent Line per SDG Theme */
     .scheme-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
+      height: 3.5px;
       background: var(--card-top-bar);
-      opacity: 0.85;
+      opacity: 0.9;
       transition: opacity 0.2s ease, background 0.2s ease;
     }
 
@@ -1471,7 +1472,7 @@
       content: '';
       position: absolute;
       inset: -6px;
-      border-radius: 18px;
+      border-radius: 20px;
       background: radial-gradient(
         500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
         var(--card-accent-glow) 0%,
@@ -1484,7 +1485,7 @@
       filter: blur(8px);
     }
 
-    /* Light Theme SDG Accent Glows */
+    /* SDG Context Card Accents */
     .scheme-card:has(.type-badge) {
       --card-accent-glow: rgba(46, 125, 50, 0.14);
       --card-border-hover: #2E7D32;
@@ -1496,6 +1497,13 @@
       --card-accent-glow: rgba(229, 36, 59, 0.14);
       --card-border-hover: #E5243B;
       --card-top-bar: #E5243B;
+    }
+
+    #panel-scholarships .scheme-card,
+    #scholarships-results .scheme-card {
+      --card-accent-glow: rgba(26, 115, 232, 0.15);
+      --card-border-hover: #1A73E8;
+      --card-top-bar: #1A73E8;
     }
 
     /* Dark Theme SDG Accent Glows */
@@ -1518,10 +1526,17 @@
       --card-top-bar: #FF7081;
     }
 
+    [data-theme="dark"] #panel-scholarships .scheme-card,
+    [data-theme="dark"] #scholarships-results .scheme-card {
+      --card-accent-glow: rgba(99, 177, 255, 0.16);
+      --card-border-hover: #63B1FF;
+      --card-top-bar: #63B1FF;
+    }
+
     .scheme-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
       border-color: var(--card-border-hover);
-      box-shadow: 0 12px 28px -10px var(--card-accent-glow), 0 6px 20px var(--shadow-strong);
+      box-shadow: 0 14px 32px -8px var(--card-accent-glow), 0 8px 24px var(--shadow-strong);
     }
 
     .scheme-card:hover::after {
@@ -1533,13 +1548,13 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 1.25rem;
+      gap: 1.35rem;
     }
 
     .card-header-main {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.5rem;
       flex: 1;
       min-width: 0;
     }
@@ -1548,22 +1563,23 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
 
     /* Category Badges & Provider Tags */
     .type-badge {
       display: inline-flex;
       align-items: center;
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 0.22rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 6px;
       background: var(--accent-light);
       color: var(--accent);
       border: 1px solid rgba(26, 115, 232, 0.22);
+      line-height: 1.2;
     }
 
     .type-scholarship {
@@ -1581,24 +1597,27 @@
     .provider-tag {
       display: inline-flex;
       align-items: center;
+      gap: 4px;
       font-size: 0.75rem;
       font-weight: 600;
-      padding: 0.22rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 6px;
       background: var(--bg-tertiary);
       color: var(--text-secondary);
       border: 1px solid var(--border-soft);
+      line-height: 1.2;
     }
 
     /* Main Scheme Heading Focus */
     .scheme-name {
-      font-size: 1.22rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-primary);
-      line-height: 1.35;
+      line-height: 1.36;
       letter-spacing: -0.015em;
       margin: 0;
       word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     /* Badges & Amount Column */
@@ -1606,7 +1625,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 0.5rem;
+      gap: 0.55rem;
       flex-shrink: 0;
     }
 
@@ -1614,31 +1633,37 @@
       background: var(--accent-light);
       color: var(--accent);
       border: 1px solid rgba(26, 115, 232, 0.22);
-      padding: 0.45rem 0.75rem;
-      border-radius: 10px;
+      padding: 0.5rem 0.85rem;
+      border-radius: 12px;
       text-align: right;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 1px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      gap: 2px;
+      box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.05);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    [data-theme="dark"] .amount-badge {
+      background: rgba(99, 177, 255, 0.12);
+      border-color: rgba(99, 177, 255, 0.25);
     }
 
     .amount-value,
     .amount-badge > span:first-child {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
       line-height: 1.15;
       color: var(--text-primary);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
 
     .amount-subtext {
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
     }
 
     /* Match Badges */
@@ -1649,11 +1674,12 @@
       background: #FEF3C7;
       color: #92400E;
       border: 1px solid #FCD34D;
-      padding: 0.25rem 0.65rem;
+      padding: 0.28rem 0.7rem;
       border-radius: 9999px;
       font-size: 0.74rem;
       font-weight: 700;
       white-space: nowrap;
+      box-shadow: 0 1px 4px rgba(245, 158, 11, 0.15);
     }
 
     [data-theme="dark"] .best-match-badge {
@@ -1666,7 +1692,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 0.25rem 0.65rem;
+      padding: 0.28rem 0.7rem;
       border-radius: 9999px;
       font-size: 0.74rem;
       font-weight: 700;
@@ -1699,28 +1725,32 @@
 
     /* Description */
     .scheme-description {
-      font-size: 0.925rem;
+      font-size: 0.93rem;
       color: var(--text-secondary);
-      line-height: 1.55;
+      line-height: 1.6;
       margin: 0;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     /* Metadata Box */
     .scheme-details-meta {
       background: var(--bg-card-muted);
       border: 1px solid var(--border-soft);
-      border-radius: 10px;
-      padding: 0.65rem 0.85rem;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.4rem;
       font-size: 0.86rem;
     }
 
     .detail-item {
       margin: 0;
-      line-height: 1.45;
+      line-height: 1.5;
       color: var(--text-secondary);
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .detail-item strong {
@@ -1731,12 +1761,13 @@
     /* Special Eligibility Callout */
     .special-eligibility-box {
       background: rgba(245, 158, 11, 0.08);
-      border-left: 3.5px solid #F59E0B;
-      padding: 0.65rem 0.85rem;
-      border-radius: 0 8px 8px 0;
-      font-size: 0.84rem;
+      border-left: 4px solid #F59E0B;
+      padding: 0.75rem 1rem;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.85rem;
       color: var(--text-primary);
-      line-height: 1.5;
+      line-height: 1.55;
+      word-break: break-word;
     }
 
     [data-theme="dark"] .special-eligibility-box {
@@ -1748,11 +1779,12 @@
     .verification-callout {
       background: rgba(239, 68, 68, 0.08);
       border: 1px solid rgba(239, 68, 68, 0.25);
-      border-radius: 10px;
-      padding: 0.65rem 0.85rem;
-      font-size: 0.84rem;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
       color: var(--text-primary);
-      line-height: 1.5;
+      line-height: 1.55;
+      word-break: break-word;
     }
 
     [data-theme="dark"] .verification-callout {
@@ -1767,7 +1799,7 @@
       background: rgba(239, 68, 68, 0.1);
       color: #DC2626;
       border: 1px solid rgba(239, 68, 68, 0.2);
-      padding: 0.2rem 0.5rem;
+      padding: 0.22rem 0.55rem;
       border-radius: 6px;
       font-size: 0.76rem;
       font-weight: 600;
@@ -1784,19 +1816,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 0.85rem;
+      padding-top: 0.95rem;
       border-top: 1px solid var(--border-soft);
-      margin-top: 0.15rem;
+      margin-top: auto;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
 
     .deadline-info {
-      font-size: 0.82rem;
+      font-size: 0.83rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
       flex-wrap: wrap;
     }
 
@@ -1805,65 +1837,30 @@
       font-weight: 700;
     }
 
-    .official-source-link {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: var(--accent-light);
-      padding: 0.25rem 0.55rem;
-      border-radius: 6px;
-      text-decoration: none;
-      border: 1px solid rgba(26, 115, 232, 0.18);
-      transition: all 0.2s ease;
-    }
-
-    .official-source-link:hover {
-      background: var(--accent);
-      color: #FFFFFF !important;
-    }
-
-    .btn-ask-ai {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      padding: 0.5rem 0.9rem;
-      border-radius: 8px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s ease;
-    }
-
-    .btn-ask-ai:hover {
-      background: var(--accent-light);
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-1px);
-    }
-
     .apply-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       background-color: var(--accent);
       color: #FFFFFF !important;
-      padding: 0.55rem 1.15rem;
-      border-radius: 8px;
+      padding: 0.6rem 1.25rem;
+      border-radius: 10px;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.88rem;
       box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .apply-btn:hover {
       background-color: var(--accent-hover);
-      box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);
-      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(26, 115, 232, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .apply-btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--focus-ring);
     }
 
     /* ── Reset Form Button ── */
