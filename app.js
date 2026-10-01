@@ -2665,9 +2665,20 @@ function renderScholarshipsTab(container) {
     const emptyState = document.createElement("div");
     emptyState.className = "empty-state";
     emptyState.innerHTML = `
-      <div class="empty-icon">🎓</div>
-      <h3 class="empty-title">No scholarship schemes matched</h3>
-      <p class="empty-subtitle">Try adjusting your category, income range, course level, or state to see more scholarship opportunities.</p>
+      <div class="empty-icon-badge">🎓</div>
+      <h3 class="empty-title">No scholarship schemes matched your profile</h3>
+      <p class="empty-subtitle">We couldn't find active scholarships matching your exact profile parameters. Try widening your search parameters.</p>
+      <div class="empty-suggestions-box">
+        <div class="empty-suggestions-title">💡 Helpful Suggestions</div>
+        <ul class="empty-suggestions-list">
+          <li><span>•</span> Set State / UT to "Other / Not Listed" to see pan-India central schemes</li>
+          <li><span>•</span> Adjust your Income selection</li>
+          <li><span>•</span> Check other SDG categories (Skills & Employment or Social Welfare)</li>
+        </ul>
+      </div>
+      <div class="empty-actions-row">
+        <button type="button" class="btn-reset-summary" onclick="showDefaultState()">↻ Show All Schemes</button>
+      </div>
     `;
     container.appendChild(emptyState);
     return;
@@ -2792,9 +2803,20 @@ function renderSkillsTab(container) {
     const emptyState = document.createElement("div");
     emptyState.className = "empty-state";
     emptyState.innerHTML = `
-      <div class="empty-icon">💼</div>
+      <div class="empty-icon-badge">💼</div>
       <h3 class="empty-title">No skills & employment schemes matched</h3>
-      <p class="empty-subtitle">Try selecting "Select status" or "Urban or Rural" location type to explore all available skill & employment schemes.</p>
+      <p class="empty-subtitle">No programmes matched your current filters. Try selecting "Select status" or location type "Both" to explore all available skill & employment schemes.</p>
+      <div class="empty-suggestions-box">
+        <div class="empty-suggestions-title">💡 Helpful Suggestions</div>
+        <ul class="empty-suggestions-list">
+          <li><span>•</span> Select "Select status" to view universal skilling schemes</li>
+          <li><span>•</span> Try selecting "Both" for location preference</li>
+          <li><span>•</span> Explore SDG 4 Scholarships or SDG 1 Social Welfare schemes</li>
+        </ul>
+      </div>
+      <div class="empty-actions-row">
+        <button type="button" class="btn-reset-summary" onclick="showDefaultState()">↻ Show All Schemes</button>
+      </div>
     `;
     container.appendChild(emptyState);
     return;
@@ -2930,9 +2952,20 @@ function renderPovertyCardsList(targetElement) {
     const emptyState = document.createElement("div");
     emptyState.className = "empty-state";
     emptyState.innerHTML = `
-      <div class="empty-icon">🌱</div>
+      <div class="empty-icon-badge">🌱</div>
       <h3 class="empty-title">No poverty alleviation schemes matched</h3>
-      <p class="empty-subtitle">Try adjusting your income range, status, or location to explore available welfare and poverty alleviation programmes.</p>
+      <p class="empty-subtitle">Try adjusting your income range, status, or location to explore available welfare and social protection programmes.</p>
+      <div class="empty-suggestions-box">
+        <div class="empty-suggestions-title">💡 Helpful Suggestions</div>
+        <ul class="empty-suggestions-list">
+          <li><span>•</span> Select "Other / Not Listed" for State / UT</li>
+          <li><span>•</span> Adjust your income selection</li>
+          <li><span>•</span> Check all identity options that apply to your household</li>
+        </ul>
+      </div>
+      <div class="empty-actions-row">
+        <button type="button" class="btn-reset-summary" onclick="showDefaultState()">↻ Show All Schemes</button>
+      </div>
     `;
     targetElement.appendChild(emptyState);
     return;
