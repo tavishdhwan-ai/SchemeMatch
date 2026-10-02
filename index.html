@@ -30,98 +30,107 @@
   <style>
     :root {
       --bg-primary: #FFFFFF;
-      --bg-secondary: #F8F9FA;
-      --bg-tertiary: #F1F3F4;
+      --bg-secondary: #F8FAFC;
+      --bg-tertiary: #F1F5F9;
       --bg-card: #FFFFFF;
-      --bg-card-muted: #F8F9FA;
-      --border-color: #DADCE0;
-      --border-soft: #E8EAED;
-      --border-strong: #BDC1C6;
-      --text-primary: #202124;
-      --text-secondary: #5F6368;
-      --text-muted: #80868B;
-      --accent: #1A73E8;
-      --accent-light: #E8F0FE;
-      --accent-hover-surface: #DCE7FB;
-      --shadow: rgba(60, 64, 67, 0.14);
-      --shadow-strong: rgba(60, 64, 67, 0.22);
-      --nav-bg: rgba(255, 255, 255, 0.94);
+      --bg-card-muted: #F8FAFC;
+      --bg-card-hover: #FFFFFF;
+      --border-color: #E2E8F0;
+      --border-soft: #F1F5F9;
+      --border-strong: #CBD5E1;
+      --border-accent: rgba(37, 99, 235, 0.28);
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --text-dark: #0F172A;
+      --text-medium: #475569;
+      --text-light: #64748B;
+      --accent: #2563EB;
+      --accent-gradient: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+      --accent-light: #EFF6FF;
+      --accent-hover: #1D4ED8;
+      --accent-hover-surface: #DBEAFE;
+      --shadow: rgba(15, 23, 42, 0.08);
+      --shadow-strong: rgba(15, 23, 42, 0.16);
+      --nav-bg: rgba(255, 255, 255, 0.85);
       --input-bg: #FFFFFF;
-      --input-bg-hover: #FFFFFF;
-      --accent-hover: #1557B0;
+      --input-bg-hover: #F8FAFC;
       --text-on-accent: #FFFFFF;
-      --toast-bg: rgba(32, 33, 36, 0.94);
-      --toast-text: #FFFFFF;
-      --focus-ring: rgba(26, 115, 232, 0.22);
-      --hero-gradient-start: #1A73E8;
-      --hero-gradient-end: #0D47A1;
+      --toast-bg: rgba(15, 23, 42, 0.94);
+      --toast-text: #F8FAFC;
+      --focus-ring: rgba(37, 99, 235, 0.25);
+      --hero-gradient-start: #2563EB;
+      --hero-gradient-end: #1E40AF;
       --section-hero-start: #FFFFFF;
-      --section-hero-end: #F4F8FE;
-      --hero-text: #FFFFFF;
-      --hero-text-soft: rgba(255,255,255,0.85);
-      --hero-text-muted: rgba(255,255,255,0.6);
-      --hero-surface: rgba(255,255,255,0.15);
-      --hero-surface-strong: rgba(255,255,255,0.12);
-      --hero-border: rgba(255,255,255,0.3);
-      --hero-border-soft: rgba(255,255,255,0.2);
+      --section-hero-end: #F8FAFC;
+      --hero-text: #0F172A;
+      --hero-text-soft: #475569;
+      --hero-text-muted: #64748B;
+      --hero-surface: rgba(37, 99, 235, 0.06);
+      --hero-surface-strong: rgba(37, 99, 235, 0.12);
+      --hero-border: rgba(37, 99, 235, 0.2);
+      --hero-border-soft: rgba(37, 99, 235, 0.12);
 
-      --glow-1: rgba(26, 115, 232, 0.08);
-      --glow-2: rgba(0, 180, 216, 0.06);
-      --glow-3: rgba(67, 97, 238, 0.05);
-      --glow-opacity: 0.85;
+      --glow-1: rgba(37, 99, 235, 0.12);
+      --glow-2: rgba(99, 102, 241, 0.1);
+      --glow-3: rgba(14, 165, 233, 0.08);
+      --glow-opacity: 0.9;
 
       --primary: var(--accent);
       --primary-hover: var(--accent-hover);
       --primary-light: var(--accent-light);
-      --text-dark: var(--text-primary);
-      --text-medium: var(--text-secondary);
-      --text-light: var(--text-muted);
       --bg-main: var(--bg-secondary);
       --shadow-sm: 0 1px 3px var(--shadow), 0 1px 2px var(--shadow);
-      --shadow-md: 0 4px 12px var(--shadow);
-      --shadow-lg: 0 8px 24px var(--shadow);
+      --shadow-md: 0 6px 20px -4px var(--shadow);
+      --shadow-lg: 0 16px 36px -6px var(--shadow);
     }
 
     [data-theme="dark"] {
-      --bg-primary: #10161F;
-      --bg-secondary: #182230;
-      --bg-tertiary: #202D3D;
-      --bg-card: #1A2432;
-      --bg-card-muted: #202B39;
-      --border-color: #324255;
-      --border-soft: #243242;
-      --border-strong: #4A6077;
-      --text-primary: #EDF3FE;
-      --text-secondary: #BCC8D8;
-      --text-muted: #94A3B7;
-      --accent: #63B1FF;
-      --accent-light: rgba(99, 177, 255, 0.14);
-      --accent-hover-surface: rgba(99, 177, 255, 0.22);
-      --shadow: rgba(3, 8, 16, 0.42);
-      --shadow-strong: rgba(3, 8, 16, 0.58);
-      --nav-bg: rgba(16, 22, 31, 0.92);
-      --input-bg: #1F2B3A;
-      --input-bg-hover: #243243;
-      --accent-hover: #89C7FF;
+      --bg-primary: #090D16;
+      --bg-secondary: #0E1422;
+      --bg-tertiary: #141C2E;
+      --bg-card: #131C2E;
+      --bg-card-muted: #172238;
+      --bg-card-hover: #1A2740;
+      --border-color: rgba(255, 255, 255, 0.09);
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-accent: rgba(96, 165, 250, 0.35);
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --text-dark: #F8FAFC;
+      --text-medium: #94A3B8;
+      --text-light: #64748B;
+      --accent: #60A5FA;
+      --accent-gradient: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+      --accent-light: rgba(96, 165, 250, 0.14);
+      --accent-hover: #93C5FD;
+      --accent-hover-surface: rgba(96, 165, 250, 0.22);
+      --shadow: rgba(0, 0, 0, 0.4);
+      --shadow-strong: rgba(0, 0, 0, 0.6);
+      --nav-bg: rgba(9, 13, 22, 0.85);
+      --input-bg: #172238;
+      --input-bg-hover: #1D2B47;
       --text-on-accent: #FFFFFF;
-      --toast-bg: rgba(10, 16, 24, 0.94);
-      --toast-text: #EDF3FE;
-      --focus-ring: rgba(99, 177, 255, 0.3);
-      --hero-gradient-start: #113B77;
-      --hero-gradient-end: #081F4C;
-      --section-hero-start: #121A26;
-      --section-hero-end: #162231;
-      --hero-text: #FFFFFF;
-      --hero-text-soft: rgba(255,255,255,0.85);
-      --hero-text-muted: rgba(255,255,255,0.6);
-      --hero-surface: rgba(255,255,255,0.15);
-      --hero-surface-strong: rgba(255,255,255,0.12);
-      --hero-border: rgba(255,255,255,0.3);
-      --hero-border-soft: rgba(255,255,255,0.2);
+      --toast-bg: rgba(15, 23, 42, 0.96);
+      --toast-text: #F8FAFC;
+      --focus-ring: rgba(96, 165, 250, 0.35);
+      --hero-gradient-start: #0F172A;
+      --hero-gradient-end: #090D16;
+      --section-hero-start: #090D16;
+      --section-hero-end: #0E1422;
+      --hero-text: #F8FAFC;
+      --hero-text-soft: #94A3B8;
+      --hero-text-muted: #64748B;
+      --hero-surface: rgba(255, 255, 255, 0.06);
+      --hero-surface-strong: rgba(255, 255, 255, 0.12);
+      --hero-border: rgba(255, 255, 255, 0.15);
+      --hero-border-soft: rgba(255, 255, 255, 0.08);
 
-      --glow-1: rgba(99, 177, 255, 0.16);
-      --glow-2: rgba(0, 195, 255, 0.12);
-      --glow-3: rgba(114, 9, 183, 0.14);
+      --glow-1: rgba(59, 130, 246, 0.22);
+      --glow-2: rgba(139, 92, 246, 0.18);
+      --glow-3: rgba(14, 165, 233, 0.15);
       --glow-opacity: 1;
 
       color-scheme: dark;
@@ -1510,36 +1519,36 @@
 
     #panel-scholarships .scheme-card,
     #scholarships-results .scheme-card {
-      --card-accent-glow: rgba(26, 115, 232, 0.15);
-      --card-border-hover: #1A73E8;
-      --card-top-bar: #1A73E8;
+      --card-accent-glow: rgba(37, 99, 235, 0.15);
+      --card-border-hover: var(--accent);
+      --card-top-bar: var(--accent);
     }
 
     /* Dark Theme SDG Accent Glows */
     [data-theme="dark"] .scheme-card {
-      --card-accent-glow: rgba(99, 177, 255, 0.16);
-      --card-border-hover: #63B1FF;
-      --card-top-bar: #63B1FF;
+      --card-accent-glow: rgba(96, 165, 250, 0.16);
+      --card-border-hover: #60A5FA;
+      --card-top-bar: #60A5FA;
     }
 
     [data-theme="dark"] .scheme-card:has(.type-badge) {
-      --card-accent-glow: rgba(123, 199, 141, 0.16);
-      --card-border-hover: #7BC78D;
-      --card-top-bar: #7BC78D;
+      --card-accent-glow: rgba(52, 211, 153, 0.16);
+      --card-border-hover: #34D399;
+      --card-top-bar: #34D399;
     }
 
     [data-theme="dark"] #panel-poverty .scheme-card,
     [data-theme="dark"] #poverty-results .scheme-card {
-      --card-accent-glow: rgba(255, 112, 129, 0.16);
-      --card-border-hover: #FF7081;
-      --card-top-bar: #FF7081;
+      --card-accent-glow: rgba(255, 77, 109, 0.16);
+      --card-border-hover: #FF4D6D;
+      --card-top-bar: #FF4D6D;
     }
 
     [data-theme="dark"] #panel-scholarships .scheme-card,
     [data-theme="dark"] #scholarships-results .scheme-card {
-      --card-accent-glow: rgba(99, 177, 255, 0.16);
-      --card-border-hover: #63B1FF;
-      --card-top-bar: #63B1FF;
+      --card-accent-glow: rgba(96, 165, 250, 0.16);
+      --card-border-hover: #60A5FA;
+      --card-top-bar: #60A5FA;
     }
 
     .scheme-card:hover {
@@ -1587,14 +1596,14 @@
       border-radius: 6px;
       background: var(--accent-light);
       color: var(--accent);
-      border: 1px solid rgba(26, 115, 232, 0.22);
+      border: 1px solid var(--border-accent);
       line-height: 1.2;
     }
 
     .type-scholarship {
-      background: rgba(26, 115, 232, 0.1);
-      color: #1A73E8;
-      border-color: rgba(26, 115, 232, 0.25);
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: var(--border-accent);
     }
 
     [data-theme="dark"] .type-scholarship {
