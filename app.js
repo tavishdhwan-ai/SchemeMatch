@@ -2653,40 +2653,38 @@ function renderResultsView() {
 
 // Render Scholarship Tab Content (SDG 4)
 function renderScholarshipsTab(container) {
-  // Results Header
+  // Results Header Bar
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
 
-  const titleContainer = document.createElement("div");
-  titleContainer.style.display = "flex";
-  titleContainer.style.alignItems = "baseline";
-  titleContainer.style.gap = "0.75rem";
-  titleContainer.style.flexWrap = "wrap";
+  const countText = isFiltered
+    ? `${filteredScholarships.length} ${filteredScholarships.length === 1 ? 'scholarship matched' : 'scholarships matched'}`
+    : `${filteredScholarships.length} ${filteredScholarships.length === 1 ? 'scholarship' : 'scholarships'} available`;
 
-  const countTitle = document.createElement("h2");
-  countTitle.className = "results-count-title";
-  countTitle.textContent = isFiltered
-    ? `${filteredScholarships.length} ${filteredScholarships.length === 1 ? 'scheme' : 'schemes'} matched`
-    : `${filteredScholarships.length} ${filteredScholarships.length === 1 ? 'scheme' : 'schemes'}`;
+  resultsHeader.innerHTML = `
+    <div class="results-header-left" style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+      <div class="results-count-badge">
+        <span class="count-pulse"></span>
+        <span class="results-count-text">${countText}</span>
+      </div>
+      ${isFiltered ? `
+        <button type="button" class="clear-saved-btn" style="font-size: 0.82rem; padding: 4px 12px;" onclick="showDefaultState()">
+          ↻ Show All Schemes
+        </button>
+      ` : ''}
+    </div>
+    <div class="results-header-right">
+      <span class="results-sort-info">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="7" y1="12" x2="17" y2="12"></line>
+          <line x1="10" y1="18" x2="14" y2="18"></line>
+        </svg>
+        <span>Sorted by annual amount (high to low)</span>
+      </span>
+    </div>
+  `;
 
-  titleContainer.appendChild(countTitle);
-
-  if (isFiltered) {
-    const showAllBtn = document.createElement("button");
-    showAllBtn.type = "button";
-    showAllBtn.className = "clear-saved-btn";
-    showAllBtn.style.fontSize = "0.85rem";
-    showAllBtn.textContent = "Show All Schemes";
-    showAllBtn.addEventListener("click", showDefaultState);
-    titleContainer.appendChild(showAllBtn);
-  }
-
-  const sortInfo = document.createElement("span");
-  sortInfo.className = "results-sort-info";
-  sortInfo.textContent = "Sorted by annual amount (high to low)";
-
-  resultsHeader.appendChild(titleContainer);
-  resultsHeader.appendChild(sortInfo);
   container.appendChild(resultsHeader);
 
   // Empty state
@@ -2727,12 +2725,6 @@ function renderScholarshipsTab(container) {
 
     const isVerify = scheme.deadline && scheme.deadline.includes("Check");
 
-    const specialEligibilityHTML = scheme.special_eligibility
-      ? `<div class="special-eligibility-box">
-           <strong>💡 Special Eligibility:</strong> ${escapeHTML(scheme.special_eligibility)}
-         </div>`
-      : "";
-
     const verifyBadgeHTML = isVerify
       ? `<span class="verify-badge">⚠️ Verify Details</span>`
       : "";
@@ -2741,12 +2733,49 @@ function renderScholarshipsTab(container) {
       ? `<span class="best-match-badge">⭐ Best Match</span>`
       : "";
 
+    const stateBadgeHTML = scheme.state_specific
+      ? `<span class="provider-tag" style="background: rgba(99, 102, 241, 0.1); color: var(--indigo-600); border-color: rgba(99, 102, 241, 0.2);">📍 ${escapeHTML(scheme.state_specific)}</span>`
+      : "";
+
+    // "WHY THIS APPEARED" Match Reason Callout
+    const reasonsList = [];
+    if (scheme.special_eligibility) {
+      reasonsList.push(escapeHTML(scheme.special_eligibility));
+    }
+    if (scheme.max_income) {
+      reasonsList.push(`Income eligibility: Max ₹${scheme.max_income.toLocaleString('en-IN')}/year`);
+    }
+    if (scheme.eligible_categories && scheme.eligible_categories.length > 0) {
+      reasonsList.push(`Categories: ${scheme.eligible_categories.join(', ')}`);
+    }
+    if (scheme.eligible_courses && scheme.eligible_courses.length > 0) {
+      reasonsList.push(`Target Courses: ${scheme.eligible_courses.join(', ')}`);
+    }
+
+    const whyAppearedHTML = (isFiltered || reasonsList.length > 0)
+      ? `<div class="why-appeared-box why-eligible">
+           <div class="why-appeared-header">
+             <span class="why-icon">🛡️</span>
+             <span class="why-title">Why This Scheme Appeared</span>
+           </div>
+           <ul class="why-reasons-list">
+             ${reasonsList.map(r => `
+               <li class="why-reason-item">
+                 <span class="reason-check">✓</span>
+                 <span>${r}</span>
+               </li>
+             `).join('')}
+           </ul>
+         </div>`
+      : "";
+
     card.innerHTML = `
       <div class="card-top-row">
         <div class="card-header-main">
           <div class="card-meta-tags">
             <span class="type-badge type-scholarship">${escapeHTML(scheme.scheme_type || 'Scholarship')}</span>
             <span class="provider-tag">🏛️ ${escapeHTML(scheme.provider)}</span>
+            ${stateBadgeHTML}
           </div>
           <h3 class="scheme-name">${escapeHTML(scheme.name)}</h3>
         </div>
@@ -2762,10 +2791,10 @@ function renderScholarshipsTab(container) {
       <p class="scheme-description">${escapeHTML(scheme.description || '')}</p>
 
       <div class="scheme-details-meta">
-        <p class="detail-item"><strong>Benefit:</strong> ${escapeHTML(scheme.benefit_label)}</p>
+        <p class="detail-item"><strong>Benefit Coverage:</strong> ${escapeHTML(scheme.benefit_label)}</p>
       </div>
 
-      ${specialEligibilityHTML}
+      ${whyAppearedHTML}
 
       <div class="card-footer">
         <div class="deadline-info">
@@ -2773,7 +2802,7 @@ function renderScholarshipsTab(container) {
           ${verifyBadgeHTML}
         </div>
         <a href="${escapeHTML(scheme.apply_link)}" target="_blank" rel="noopener noreferrer" class="apply-btn">
-          <span>Apply Now</span>
+          <span>Official Portal</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
@@ -2791,40 +2820,38 @@ function renderScholarshipsTab(container) {
 
 // Render Skills & Employment Tab Content (SDG 8)
 function renderSkillsTab(container) {
-  // Results Header
+  // Results Header Bar
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
 
-  const titleContainer = document.createElement("div");
-  titleContainer.style.display = "flex";
-  titleContainer.style.alignItems = "baseline";
-  titleContainer.style.gap = "0.75rem";
-  titleContainer.style.flexWrap = "wrap";
+  const countText = isFiltered
+    ? `${filteredSkills.length} ${filteredSkills.length === 1 ? 'programme matched' : 'programmes matched'}`
+    : `${filteredSkills.length} ${filteredSkills.length === 1 ? 'programme' : 'programmes'} available`;
 
-  const countTitle = document.createElement("h2");
-  countTitle.className = "results-count-title";
-  countTitle.textContent = isFiltered
-    ? `${filteredSkills.length} ${filteredSkills.length === 1 ? 'scheme' : 'schemes'} matched`
-    : `${filteredSkills.length} ${filteredSkills.length === 1 ? 'scheme' : 'schemes'}`;
+  resultsHeader.innerHTML = `
+    <div class="results-header-left" style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+      <div class="results-count-badge">
+        <span class="count-pulse"></span>
+        <span class="results-count-text">${countText}</span>
+      </div>
+      ${isFiltered ? `
+        <button type="button" class="clear-saved-btn" style="font-size: 0.82rem; padding: 4px 12px;" onclick="showDefaultState()">
+          ↻ Show All Schemes
+        </button>
+      ` : ''}
+    </div>
+    <div class="results-header-right">
+      <span class="results-sort-info">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="7" y1="12" x2="17" y2="12"></line>
+          <line x1="10" y1="18" x2="14" y2="18"></line>
+        </svg>
+        <span>${isFiltered ? "Sorted by eligibility & scheme type" : "Sorted by scheme type"}</span>
+      </span>
+    </div>
+  `;
 
-  titleContainer.appendChild(countTitle);
-
-  if (isFiltered) {
-    const showAllBtn = document.createElement("button");
-    showAllBtn.type = "button";
-    showAllBtn.className = "clear-saved-btn";
-    showAllBtn.style.fontSize = "0.85rem";
-    showAllBtn.textContent = "Show All Schemes";
-    showAllBtn.addEventListener("click", showDefaultState);
-    titleContainer.appendChild(showAllBtn);
-  }
-
-  const sortInfo = document.createElement("span");
-  sortInfo.className = "results-sort-info";
-  sortInfo.textContent = isFiltered ? "Sorted by eligibility & scheme type" : "Sorted by scheme type";
-
-  resultsHeader.appendChild(titleContainer);
-  resultsHeader.appendChild(sortInfo);
   container.appendChild(resultsHeader);
 
   // Empty state
@@ -2874,20 +2901,37 @@ function renderSkillsTab(container) {
     // Type badge class
     const typeClass = `type-${(scheme.type || 'skilling').toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
 
-    // Verification callout: shown in filtered state if verify_before_use is true OR if status is gated
-    let verificationCalloutHTML = "";
-    if (isFiltered) {
-      const parts = [];
-      if (scheme.verify_before_use && scheme.verification_note) {
-        parts.push(escapeHTML(scheme.verification_note));
-      }
-      if (scheme.statusReason) {
-        parts.push(`<em>${escapeHTML(scheme.statusReason)}</em>`);
-      }
-      if (parts.length > 0) {
-        verificationCalloutHTML = `<div class="verification-callout">${parts.join("<br>")}</div>`;
-      }
+    // "WHY THIS APPEARED" Match Reason Callout
+    const reasonsList = [];
+    if (scheme.verification_note) {
+      reasonsList.push(escapeHTML(scheme.verification_note));
     }
+    if (scheme.statusReason) {
+      reasonsList.push(escapeHTML(scheme.statusReason));
+    }
+    if (scheme.target_audience) {
+      reasonsList.push(`Target Audience: ${escapeHTML(scheme.target_audience)}`);
+    }
+    if (scheme.location_type) {
+      reasonsList.push(`Location Coverage: ${escapeHTML(scheme.location_type)}`);
+    }
+
+    const whyAppearedHTML = (isFiltered || reasonsList.length > 0)
+      ? `<div class="why-appeared-box ${scheme.matchType === 'potential' ? 'why-potential' : 'why-eligible'}">
+           <div class="why-appeared-header">
+             <span class="why-icon">${scheme.matchType === 'potential' ? '🔍' : '🛡️'}</span>
+             <span class="why-title">${scheme.matchType === 'potential' ? 'Match Rationale & Verification' : 'Why This Scheme Appeared'}</span>
+           </div>
+           <ul class="why-reasons-list">
+             ${reasonsList.map(r => `
+               <li class="why-reason-item">
+                 <span class="reason-check">${scheme.matchType === 'potential' ? '⚠️' : '✓'}</span>
+                 <span>${r}</span>
+               </li>
+             `).join('')}
+           </ul>
+         </div>`
+      : "";
 
     card.innerHTML = `
       <div class="card-top-row">
@@ -2911,14 +2955,14 @@ function renderSkillsTab(container) {
         ${scheme.application_method ? `<p class="detail-item" style="font-size: 0.85rem; color: var(--text-medium); margin-top: 0.25rem;"><strong>How to Apply:</strong> ${escapeHTML(scheme.application_method)}</p>` : ''}
       </div>
 
-      ${verificationCalloutHTML}
+      ${whyAppearedHTML}
 
       <div class="card-footer">
         <div class="deadline-info">
           <span>📅 Deadline: <strong>${escapeHTML(scheme.deadline_type)}</strong></span>
         </div>
         <a href="${escapeHTML(scheme.official_url)}" target="_blank" rel="noopener noreferrer" class="apply-btn">
-          <span>Apply / Learn More</span>
+          <span>Official Portal</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
@@ -2939,36 +2983,34 @@ function renderPovertyTabHeader(container) {
   const resultsHeader = document.createElement("div");
   resultsHeader.className = "results-header";
 
-  const titleContainer = document.createElement("div");
-  titleContainer.style.display = "flex";
-  titleContainer.style.alignItems = "baseline";
-  titleContainer.style.gap = "0.75rem";
-  titleContainer.style.flexWrap = "wrap";
+  const countText = isFiltered
+    ? `${filteredPoverty.length} ${filteredPoverty.length === 1 ? 'scheme matched' : 'schemes matched'}`
+    : `${filteredPoverty.length} ${filteredPoverty.length === 1 ? 'scheme' : 'schemes'} available`;
 
-  const countTitle = document.createElement("h2");
-  countTitle.className = "results-count-title";
-  countTitle.textContent = isFiltered
-    ? `${filteredPoverty.length} ${filteredPoverty.length === 1 ? 'scheme' : 'schemes'} matched`
-    : `${filteredPoverty.length} ${filteredPoverty.length === 1 ? 'scheme' : 'schemes'}`;
+  resultsHeader.innerHTML = `
+    <div class="results-header-left" style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+      <div class="results-count-badge">
+        <span class="count-pulse"></span>
+        <span class="results-count-text">${countText}</span>
+      </div>
+      ${isFiltered ? `
+        <button type="button" class="clear-saved-btn" style="font-size: 0.82rem; padding: 4px 12px;" onclick="showDefaultState()">
+          ↻ Show All Schemes
+        </button>
+      ` : ''}
+    </div>
+    <div class="results-header-right">
+      <span class="results-sort-info">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="7" y1="12" x2="17" y2="12"></line>
+          <line x1="10" y1="18" x2="14" y2="18"></line>
+        </svg>
+        <span>${isFiltered ? "Sorted by eligibility & annual amount" : "Sorted by annual amount (high to low)"}</span>
+      </span>
+    </div>
+  `;
 
-  titleContainer.appendChild(countTitle);
-
-  if (isFiltered) {
-    const showAllBtn = document.createElement("button");
-    showAllBtn.type = "button";
-    showAllBtn.className = "clear-saved-btn";
-    showAllBtn.style.fontSize = "0.85rem";
-    showAllBtn.textContent = "Show All Schemes";
-    showAllBtn.addEventListener("click", showDefaultState);
-    titleContainer.appendChild(showAllBtn);
-  }
-
-  const sortInfo = document.createElement("span");
-  sortInfo.className = "results-sort-info";
-  sortInfo.textContent = isFiltered ? "Sorted by eligibility & annual amount" : "Sorted by annual amount (high to low)";
-
-  resultsHeader.appendChild(titleContainer);
-  resultsHeader.appendChild(sortInfo);
   container.appendChild(resultsHeader);
 }
 
@@ -3034,17 +3076,27 @@ function renderPovertyCardsList(targetElement) {
 
     const typeClass = `type-${(scheme.type || 'welfare').toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
 
-    // Verification callout
-    let verificationCalloutHTML = "";
-    if (isFiltered) {
-      const parts = [];
-      if (scheme.reasons && scheme.reasons.length > 0) {
-        scheme.reasons.forEach(r => parts.push(escapeHTML(r)));
-      }
-      if (parts.length > 0) {
-        verificationCalloutHTML = `<div class="verification-callout">${parts.join("<br>")}</div>`;
-      }
-    }
+    // "WHY THIS APPEARED" Match Reason Callout
+    const reasonsList = scheme.reasons && scheme.reasons.length > 0
+      ? scheme.reasons
+      : [];
+
+    const whyAppearedHTML = (isFiltered && reasonsList.length > 0)
+      ? `<div class="why-appeared-box ${scheme.matchType === 'potential' ? 'why-potential' : 'why-eligible'}">
+           <div class="why-appeared-header">
+             <span class="why-icon">${scheme.matchType === 'potential' ? '🔍' : '🛡️'}</span>
+             <span class="why-title">${scheme.matchType === 'potential' ? 'Match Rationale & Verification' : 'Why This Scheme Appeared'}</span>
+           </div>
+           <ul class="why-reasons-list">
+             ${reasonsList.map(r => `
+               <li class="why-reason-item">
+                 <span class="reason-check">${scheme.matchType === 'potential' ? '⚠️' : '✓'}</span>
+                 <span>${escapeHTML(r)}</span>
+               </li>
+             `).join('')}
+           </ul>
+         </div>`
+      : "";
 
     card.innerHTML = `
       <div class="card-top-row">
@@ -3071,14 +3123,14 @@ function renderPovertyCardsList(targetElement) {
         <p class="detail-item"><strong>Benefit:</strong> ${escapeHTML(scheme.benefit || scheme.benefit_summary || amountDisplay)}</p>
       </div>
 
-      ${verificationCalloutHTML}
+      ${whyAppearedHTML}
 
       <div class="card-footer">
         <div class="deadline-info">
           <span>📅 Deadline: <strong>${escapeHTML(scheme.deadline || 'Ongoing')}</strong></span>
         </div>
         <a href="${escapeHTML(scheme.apply_link)}" target="_blank" rel="noopener noreferrer" class="apply-btn">
-          <span>Apply Now</span>
+          <span>Official Portal</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>

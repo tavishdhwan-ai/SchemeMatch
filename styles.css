@@ -1474,20 +1474,175 @@ select option {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  padding: 0.5rem 0.2rem;
+  padding: 0.8rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .results-count-title {
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.results-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.count-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  display: inline-block;
 }
 
 .results-sort-info {
   font-size: 0.84rem;
+  font-weight: 500;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   "Why This Appeared" Match Reasons Callout Box (.why-appeared-box)
+   ========================================================================== */
+.why-appeared-box {
+  background: var(--bg-card-muted);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 0.95rem 1.15rem;
+  margin-top: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.why-appeared-box.why-eligible {
+  border-left-color: #10B981;
+  background: color-mix(in srgb, #ECFDF5 50%, var(--bg-card-muted) 50%);
+}
+
+.why-appeared-box.why-potential {
+  border-left-color: #F59E0B;
+  background: color-mix(in srgb, #FFFBEB 50%, var(--bg-card-muted) 50%);
+}
+
+[data-theme="dark"] .why-appeared-box.why-eligible {
+  background: rgba(16, 185, 129, 0.11);
+  border-left-color: #34D399;
+}
+
+[data-theme="dark"] .why-appeared-box.why-potential {
+  background: rgba(245, 158, 11, 0.11);
+  border-left-color: #FBBF24;
+}
+
+.why-appeared-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 0.45rem;
+}
+
+.why-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.why-title {
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.why-reasons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.why-reason-item {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.why-reason-item .reason-check {
+  color: #10B981;
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.why-potential .why-reason-item .reason-check {
+  color: #F59E0B;
+}
+
+/* Empty Suggestions Box */
+.empty-suggestions-box {
+  background: var(--bg-card-muted);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.4rem;
+  margin: 1.25rem 0;
+  text-align: left;
+  max-width: 520px;
+  width: 100%;
+}
+
+.empty-suggestions-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.empty-suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.empty-suggestions-list li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 /* Results Tabs */
