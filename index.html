@@ -62,29 +62,29 @@
 
   <!-- Top Hero Section -->
   <div id="hero-section" class="hero-wrapper">
-    <!-- Subtle Background Visual FX -->
+    <!-- Subtle Ambient Visual FX -->
     <div class="hero-bg-glow hero-bg-glow-1"></div>
     <div class="hero-bg-glow hero-bg-glow-2"></div>
     <div class="hero-grid-pattern" aria-hidden="true"></div>
 
     <div class="hero-container">
-      <!-- Badge -->
+      <!-- Eyebrow Badge -->
       <div class="hero-badge">
         <span class="badge-pulse"></span>
-        <span class="badge-text">Verified Government Schemes • 2026</span>
+        <span class="badge-text">CIVIC INTELLIGENCE PLATFORM • 2026</span>
       </div>
 
-      <!-- Main Heading -->
+      <!-- Striking Main Heading -->
       <h1 class="hero-heading">
-        Find Government Schemes <span class="heading-highlight">You're Eligible For</span>
+        Find Government Support <br><span class="heading-highlight">Tailored To Your Profile</span>
       </h1>
 
       <!-- Subtitle -->
       <p class="hero-subheading">
-        Answer a few questions. Discover government schemes matched to your profile — from scholarships and employment support to social protection.
+        Tell us about yourself — SchemeMatch instantly matches your profile against 90+ central and state government schemes across education, skilling, and social protection.
       </p>
 
-      <!-- Hero Stats & Trust Metrics -->
+      <!-- Redesigned Hero Stats & Trust Metrics -->
       <div class="hero-stats">
         <div class="hero-stat-card">
           <div class="stat-icon-wrapper">
@@ -92,7 +92,7 @@
           </div>
           <div class="stat-info">
             <span class="stat-number">90+</span>
-            <span class="stat-label">Schemes Covered</span>
+            <span class="stat-label">Government Schemes</span>
           </div>
         </div>
 
@@ -101,8 +101,8 @@
             <span class="stat-icon">🎯</span>
           </div>
           <div class="stat-info">
-            <span class="stat-number">3</span>
-            <span class="stat-label">SDG Goals</span>
+            <span class="stat-number">3 Impact Goals</span>
+            <span class="stat-label">SDG 1 · SDG 4 · SDG 8</span>
           </div>
         </div>
 
@@ -111,23 +111,73 @@
             <span class="stat-icon">⚡</span>
           </div>
           <div class="stat-info">
-            <span class="stat-number">Free</span>
-            <span class="stat-label">No Login Needed</span>
+            <span class="stat-number">100% Free</span>
+            <span class="stat-label">No Account Required</span>
           </div>
         </div>
       </div>
 
+      <!-- Application Workflow Flow graphic -->
+      <div class="hero-process-flow">
+        <div class="process-step">
+          <span class="step-num">1</span>
+          <span class="step-label">Select Goal</span>
+        </div>
+        <span class="process-arrow">→</span>
+        <div class="process-step">
+          <span class="step-num">2</span>
+          <span class="step-label">Fill Profile</span>
+        </div>
+        <span class="process-arrow">→</span>
+        <div class="process-step">
+          <span class="step-num">3</span>
+          <span class="step-label">Get Scheme Matches</span>
+        </div>
+      </div>
+
       <!-- Interactive Scroll / CTA Hint -->
-      <div class="hero-scroll-hint" onclick="document.querySelector('header')?.scrollIntoView({behavior: 'smooth'})" role="button" tabindex="0">
-        <span class="scroll-arrow">↓</span> Select an SDG goal below to begin
+      <div class="hero-scroll-hint" onclick="document.querySelector('.main-container')?.scrollIntoView({behavior: 'smooth'})" role="button" tabindex="0">
+        <span class="scroll-arrow">↓</span> Select an SDG Goal & Fill Profile Below
       </div>
     </div>
     <div class="hero-divider-bar" aria-hidden="true"></div>
   </div>
 
-  <!-- Navigation / Header -->
+  <!-- Navigation / Header with Segmented SDG Navigation Component -->
   <header>
     <div class="nav-container">
+      <div class="logo-group">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">Scheme<span>Match</span></div>
+      </div>
+
+      <!-- Segmented SDG Navigation Component -->
+      <div class="sdg-segmented-nav" role="tablist" aria-label="Select Sustainable Development Goal">
+        <button type="button" class="sdg-segment-btn sdg-4 active" data-tab="scholarships" role="tab" aria-selected="true" title="SDG 4: Quality Education">
+          <span class="sdg-segment-badge">4</span>
+          <div class="sdg-segment-text">
+            <span class="sdg-segment-title">🎓 SDG 4 · Education</span>
+            <span class="sdg-segment-sub">Scholarships &amp; Grants</span>
+          </div>
+        </button>
+
+        <button type="button" class="sdg-segment-btn sdg-8" data-tab="skills" role="tab" aria-selected="false" title="SDG 8: Decent Work & Economic Growth">
+          <span class="sdg-segment-badge">8</span>
+          <div class="sdg-segment-text">
+            <span class="sdg-segment-title">💼 SDG 8 · Decent Work</span>
+            <span class="sdg-segment-sub">Skilling &amp; Loans</span>
+          </div>
+        </button>
+
+        <button type="button" class="sdg-segment-btn sdg-1" data-tab="poverty" role="tab" aria-selected="false" title="SDG 1: No Poverty">
+          <span class="sdg-segment-badge">1</span>
+          <div class="sdg-segment-text">
+            <span class="sdg-segment-title">🌱 SDG 1 · No Poverty</span>
+            <span class="sdg-segment-sub">Social Protection</span>
+          </div>
+        </button>
+      </div>
+
       <button type="button" id="theme-toggle" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
         <span class="theme-toggle-track" aria-hidden="true">
           <span class="theme-icon theme-icon-sun">☀️</span>
@@ -136,28 +186,8 @@
         </span>
         <span class="theme-toggle-text">Light</span>
       </button>
-      <div class="logo-group">
-        <div class="logo-icon">🎓</div>
-        <div class="logo-text">Scheme<span>Match</span></div>
-      </div>
-      <div class="sdg-badges">
-        <div class="sdg-badge sdg-1">
-          <span class="sdg-badge-icon">1</span>
-          <span>🌱 SDG 1 · No Poverty</span>
-        </div>
-        <div class="sdg-badge sdg-4">
-          <span class="sdg-badge-icon">4</span>
-          <span>🎓 SDG 4 · Quality Education</span>
-        </div>
-        <div class="sdg-badge sdg-8">
-          <span class="sdg-badge-icon">8</span>
-          <span>💼 SDG 8 · Decent Work</span>
-        </div>
-      </div>
     </div>
   </header>
-
-
 
   <!-- Main App Layout -->
   <main class="main-container">
@@ -165,10 +195,11 @@
     <!-- Filter Form Sidebar -->
     <aside>
       <div class="form-card">
-        <div class="form-header-badge"><span class="badge-step-dot"></span> Profile Matcher</div>
+        <div class="form-header-badge"><span class="badge-step-dot"></span> GUIDED PROFILE MATCHER</div>
         <h2 class="form-title">
-          <span class="form-title-icon">🔍</span> Check Eligibility
+          <span class="form-title-icon">🎯</span> Eligibility Checklist
         </h2>
+        <p class="form-subtitle-guide">Tell us about yourself → SchemeMatch finds relevant support.</p>
 
         <!-- SDG 4: Scholarships Form (SDG 4) -->
         <form id="form-sdg4" novalidate>

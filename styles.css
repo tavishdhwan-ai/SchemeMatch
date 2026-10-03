@@ -454,65 +454,177 @@ header {
   -webkit-text-fill-color: transparent;
 }
 
-/* SDG Navigation Pills */
-.sdg-badges {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  flex-wrap: wrap;
-  margin-left: auto;
-}
-
-.sdg-badge {
+/* ==========================================================================
+   SDG Segmented Navigation Component (.sdg-segmented-nav)
+   ========================================================================== */
+.sdg-segmented-nav {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.42rem 0.95rem;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  padding: 5px;
+  box-shadow: var(--shadow-sm);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sdg-segment-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  user-select: none;
+  text-align: left;
 }
 
-.sdg-badge:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.1);
-}
-
-.sdg-badge-icon {
-  width: 22px;
-  height: 22px;
+.sdg-segment-badge {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.sdg-segment-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sdg-segment-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.sdg-segment-sub {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* Inactive SDG Segment Hover Feedback */
+.sdg-segment-btn:hover {
+  background: var(--bg-card-muted);
+  transform: translateY(-1px);
+}
+
+.sdg-segment-btn.sdg-4:hover { border-color: var(--sdg4-border); }
+.sdg-segment-btn.sdg-8:hover { border-color: var(--sdg8-border); }
+.sdg-segment-btn.sdg-1:hover { border-color: var(--sdg1-border); }
+
+.sdg-segment-btn.sdg-4 .sdg-segment-badge { background-color: var(--sdg4-red); }
+.sdg-segment-btn.sdg-8 .sdg-segment-badge { background-color: var(--sdg8-burgundy); }
+.sdg-segment-btn.sdg-1 .sdg-segment-badge { background-color: var(--sdg1-red); }
+
+/* Active Segmented States */
+.sdg-segment-btn.active {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.sdg-segment-btn.sdg-4.active {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  border-color: #1D4ED8;
+}
+
+.sdg-segment-btn.sdg-8.active {
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  border-color: #B45309;
+}
+
+.sdg-segment-btn.sdg-1.active {
+  background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%);
+  border-color: #BE123C;
+}
+
+.sdg-segment-btn.active .sdg-segment-title { color: #FFFFFF !important; }
+.sdg-segment-btn.active .sdg-segment-sub { color: rgba(255, 255, 255, 0.85) !important; }
+.sdg-segment-btn.active .sdg-segment-badge {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   Hero Application Workflow Flow Graphic (.hero-process-flow)
+   ========================================================================== */
+.hero-process-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hero-border-soft);
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  margin-bottom: 24px;
+  max-width: 620px;
+  width: 100%;
+}
+
+.process-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #FFFFFF;
   font-size: 0.72rem;
   font-weight: 800;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.sdg-badge.sdg-1 {
-  background-color: var(--sdg1-bg);
-  color: var(--sdg1-text);
-  border: 1px solid var(--sdg1-border);
+.step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  white-space: nowrap;
 }
-.sdg-badge.sdg-1 .sdg-badge-icon { background-color: var(--sdg1-red); }
 
-.sdg-badge.sdg-4 {
-  background-color: var(--sdg4-bg);
-  color: var(--sdg4-text);
-  border: 1px solid var(--sdg4-border);
+.process-arrow {
+  font-size: 0.9rem;
+  color: var(--hero-text-soft);
+  opacity: 0.7;
 }
-.sdg-badge.sdg-4 .sdg-badge-icon { background-color: var(--sdg4-red); }
 
-.sdg-badge.sdg-8 {
-  background-color: var(--sdg8-bg);
-  color: var(--sdg8-text);
-  border: 1px solid var(--sdg8-border);
+/* Form Subtitle Guide */
+.form-subtitle-guide {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid var(--border-accent);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  line-height: 1.45;
 }
-.sdg-badge.sdg-8 .sdg-badge-icon { background-color: var(--sdg8-burgundy); }
 
 /* Theme Toggle Slider */
 #theme-toggle {

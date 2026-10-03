@@ -2514,7 +2514,7 @@ function filterAndDisplaySchemes() {
   renderResultsView();
 }
 
-// Synchronize left eligibility form with active tab
+// Synchronize left eligibility form and SDG segmented navigation controls with active tab
 function updateActiveSDGForm() {
   const form4 = document.getElementById("form-sdg4");
   const form8 = document.getElementById("form-sdg8");
@@ -2523,7 +2523,36 @@ function updateActiveSDGForm() {
   if (form4) form4.style.display = activeTab === 'scholarships' ? 'block' : 'none';
   if (form8) form8.style.display = activeTab === 'skills' ? 'block' : 'none';
   if (form1) form1.style.display = activeTab === 'poverty' ? 'block' : 'none';
+
+  // Synchronize SDG Segmented Nav active states
+  const segmentBtns = document.querySelectorAll(".sdg-segment-btn");
+  segmentBtns.forEach(btn => {
+    const targetTab = btn.getAttribute("data-tab");
+    if (targetTab === activeTab) {
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+    } else {
+      btn.classList.remove("active");
+      btn.setAttribute("aria-selected", "false");
+    }
+  });
 }
+
+// Event Delegation for SDG Segmented Navigation buttons
+document.addEventListener("click", (e) => {
+  const segmentBtn = e.target.closest(".sdg-segment-btn");
+  if (segmentBtn) {
+    const targetTab = segmentBtn.getAttribute("data-tab");
+    if (targetTab && activeTab !== targetTab) {
+      activeTab = targetTab;
+      renderResultsView();
+      const mainContainer = document.querySelector(".main-container");
+      if (mainContainer) {
+        mainContainer.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }
+});
 
 // Master Render function handling Tab bar and Active Tab content
 function renderResultsView() {
